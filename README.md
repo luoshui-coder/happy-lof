@@ -13,6 +13,7 @@
 - ✅ 支持指数LOF、QDII、商品基金
 - ✅ 精美的移动端友好界面
 - ✅ 自动每5分钟刷新数据
+- ✅ 历史溢价率趋势记录
 - ✅ 显示交易所信息（深/沪）
 
 ## 快速开始
@@ -44,7 +45,8 @@ python3 app.py
 ```
 LOF 基金套利/
 ├── app.py                 # Flask 后端服务
-├── lof_api.py             # LOF 数据接口 demo
+├── database.py            # SQLite 数据库管理
+├── scheduler.py           # 定时任务调度（每天 14:55 记录数据）
 ├── static/
 │   └── index.html         # 前端页面
 ├── requirements.txt       # 依赖文件
@@ -70,6 +72,16 @@ GET /api/lof
 ```
 GET /api/lof/all
 ```
+
+### 获取历史溢价数据
+
+```
+GET /api/lof/history/<fund_id>?days=30
+```
+
+参数：
+- `fund_id`: 基金代码
+- `days`: 查询天数（默认 30 天）
 
 ## 数据来源
 
