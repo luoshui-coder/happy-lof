@@ -175,12 +175,16 @@
         }
 
         .status-badge {
-            background: #ff6b6b;
+            background: #48bb78;
             color: white;
             padding: 3px 8px;
             border-radius: 10px;
             font-size: 0.7em;
             font-weight: 500;
+        }
+
+        .badge-paused {
+            background: #ffa500;
         }
 
         .volume-text {
@@ -268,8 +272,8 @@
 
 <body>
     <div class="header">
-        <h1>今乐福</h1>
-        <p>LOF基金💰溢价查询</p>
+        <h1>今乐福 Happy LOF</h1>
+        <p>套利基金💰溢价查询</p>
         <div class="update-time" id="updateTime">更新时间：加载中...</div>
     </div>
 
@@ -345,7 +349,7 @@
                                 </div>
                             </div>
                             <div class="fund-footer">
-                                <span class="status-badge">${fund.apply_status}</span>
+                                <span class="status-badge ${fund.apply_status.includes('暂停') ? 'badge-paused' : ''}">${fund.apply_status.includes('暂停') ? '⏸ ' : ''}${fund.apply_status}</span>
                                 <span class="volume-text">${volumeStr}</span>
                             </div>
                         </div>

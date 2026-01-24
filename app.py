@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-今乐福 - LOF 基金套利溢价查询
+今乐福 - Happy LOF 套利基金溢价查询
 Flask 后端 API 服务
 """
 
