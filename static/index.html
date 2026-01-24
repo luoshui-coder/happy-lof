@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今乐福 - LOF基金套利溢价查询</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 20px 25px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .header h1 {
+            font-size: 1.6em;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .update-time {
+            font-size: 0.75em;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: -15px auto 0;
+            padding: 0 12px 60px;
+        }
+
+        .group-title {
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.8em;
+            margin: 15px 0 10px;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .group-title::before,
+        .group-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ddd, transparent);
+        }
+
+        .group-title::before {
+            left: 0;
+        }
+
+        .group-title::after {
+            right: 0;
+        }
+
+        .fund-card {
+            background: white;
+            border-radius: 10px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+
+        .fund-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .fund-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .fund-info {
+            flex: 1;
+        }
+
+        .fund-name {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .fund-code {
+            font-size: 0.7em;
+            color: #999;
+        }
+
+        .premium-badge {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff8e53 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .premium-medium {
+            background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+        }
+
+        .fund-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 0.7em;
+            color: #999;
+            margin-bottom: 2px;
+        }
+
+        .detail-value {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .detail-sub {
+            font-size: 0.7em;
+            margin-top: 1px;
+        }
+
+        .positive {
+            color: #f56565;
+        }
+
+        .negative {
+            color: #48bb78;
+        }
+
+        .fund-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 8px;
+            border-top: 1px dashed #eee;
+        }
+
+        .status-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 500;
+        }
+
+        .volume-text {
+            font-size: 0.75em;
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        .error {
+            text-align: center;
+            padding: 60px 20px;
+            color: #f56565;
+            background: white;
+            border-radius: 16px;
+            margin: 20px;
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .refresh-btn:hover {
+            transform: scale(1.1) rotate(180deg);
+        }
+
+        .refresh-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes dots {
+
+            0%,
+            20% {
+                content: '.';
+            }
+
+            40% {
+                content: '..';
+            }
+
+            60%,
+            100% {
+                content: '...';
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>今乐福</h1>
+        <p>LOF基金💰溢价查询</p>
+        <div class="update-time" id="updateTime">更新时间：加载中...</div>
+    </div>
+
+    <div class="container" id="content">
+        <div class="loading">正在获取最新数据</div>
+    </div>
+
+    <button class="refresh-btn" onclick="loadData()" title="刷新数据">↻</button>
+
+    <script>
+        async function loadData() {
+            const content = document.getElementById('content');
+            const updateTimeEl = document.getElementById('updateTime');
+
+            content.innerHTML = '<div class="loading">正在获取最新数据</div>';
+
+            try {
+                const response = await fetch('/api/lof');
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || '数据获取失败');
+                }
+
+                updateTimeEl.textContent = `更新时间：${result.update_time}`;
+
+                if (result.data.length === 0) {
+                    content.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <div>暂无符合条件的套利机会</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // 不分组，直接按溢价率排序显示
+                let html = '';
+
+                result.data.forEach(fund => {
+                    const changeClass = fund.change_pct > 0 ? 'positive' : (fund.change_pct < 0 ? 'negative' : '');
+                    const changeSign = fund.change_pct > 0 ? '+' : '';
+                    const premiumClass = fund.premium_rate >= 5 ? 'premium-badge' : 'premium-badge premium-medium';
+                    const volumeStr = fund.volume >= 10000 ?
+                        `成交额 ${(fund.volume / 10000).toFixed(2)}亿` :
+                        `成交额 ${fund.volume.toFixed(0)}万`;
+
+                    // 判断交易所
+                    const exchange = fund.fund_id.startsWith('50') || fund.fund_id.startsWith('51') ? '沪' : '深';
+
+                    html += `
+                        <div class="fund-card">
+                            <div class="fund-header">
+                                <div class="fund-info">
+                                    <div class="fund-name">${fund.fund_name}</div>
+                                    <div class="fund-code">${fund.fund_id} <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #bbb; font-size: 0.85em;">${exchange}</span> <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #ccc; font-size: 0.9em;">${fund.fund_type}</span></div>
+                                </div>
+                                <div class="${premiumClass}">${fund.premium_rate.toFixed(2)}%</div>
+                            </div>
+                            <div class="fund-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">价格</div>
+                                    <div class="detail-value">${fund.price.toFixed(3)}</div>
+                                    <div class="detail-sub ${changeClass}">${changeSign}${fund.change_pct.toFixed(2)}%</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">净值</div>
+                                    <div class="detail-value">${fund.net_value.toFixed(3)}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">溢价率</div>
+                                    <div class="detail-value" style="color: #ff6b9d;">${fund.premium_rate.toFixed(2)}%</div>
+                                </div>
+                            </div>
+                            <div class="fund-footer">
+                                <span class="status-badge">${fund.apply_status}</span>
+                                <span class="volume-text">${volumeStr}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                content.innerHTML = html;
+
+            } catch (error) {
+                console.error('加载失败:', error);
+                content.innerHTML = `<div class="error">❌ 数据加载失败<br>${error.message}</div>`;
+            }
+        }
+
+        // 页面加载时获取数据
+        loadData();
+
+        // 每5分钟自动刷新
+        setInterval(loadData, 5 * 60 * 1000);
+    </script>
+</body>
+
+</html>

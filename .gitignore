@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Flask
+instance/
+.webassets-cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+app.log
+nohup.out
+
+# JSON 数据文件
+lof_all.json
+lof_high_premium.json
+
+# 临时文件
+*.tmp
+*.bak
