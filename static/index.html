@@ -111,9 +111,47 @@
             margin-bottom: 2px;
         }
 
+        .fund-name {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .fund-name a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .fund-name a:hover {
+            color: #667eea;
+        }
+
         .fund-code {
             font-size: 0.7em;
             color: #999;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s;
+        }
+
+        .fund-code:hover {
+            color: #667eea;
+        }
+
+        .notice-link {
+            display: inline-block;
+            margin-left: 6px;
+            color: #667eea;
+            font-size: 0.85em;
+            text-decoration: none;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .notice-link:hover {
+            opacity: 1;
         }
 
         .premium-badge {
@@ -267,6 +305,42 @@
             font-size: 3em;
             margin-bottom: 10px;
         }
+
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            z-index: 9999;
+            animation: fadeInOut 1s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            80% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+        }
     </style>
 </head>
 
@@ -284,6 +358,23 @@
     <button class="refresh-btn" onclick="loadData()" title="刷新数据">↻</button>
 
     <script>
+        function copyCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                // 显示复制成功提示
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.textContent = `已复制 ${code}`;
+                document.body.appendChild(toast);
+
+                // 1秒后自动移除
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 1000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+            });
+        }
+
         async function loadData() {
             const content = document.getElementById('content');
             const updateTimeEl = document.getElementById('updateTime');
@@ -328,8 +419,8 @@
                         <div class="fund-card">
                             <div class="fund-header">
                                 <div class="fund-info">
-                                    <div class="fund-name">${fund.fund_name}</div>
-                                    <div class="fund-code">${fund.fund_id} <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #bbb; font-size: 0.85em;">${exchange}</span> <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #ccc; font-size: 0.9em;">${fund.fund_type}</span></div>
+                                    <div class="fund-name"><a href="http://fund.eastmoney.com/${fund.fund_id}.html" target="_blank">${fund.fund_name}</a></div>
+                                    <div class="fund-code" onclick="copyCode('${fund.fund_id}')" title="点击复制代码">${fund.fund_id} <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #bbb; font-size: 0.85em;">${exchange}</span> <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #ccc; font-size: 0.9em;">${fund.fund_type}</span></div>
                                 </div>
                                 <div class="${premiumClass}">${fund.premium_rate.toFixed(2)}%</div>
                             </div>
