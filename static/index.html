@@ -88,9 +88,20 @@
             transition: all 0.3s;
         }
 
+        .fund-card.paused {
+            opacity: 0.5;
+            filter: grayscale(0.3);
+            background: #f5f5f5;
+        }
+
         .fund-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .fund-card.paused:hover {
+            transform: none;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
         }
 
         .fund-header {
@@ -186,7 +197,7 @@
         }
 
         .detail-value {
-            font-size: 0.85em;
+            font-size: 1em;
             font-weight: 600;
             color: #333;
         }
@@ -194,6 +205,13 @@
         .detail-sub {
             font-size: 0.7em;
             margin-top: 1px;
+        }
+
+        .difficulty-badge {
+            color: #ffa500;
+            padding: 0;
+            font-size: 1em;
+            white-space: nowrap;
         }
 
         .positive {
@@ -412,17 +430,47 @@
                         `成交额 ${(fund.volume / 10000).toFixed(2)}亿` :
                         `成交额 ${fund.volume.toFixed(0)}万`;
 
-                    // 判断交易所
-                    const exchange = fund.fund_id.startsWith('50') || fund.fund_id.startsWith('51') ? '沪' : '深';
+                    // 判断交易所和持有天数
+                    const isShanghai = fund.fund_id.startsWith('50') || fund.fund_id.startsWith('51');
+                    const exchange = isShanghai ? '沪' : '深';
+                    const holdDays = isShanghai ? 'T+3' : 'T+2';
+
+                    // 计算套利难度评级（散户薅羊毛版）
+                    let difficulty = 1;
+                    const volume = fund.volume;
+                    const premium = fund.premium_rate;
+                    const isPaused = fund.apply_status.includes('暂停');
+                    const isQDII = fund.fund_type.includes('QDII');
+
+                    if (isPaused) {
+                        difficulty = 1; // 暂停申购
+                    } else if (premium >= 5 && volume >= 5000) {
+                        difficulty = 5; // 强烈推荐
+                    } else if (premium >= 3.5 && volume >= 3000) {
+                        difficulty = 4; // 推荐
+                    } else if (premium >= 2.5 && volume >= 2000) {
+                        difficulty = 3; // 可尝试
+                    } else if (premium >= 2 && volume >= 1000) {
+                        difficulty = 2; // 谨慎
+                    } else {
+                        difficulty = 1; // 不推荐
+                    }
+
+                    // QDII降级（T+3风险更高）
+                    if (isQDII && difficulty > 1) {
+                        difficulty = Math.max(1, difficulty - 1);
+                    }
+
+                    const stars = isPaused ? '🚫' : '⭐'.repeat(difficulty);
 
                     html += `
-                        <div class="fund-card">
+                        <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}">
                             <div class="fund-header">
                                 <div class="fund-info">
                                     <div class="fund-name"><a href="http://fund.eastmoney.com/${fund.fund_id}.html" target="_blank">${fund.fund_name}</a></div>
-                                    <div class="fund-code" onclick="copyCode('${fund.fund_id}')" title="点击复制代码">${fund.fund_id} <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #bbb; font-size: 0.85em;">${exchange}</span> <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #ccc; font-size: 0.9em;">${fund.fund_type}</span></div>
+                                    <div class="fund-code" onclick="copyCode('${fund.fund_id}')" title="点击复制代码">${fund.fund_id} <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #bbb; font-size: 0.85em;">${exchange}</span> <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #ccc; font-size: 0.9em;">${fund.fund_type}</span> <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #bbb; font-size: 0.8em;">${holdDays}</span></div>
                                 </div>
-                                <div class="${premiumClass}">${fund.premium_rate.toFixed(2)}%</div>
+                                <div class="difficulty-badge" title="套利难度">${stars}</div>
                             </div>
                             <div class="fund-details">
                                 <div class="detail-item">
