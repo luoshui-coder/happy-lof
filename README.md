@@ -45,6 +45,7 @@ python3 app.py
 ```
 LOF 基金套利/
 ├── app.py                 # Flask 后端服务
+├── lof_lib.py             # LOF 核心逻辑库
 ├── database.py            # SQLite 数据库管理
 ├── scheduler.py           # 定时任务调度（每天 14:55 记录数据）
 ├── static/

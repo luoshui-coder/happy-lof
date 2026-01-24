@@ -7,7 +7,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 from database import LOFDatabase
-from lof_api import JisiluAPI, filter_lof
+from lof_lib import JisiluAPI, filter_lof
 
 
 class LOFScheduler:
