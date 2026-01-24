@@ -38,3 +38,5 @@ lof_high_premium.json
 # 临时文件
 *.tmp
 *.bak
+lof_history.db
+*.log

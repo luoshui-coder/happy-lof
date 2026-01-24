@@ -5,7 +5,7 @@
 Flask 后端 API 服务
 """
 
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
 import requests
 import time
@@ -13,9 +13,16 @@ import json
 from typing import Optional, List, Dict, Any
 from dataclasses import dataclass, asdict
 import os
+from database import LOFDatabase
+from scheduler import LOFScheduler
 
 app = Flask(__name__, static_folder='static')
 CORS(app)  # 允许跨域
+
+# 初始化数据库和定时任务
+db = LOFDatabase()
+scheduler = LOFScheduler()
+scheduler.start()  # 启动定时任务
 
 
 @dataclass
@@ -244,6 +251,26 @@ def get_all_lof_data():
             "data": [asdict(lof) for lof in filtered],
             "total": len(filtered),
             "update_time": time.strftime("%Y-%m-%d %H:%M:%S")
+        })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
+@app.route('/api/lof/history/<fund_id>')
+def get_lof_history(fund_id):
+    """获取指定基金的历史溢价率数据"""
+    try:
+        days = int(request.args.get('days', 30))
+        history = db.get_history(fund_id, days)
+        
+        return jsonify({
+            "success": True,
+            "fund_id": fund_id,
+            "data": history,
+            "total": len(history)
         })
     except Exception as e:
         return jsonify({

@@ -86,6 +86,27 @@
             margin-bottom: 6px;
             box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-canvas {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            max-height: 100% !important;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .fund-card>* {
+            position: relative;
+            z-index: 1;
         }
 
         .fund-card.paused {
@@ -360,12 +381,13 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 
 <body>
     <div class="header">
         <h1>今乐福 Happy LOF</h1>
-        <p>套利基金💰溢价查询</p>
+        <p>基金套利💰溢价查询</p>
         <div class="update-time" id="updateTime">更新时间：加载中...</div>
     </div>
 
@@ -465,6 +487,7 @@
 
                     html += `
                         <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}">
+                            <canvas class="chart-canvas" id="chart-${fund.fund_id}"></canvas>
                             <div class="fund-header">
                                 <div class="fund-info">
                                     <div class="fund-name"><a href="http://fund.eastmoney.com/${fund.fund_id}.html" target="_blank">${fund.fund_name}</a></div>
@@ -497,9 +520,70 @@
 
                 content.innerHTML = html;
 
+                // 绘制所有基金的走势图
+                result.data.forEach(fund => {
+                    drawMiniChart(fund.fund_id);
+                });
+
             } catch (error) {
                 console.error('加载失败:', error);
                 content.innerHTML = `<div class="error">❌ 数据加载失败<br>${error.message}</div>`;
+            }
+        }
+
+        async function drawMiniChart(fundId) {
+            try {
+                const response = await fetch(`/api/lof/history/${fundId}?days=30`);
+                const result = await response.json();
+
+                const canvas = document.getElementById(`chart-${fundId}`);
+                if (!canvas) return;
+
+                if (!result.success || !result.data || result.data.length < 2) {
+                    canvas.style.display = "none";
+                    return;
+                }
+
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+                const ctx = canvas.getContext('2d');
+                const history = result.data;
+
+                let displayData = history;
+                if (history.length >= 30) {
+                    displayData = history.slice(-30);
+                } else if (history.length >= 7) {
+                    displayData = history.slice(-7);
+                }
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: displayData.map(d => d.date.slice(5)),
+                        datasets: [{
+                            data: displayData.map(d => d.premium_rate),
+                            borderColor: '#667eea',
+                            borderWidth: 1.5,
+                            fill: false,
+                            tension: 0.3,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false }
+                        },
+                        scales: {
+                            x: { display: false },
+                            y: { display: false }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error(`绘制走势图失败 ${fundId}:`, error);
             }
         }
 

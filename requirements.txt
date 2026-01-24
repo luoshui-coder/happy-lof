@@ -1,3 +1,4 @@
 flask
 flask-cors
 requests
+APScheduler==3.10.4
