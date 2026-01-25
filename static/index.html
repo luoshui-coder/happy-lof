@@ -303,19 +303,33 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s;
+            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 9999;
+            animation: pulse 2s infinite;
         }
 
         .refresh-btn:hover {
-            transform: scale(1.1) rotate(180deg);
+            transform: scale(1.15) rotate(180deg);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.6), 0 0 0 8px rgba(102, 126, 234, 0.1);
+            animation: none;
         }
 
         .refresh-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.95) rotate(180deg);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5), 0 0 0 8px rgba(102, 126, 234, 0);
+            }
         }
 
         @keyframes dots {
