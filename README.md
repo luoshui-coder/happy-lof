@@ -84,12 +84,69 @@ GET /api/lof/history/<fund_id>?days=30
 - `fund_id`: 基金代码
 - `days`: 查询天数（默认 30 天）
 
-## 数据来源
+## 部署指南
 
-数据来自：**集思录** (https://www.jisilu.cn)
-- 指数 LOF
-- QDII LOF
-- 商品 QDII
+### 本地开发
+
+```bash
+# 开发模式（调试开启）
+export DEBUG=True
+python3 app.py
+```
+
+### 生产环境部署
+
+#### 方式一：宝塔面板部署（推荐）
+
+详细步骤请查看：[宝塔部署指南.md](./宝塔部署指南.md)
+
+**最简单的方式**：使用宝塔 **Python项目管理器**
+1. 安装 Python 项目管理器插件
+2. 添加项目，填写路径和启动文件
+3. 一键启动，支持开机自启
+
+#### 方式二：直接运行
+
+```bash
+# 使用生产环境脚本
+chmod +x start_prod.sh
+./start_prod.sh
+```
+
+#### 方式三：使用 Supervisor（推荐用于生产环境）
+
+```bash
+# 安装 supervisor
+pip install supervisor
+
+# 配置文件见宝塔部署指南
+```
+
+### 环境变量配置
+
+支持以下环境变量：
+
+- `PORT`: 应用端口（默认 5000）
+- `DEBUG`: 调试模式（默认 False）
+- `TZ`: 时区（默认 Asia/Shanghai）
+
+示例：
+```bash
+export PORT=8080
+export DEBUG=False
+python3 app.py
+```
+
+## 定时任务配置
+
+为了记录每日溢价率数据，需要配置定时任务：
+
+```bash
+# 每天 14:55 执行数据采集
+55 14 * * * cd /path/to/project && python3 database.py
+```
+
+宝塔面板用户可在 **计划任务** 中添加 Shell 脚本。
 
 ## 注意事项
 
@@ -97,10 +154,19 @@ GET /api/lof/history/<fund_id>?days=30
 2. 建议看到高溢价机会后再到券商 APP 确认
 3. 注意区分深圳和上海交易所的基金
 
+## 数据来源
+
+数据来自：**集思录** (https://www.jisilu.cn)
+- 指数 LOF
+- QDII LOF
+- 商品 QDII
+
 ## 技术栈
 
 - **后端**: Python + Flask
 - **前端**: HTML + CSS + JavaScript
+- **数据库**: SQLite
+- **图表**: Chart.js
 - **数据源**: 集思录 API
 
 ## License

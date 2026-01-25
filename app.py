@@ -103,10 +103,16 @@ def get_lof_history(fund_id):
 
 
 if __name__ == '__main__':
+    # 从环境变量读取配置，方便部署
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('DEBUG', 'False').lower() == 'true'
+    
     print("=" * 50)
     print("今乐福 - LOF 基金套利溢价查询")
     print("=" * 50)
-    print("访问 http://127.0.0.1:5001 查看页面")
-    print("API: http://127.0.0.1:5001/api/lof")
+    print(f"访问 http://127.0.0.1:{port} 查看页面")
+    print(f"API: http://127.0.0.1:{port}/api/lof")
+    print(f"调试模式: {'开启' if debug else '关闭'}")
     print("=" * 50)
-    app.run(debug=True, host='0.0.0.0', port=5003)
+    
+    app.run(debug=debug, host='0.0.0.0', port=port)
