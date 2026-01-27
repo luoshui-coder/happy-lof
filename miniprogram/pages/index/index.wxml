@@ -1,0 +1,38 @@
+<!-- pages/index/index.wxml -->
+<view class="page">
+  <!-- 头部 -->
+  <view class="header gradient-primary">
+    <view class="header-title">Happy LOF</view>
+    <view class="header-subtitle">基金套利💰溢价查询</view>
+    <view class="update-time">更新时间：{{updateTime}}</view>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="container">
+    <!-- 加载状态 -->
+    <view wx:if="{{loading}}" class="loading">
+      正在获取最新数据...
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:elif="{{!loading && fundList.length === 0}}" class="empty-state">
+      <view class="empty-state-icon">📊</view>
+      <view>暂无符合条件的套利机会</view>
+    </view>
+
+    <!-- 基金列表 -->
+    <view wx:else class="fund-list">
+      <fund-card 
+        wx:for="{{fundList}}" 
+        wx:key="fund_id"
+        fund="{{item}}"
+        bindcardtap="onFundCardTap"
+      />
+    </view>
+  </view>
+
+  <!-- 刷新按钮 -->
+  <view class="refresh-btn gradient-primary" bindtap="onRefresh">
+    <text class="refresh-icon">↻</text>
+  </view>
+</view>

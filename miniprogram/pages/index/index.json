@@ -1,0 +1,7 @@
+{
+    "usingComponents": {
+        "fund-card": "/components/fund-card/fund-card"
+    },
+    "enablePullDownRefresh": true,
+    "backgroundTextStyle": "dark"
+}

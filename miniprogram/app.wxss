@@ -1,0 +1,60 @@
+/* 全局样式 */
+page {
+  background-color: #f5f7fa;
+  font-family: -apple-system-font, "Helvetica Neue", sans-serif;
+}
+
+/* 通用渐变背景 */
+.gradient-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-premium-high {
+  background: linear-gradient(135deg, #ff6b9d 0%, #ff8e53 100%);
+}
+
+.gradient-premium-medium {
+  background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+}
+
+/* 通用文本颜色 */
+.text-primary {
+  color: #667eea;
+}
+
+.text-positive {
+  color: #f56565;
+}
+
+.text-negative {
+  color: #48bb78;
+}
+
+.text-muted {
+  color: #999;
+}
+
+/* 通用布局 */
+.container {
+  padding: 0 24rpx;
+}
+
+/* 加载状态 */
+.loading {
+  text-align: center;
+  padding: 120rpx 40rpx;
+  color: #667eea;
+  font-size: 32rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 120rpx 40rpx;
+  color: #999;
+}
+
+.empty-state-icon {
+  font-size: 120rpx;
+  margin-bottom: 20rpx;
+}
