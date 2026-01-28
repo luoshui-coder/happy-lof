@@ -483,17 +483,17 @@
                         `成交额 ${(fund.volume / 10000).toFixed(2)}亿` :
                         `成交额 ${fund.volume.toFixed(0)}万`;
 
-                    // 判断交易所和持有天数
+                    // 判断交易所和持有天数（用于界面提示）
                     const isShanghai = fund.fund_id.startsWith('50') || fund.fund_id.startsWith('51');
                     const exchange = isShanghai ? '沪' : '深';
-                    const holdDays = isShanghai ? 'T+3' : 'T+2';
+                    const holdDays = (fund.fund_type && fund.fund_type.includes('QDII')) ? 'T+3' : 'T+2';
 
                     // 计算套利难度评级（散户薅羊毛版）
                     let difficulty = 1;
                     const volume = fund.volume;
                     const premium = fund.premium_rate;
                     const isPaused = fund.apply_status.includes('暂停');
-                    const isQDII = fund.fund_type.includes('QDII');
+                    const isLongHold = holdDays === 'T+3';
 
                     if (isPaused) {
                         difficulty = 1; // 暂停申购
@@ -509,8 +509,8 @@
                         difficulty = 1; // 不推荐
                     }
 
-                    // QDII降级（T+3风险更高）
-                    if (isQDII && difficulty > 1) {
+                    // 持有期更长（如 T+3）则降级：资金占用更久、波动暴露更长
+                    if (isLongHold && difficulty > 1) {
                         difficulty = Math.max(1, difficulty - 1);
                     }
 

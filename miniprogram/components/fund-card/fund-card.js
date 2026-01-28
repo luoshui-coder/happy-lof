@@ -43,7 +43,7 @@ Component({
             if (!fund || !fund.fund_id) return;
 
             const exchange = util.getExchange(fund.fund_id);
-            const holdDays = util.getHoldDays(fund.fund_id);
+            const holdDays = util.getHoldDays(fund.fund_id, fund.fund_type);
             const difficulty = util.calculateDifficulty(fund);
             const stars = util.getStars(difficulty);
             const volumeText = util.formatVolume(fund.volume);

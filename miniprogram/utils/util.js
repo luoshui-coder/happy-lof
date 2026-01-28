@@ -60,8 +60,13 @@ function getExchange(fundId) {
  * 获取持有天数
  * @param {string} fundId - 基金代码
  */
-function getHoldDays(fundId) {
-    return isShanghai(fundId) ? 'T+3' : 'T+2';
+function getHoldDays(fundId, fundType = '') {
+    // 默认规则：普通 LOF -> T+2；QDII-LOF -> T+3
+    // 说明：这里展示的是“申购确认后可卖出”的经验值，用于界面提示。
+    if (typeof fundType === 'string' && fundType.includes('QDII')) {
+        return 'T+3';
+    }
+    return 'T+2';
 }
 
 /**
@@ -70,9 +75,10 @@ function getHoldDays(fundId) {
  * @returns {number} 1-5 星评级，0 表示暂停申购
  */
 function calculateDifficulty(fund) {
-    const { volume, premium_rate, apply_status, fund_type } = fund;
+    const { fund_id, volume, premium_rate, apply_status, fund_type } = fund;
     const isPaused = apply_status.includes('暂停');
-    const isQDII = fund_type.includes('QDII');
+    const holdDays = getHoldDays(fund_id || '', fund_type);
+    const isLongHold = holdDays === 'T+3';
 
     if (isPaused) {
         return 0; // 暂停申购
@@ -92,8 +98,8 @@ function calculateDifficulty(fund) {
         difficulty = 1; // 不推荐
     }
 
-    // QDII 降级（T+3 风险更高）
-    if (isQDII && difficulty > 1) {
+    // 持有期更长（如 T+3）则降级：资金占用更久、波动暴露更长
+    if (isLongHold && difficulty > 1) {
         difficulty = Math.max(1, difficulty - 1);
     }
 
