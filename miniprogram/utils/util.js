@@ -71,12 +71,17 @@ function getHoldDays(fundId, fundType = '') {
 
 /**
  * 计算套利难度评级（散户薅羊毛版）
+ * 说明：这是“可执行性/风险偏保守”的展示分。
+ * - QDII（尤其跨时区/汇率/估值滞后）风险更大：默认最多给到 3 星
+ * - 暂停申购：0（🚫）
  * @param {object} fund - 基金信息
  * @returns {number} 1-5 星评级，0 表示暂停申购
  */
 function calculateDifficulty(fund) {
     const { fund_id, volume, premium_rate, apply_status, fund_type } = fund;
-    const isPaused = apply_status.includes('暂停');
+    const isPaused = (apply_status || '').includes('暂停');
+    const isQDII = typeof fund_type === 'string' && fund_type.includes('QDII');
+
     const holdDays = getHoldDays(fund_id || '', fund_type);
     const isLongHold = holdDays === 'T+3';
 
@@ -84,6 +89,7 @@ function calculateDifficulty(fund) {
         return 0; // 暂停申购
     }
 
+    // 基础评级：只看“溢价 + 流动性”粗筛
     let difficulty = 1;
 
     if (premium_rate >= 5 && volume >= 5000) {
@@ -101,6 +107,12 @@ function calculateDifficulty(fund) {
     // 持有期更长（如 T+3）则降级：资金占用更久、波动暴露更长
     if (isLongHold && difficulty > 1) {
         difficulty = Math.max(1, difficulty - 1);
+    }
+
+    // 保守策略：QDII 的“高溢价”经常伴随额外风险（跨市场/汇率/估值滞后等），
+    // 即便满足高溢价/高成交额，也默认不打到 4-5 星。
+    if (isQDII) {
+        difficulty = Math.min(difficulty, 3);
     }
 
     return difficulty;

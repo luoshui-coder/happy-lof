@@ -488,15 +488,18 @@
                     const exchange = isShanghai ? '沪' : '深';
                     const holdDays = (fund.fund_type && fund.fund_type.includes('QDII')) ? 'T+3' : 'T+2';
 
-                    // 计算套利难度评级（散户薅羊毛版）
+                    // 计算套利难度评级（散户薅羊毛版，偏保守展示）
+                    // - 暂停申购：0（🚫）
+                    // - QDII：默认最多 3 星（跨时区/汇率/估值滞后等风险更高）
                     let difficulty = 1;
                     const volume = fund.volume;
                     const premium = fund.premium_rate;
-                    const isPaused = fund.apply_status.includes('暂停');
+                    const isPaused = (fund.apply_status || '').includes('暂停');
+                    const isQDII = typeof fund.fund_type === 'string' && fund.fund_type.includes('QDII');
                     const isLongHold = holdDays === 'T+3';
 
                     if (isPaused) {
-                        difficulty = 1; // 暂停申购
+                        difficulty = 0;
                     } else if (premium >= 5 && volume >= 5000) {
                         difficulty = 5; // 强烈推荐
                     } else if (premium >= 3.5 && volume >= 3000) {
@@ -514,7 +517,12 @@
                         difficulty = Math.max(1, difficulty - 1);
                     }
 
-                    const stars = isPaused ? '🚫' : '⭐'.repeat(difficulty);
+                    // 保守策略：QDII 不给 4-5 星
+                    if (isQDII && difficulty > 0) {
+                        difficulty = Math.min(difficulty, 3);
+                    }
+
+                    const stars = (difficulty === 0) ? '🚫' : '⭐'.repeat(difficulty);
 
                     html += `
                         <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}">
