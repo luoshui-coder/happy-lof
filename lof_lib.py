@@ -181,7 +181,8 @@ def filter_lof(
         filtered = [lof for lof in filtered if lof.premium_rate >= min_premium]
     
     if min_volume > 0:
-        filtered = [lof for lof in filtered if lof.volume >= min_volume]
+        # 暂停或限购的基金即使成交额不足也保留（可能是停牌或核心套利标的）
+        filtered = [lof for lof in filtered if lof.volume >= min_volume or "暂停" in lof.apply_status or "限" in lof.apply_status]
     
     if only_limited:
         filtered = [lof for lof in filtered if lof.apply_status not in ("开放申购", "开放", "")]

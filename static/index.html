@@ -411,6 +411,12 @@
                 transform: translate(-50%, -50%) scale(0.9);
             }
         }
+
+        .badge-warning {
+            background: #ff9800;
+            /* Orange */
+            box-shadow: 0 1px 4px rgba(255, 152, 0, 0.3);
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
@@ -429,6 +435,37 @@
     <button class="refresh-btn" onclick="loadData()" title="刷新数据">↻</button>
 
     <script>
+        function getBadgeClass(status) {
+            if (!status) return '';
+            if (status.includes('暂停')) return 'badge-paused';
+
+            // 解析限购金额：限100, 限1万, 限1000 等
+            if (status.startsWith('限')) {
+                let amountStr = status.replace('限', '');
+                let multiplier = 1;
+
+                if (amountStr.includes('万')) {
+                    multiplier = 10000;
+                    amountStr = amountStr.replace('万', '');
+                } else if (amountStr.includes('千')) {
+                    multiplier = 1000;
+                    amountStr = amountStr.replace('千', '');
+                }
+
+                // 去除非数字字符（如 '元'）
+                amountStr = amountStr.replace(/[^\d.]/g, '');
+
+                const amount = parseFloat(amountStr) * multiplier;
+
+                // 限额 > 1000 则显示橙色警告 (不包含 1000)
+                if (!isNaN(amount) && amount > 1000) {
+                    return 'badge-warning';
+                }
+            }
+
+            return '';
+        }
+
         function copyCode(code) {
             navigator.clipboard.writeText(code).then(() => {
                 // 显示复制成功提示
@@ -522,7 +559,25 @@
                         difficulty = Math.min(difficulty, 3);
                     }
 
+                    // 📉 跌幅风控逻辑 (新增)
+                    // 跌停 (<-9%)：直接归零，风险极大
+                    if (fund.change_pct <= -9.0) {
+                        difficulty = 0;
+                    }
+                    // 大跌 (<-5%)：扣2星 (如果是T+3, 已经扣过1星了，这里再扣就很低了)
+                    else if (fund.change_pct <= -5.0 && difficulty > 1) {
+                        difficulty = Math.max(1, difficulty - 2);
+                    }
+                    // 中跌 (<-3%)：扣1星
+                    else if (fund.change_pct <= -3.0 && difficulty > 1) {
+                        difficulty = Math.max(1, difficulty - 1);
+                    }
+
                     const stars = (difficulty === 0) ? '🚫' : '⭐'.repeat(difficulty);
+
+                    const isSuspended = fund.volume === 0;
+                    const suspendedHtml = isSuspended ?
+                        `<span class="status-badge badge-paused" style="margin-left: 6px;">⛔ 停牌</span>` : '';
 
                     html += `
                         <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}">
@@ -550,7 +605,10 @@
                                 </div>
                             </div>
                             <div class="fund-footer">
-                                <span class="status-badge ${fund.apply_status.includes('暂停') ? 'badge-paused' : ''}">${fund.apply_status.includes('暂停') ? '⏸ ' : ''}${fund.apply_status}</span>
+                                <div style="display: flex; align-items: center;">
+                                    <span class="status-badge ${getBadgeClass(fund.apply_status)}">${fund.apply_status.includes('暂停') ? '⏸ ' : ''}${fund.apply_status}</span>
+                                    ${suspendedHtml}
+                                </div>
                                 <span class="volume-text">${volumeStr}</span>
                             </div>
                         </div>
