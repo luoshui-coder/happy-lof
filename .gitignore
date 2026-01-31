@@ -40,3 +40,8 @@ lof_high_premium.json
 *.bak
 lof_history.db
 *.log
+
+# Ignored directories
+backup/
+docs/
+miniprogram/
