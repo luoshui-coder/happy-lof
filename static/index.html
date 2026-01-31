@@ -417,24 +417,226 @@
             /* Orange */
             box-shadow: 0 1px 4px rgba(255, 152, 0, 0.3);
         }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+            margin-right: 8px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(16px);
+        }
+
+        /* Help Icon & Modal */
+        .help-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .help-icon:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal h3 {
+            margin-bottom: 16px;
+            color: #333;
+            text-align: center;
+        }
+
+        .modal ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal li {
+            margin-bottom: 12px;
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .modal strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .small-text {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 4px;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 
 <body>
     <div class="header">
-        <h1>今乐福 Happy LOF</h1>
-        <p>基金套利💰溢价查询</p>
+        <h1>💰Happy LOF</h1>
+        <p>实时溢价查询 · 把握每一次价值偏离</p>
         <div class="update-time" id="updateTime">更新时间：加载中...</div>
+        <div class="toggle-container">
+            <label class="switch">
+                <input type="checkbox" id="pausedToggle" onchange="togglePaused()">
+                <span class="slider"></span>
+            </label>
+            <span>显示暂停申购</span>
+            <span class="help-icon" onclick="showHelp()" title="帮助说明">?</span>
+        </div>
     </div>
 
     <div class="container" id="content">
         <div class="loading">正在获取最新数据</div>
     </div>
 
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeHelp()">&times;</span>
+            <h3>使用帮助</h3>
+            <ul>
+                <li><strong>🔗 跳转链接：</strong>点击基金名称可直达天天基金详情页。</li>
+                <li><strong>📋 复制代码：</strong>点击基金代码即可复制到剪贴板。</li>
+                <li><strong>📈 走势背景：</strong>卡片背景曲线为近 30 天的溢价率走势。</li>
+                <li><strong>⭐ 星级规则：</strong>
+                    <p class="small-text">基于溢价率、成交额综合评分。跌幅超过 -5% 扣星，接近跌停 (-9%) 直接 0 星。</p>
+                </li>
+                <li><strong>⚠️ 免责声明：</strong>
+                    <p class="small-text">数据仅供参考，不构成投资建议。</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <button class="refresh-btn" onclick="loadData()" title="刷新数据">↻</button>
 
     <script>
+        // Modal functions
+        function showHelp() {
+            const modal = document.getElementById('helpModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeHelp() {
+            const modal = document.getElementById('helpModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
         function getBadgeClass(status) {
             if (!status) return '';
             if (status.includes('暂停')) return 'badge-paused';
@@ -483,11 +685,25 @@
             });
         }
 
+        let showPaused = false;
+        let lastResult = null; // 缓存数据，避免切换开关时重新请求
+
+        function togglePaused() {
+            showPaused = document.getElementById('pausedToggle').checked;
+            if (lastResult) {
+                renderData(lastResult);
+            } else {
+                loadData();
+            }
+        }
+
         async function loadData() {
             const content = document.getElementById('content');
             const updateTimeEl = document.getElementById('updateTime');
 
-            content.innerHTML = '<div class="loading">正在获取最新数据</div>';
+            if (!lastResult) {
+                content.innerHTML = '<div class="loading">正在获取最新数据</div>';
+            }
 
             try {
                 const response = await fetch('api/lof');
@@ -497,89 +713,105 @@
                     throw new Error(result.error || '数据获取失败');
                 }
 
+                lastResult = result;
                 updateTimeEl.textContent = `更新时间：${result.update_time}`;
+                renderData(result);
 
-                if (result.data.length === 0) {
-                    content.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📊</div>
-                            <div>暂无符合条件的套利机会</div>
-                        </div>
-                    `;
-                    return;
+            } catch (error) {
+                console.error('加载失败:', error);
+                content.innerHTML = `<div class="error">❌ 数据加载失败<br>${error.message}</div>`;
+            }
+        }
+
+        function renderData(result) {
+            const content = document.getElementById('content');
+
+            // 过滤逻辑
+            const displayList = result.data.filter(fund => {
+                if (showPaused) return true; // 显示全部
+                return !fund.apply_status.includes('暂停'); // 默认不显示暂停
+            });
+
+            if (displayList.length === 0) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <div>暂无符合条件的套利机会</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+
+            displayList.forEach(fund => {
+                const changeClass = fund.change_pct > 0 ? 'positive' : (fund.change_pct < 0 ? 'negative' : '');
+                const changeSign = fund.change_pct > 0 ? '+' : '';
+                const premiumClass = fund.premium_rate >= 5 ? 'premium-badge' : 'premium-badge premium-medium';
+                const volumeStr = fund.volume >= 10000 ?
+                    `成交额 ${(fund.volume / 10000).toFixed(2)}亿` :
+                    `成交额 ${fund.volume.toFixed(0)}万`;
+
+                // 判断交易所和持有天数（用于界面提示）
+                const isShanghai = fund.fund_id.startsWith('50') || fund.fund_id.startsWith('51');
+                const exchange = isShanghai ? '沪' : '深';
+                const holdDays = (fund.fund_type && fund.fund_type.includes('QDII')) ? 'T+3' : 'T+2';
+
+                // 计算套利难度评级（散户薅羊毛版，偏保守展示）
+                // - 暂停申购：0（🚫）
+                // - QDII：默认最多 3 星（跨时区/汇率/估值滞后等风险更高）
+                let difficulty = 1;
+                const volume = fund.volume;
+                const premium = fund.premium_rate;
+                const isPaused = (fund.apply_status || '').includes('暂停');
+                const isQDII = typeof fund.fund_type === 'string' && fund.fund_type.includes('QDII');
+                const isLongHold = holdDays === 'T+3';
+
+                if (isPaused) {
+                    difficulty = 0;
+                } else if (premium >= 5 && volume >= 5000) {
+                    difficulty = 5; // 强烈推荐
+                } else if (premium >= 3.5 && volume >= 3000) {
+                    difficulty = 4; // 推荐
+                } else if (premium >= 2.5 && volume >= 2000) {
+                    difficulty = 3; // 可尝试
+                } else if (premium >= 2 && volume >= 1000) {
+                    difficulty = 2; // 谨慎
+                } else {
+                    difficulty = 1; // 不推荐
                 }
 
-                // 不分组，直接按溢价率排序显示
-                let html = '';
+                // 持有期更长（如 T+3）则降级：资金占用更久、波动暴露更长
+                if (isLongHold && difficulty > 1) {
+                    difficulty = Math.max(1, difficulty - 1);
+                }
 
-                result.data.forEach(fund => {
-                    const changeClass = fund.change_pct > 0 ? 'positive' : (fund.change_pct < 0 ? 'negative' : '');
-                    const changeSign = fund.change_pct > 0 ? '+' : '';
-                    const premiumClass = fund.premium_rate >= 5 ? 'premium-badge' : 'premium-badge premium-medium';
-                    const volumeStr = fund.volume >= 10000 ?
-                        `成交额 ${(fund.volume / 10000).toFixed(2)}亿` :
-                        `成交额 ${fund.volume.toFixed(0)}万`;
+                // 保守策略：QDII 不给 4-5 星
+                if (isQDII && difficulty > 0) {
+                    difficulty = Math.min(difficulty, 3);
+                }
 
-                    // 判断交易所和持有天数（用于界面提示）
-                    const isShanghai = fund.fund_id.startsWith('50') || fund.fund_id.startsWith('51');
-                    const exchange = isShanghai ? '沪' : '深';
-                    const holdDays = (fund.fund_type && fund.fund_type.includes('QDII')) ? 'T+3' : 'T+2';
+                // 📉 跌幅风控逻辑 (新增)
+                // 跌停 (<-9%)：直接归零，风险极大
+                if (fund.change_pct <= -9.0) {
+                    difficulty = 0;
+                }
+                // 大跌 (<-5%)：扣2星 (如果是T+3, 已经扣过1星了，这里再扣就很低了)
+                else if (fund.change_pct <= -5.0 && difficulty > 1) {
+                    difficulty = Math.max(1, difficulty - 2);
+                }
+                // 中跌 (<-3%)：扣1星
+                else if (fund.change_pct <= -3.0 && difficulty > 1) {
+                    difficulty = Math.max(1, difficulty - 1);
+                }
 
-                    // 计算套利难度评级（散户薅羊毛版，偏保守展示）
-                    // - 暂停申购：0（🚫）
-                    // - QDII：默认最多 3 星（跨时区/汇率/估值滞后等风险更高）
-                    let difficulty = 1;
-                    const volume = fund.volume;
-                    const premium = fund.premium_rate;
-                    const isPaused = (fund.apply_status || '').includes('暂停');
-                    const isQDII = typeof fund.fund_type === 'string' && fund.fund_type.includes('QDII');
-                    const isLongHold = holdDays === 'T+3';
+                const stars = (difficulty === 0) ? '🚫' : '⭐'.repeat(difficulty);
 
-                    if (isPaused) {
-                        difficulty = 0;
-                    } else if (premium >= 5 && volume >= 5000) {
-                        difficulty = 5; // 强烈推荐
-                    } else if (premium >= 3.5 && volume >= 3000) {
-                        difficulty = 4; // 推荐
-                    } else if (premium >= 2.5 && volume >= 2000) {
-                        difficulty = 3; // 可尝试
-                    } else if (premium >= 2 && volume >= 1000) {
-                        difficulty = 2; // 谨慎
-                    } else {
-                        difficulty = 1; // 不推荐
-                    }
+                const isSuspended = fund.volume === 0;
+                const suspendedHtml = isSuspended ?
+                    `<span class="status-badge badge-paused" style="margin-left: 6px;">⛔ 停牌</span>` : '';
 
-                    // 持有期更长（如 T+3）则降级：资金占用更久、波动暴露更长
-                    if (isLongHold && difficulty > 1) {
-                        difficulty = Math.max(1, difficulty - 1);
-                    }
-
-                    // 保守策略：QDII 不给 4-5 星
-                    if (isQDII && difficulty > 0) {
-                        difficulty = Math.min(difficulty, 3);
-                    }
-
-                    // 📉 跌幅风控逻辑 (新增)
-                    // 跌停 (<-9%)：直接归零，风险极大
-                    if (fund.change_pct <= -9.0) {
-                        difficulty = 0;
-                    }
-                    // 大跌 (<-5%)：扣2星 (如果是T+3, 已经扣过1星了，这里再扣就很低了)
-                    else if (fund.change_pct <= -5.0 && difficulty > 1) {
-                        difficulty = Math.max(1, difficulty - 2);
-                    }
-                    // 中跌 (<-3%)：扣1星
-                    else if (fund.change_pct <= -3.0 && difficulty > 1) {
-                        difficulty = Math.max(1, difficulty - 1);
-                    }
-
-                    const stars = (difficulty === 0) ? '🚫' : '⭐'.repeat(difficulty);
-
-                    const isSuspended = fund.volume === 0;
-                    const suspendedHtml = isSuspended ?
-                        `<span class="status-badge badge-paused" style="margin-left: 6px;">⛔ 停牌</span>` : '';
-
-                    html += `
+                html += `
                         <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}">
                             <canvas class="chart-canvas" id="chart-${fund.fund_id}"></canvas>
                             <div class="fund-header">
@@ -613,19 +845,15 @@
                             </div>
                         </div>
                     `;
-                });
+            });
 
-                content.innerHTML = html;
+            content.innerHTML = html;
 
-                // 绘制所有基金的走势图
-                result.data.forEach(fund => {
-                    drawMiniChart(fund.fund_id);
-                });
+            // 绘制所有基金的走势图
+            result.data.forEach(fund => {
+                drawMiniChart(fund.fund_id);
+            });
 
-            } catch (error) {
-                console.error('加载失败:', error);
-                content.innerHTML = `<div class="error">❌ 数据加载失败<br>${error.message}</div>`;
-            }
         }
 
         async function drawMiniChart(fundId) {
