@@ -34,7 +34,7 @@ api = JisiluAPI()
 api = JisiluAPI()
 
 
-@app.route('/')
+@app.route('/happy-lof')
 def index():
     """首页"""
     return send_from_directory('static', 'index.html')

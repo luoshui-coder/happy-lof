@@ -1,0 +1,234 @@
+// utils/util.js - 工具函数
+
+/**
+ * 格式化时间
+ */
+function formatTime(date) {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
+
+    return `${[year, month, day].map(formatNumber).join('-')} ${[hour, minute, second].map(formatNumber).join(':')}`;
+}
+
+function formatNumber(n) {
+    n = n.toString();
+    return n[1] ? n : `0${n}`;
+}
+
+/**
+ * 复制文本到剪贴板
+ * @param {string} text - 要复制的文本
+ */
+function copyToClipboard(text) {
+    return new Promise((resolve, reject) => {
+        wx.setClipboardData({
+            data: text,
+            success: () => {
+                wx.showToast({
+                    title: `已复制 ${text}`,
+                    icon: 'success',
+                    duration: 1500
+                });
+                resolve();
+            },
+            fail: reject
+        });
+    });
+}
+
+/**
+ * 判断是否为上海交易所
+ * @param {string} fundId - 基金代码
+ */
+function isShanghai(fundId) {
+    return fundId.startsWith('50') || fundId.startsWith('51');
+}
+
+/**
+ * 获取交易所名称
+ * @param {string} fundId - 基金代码
+ */
+function getExchange(fundId) {
+    return isShanghai(fundId) ? '沪' : '深';
+}
+
+/**
+ * 获取持有天数
+ * @param {string} fundId - 基金代码
+ */
+function getHoldDays(fundId, fundType = '') {
+    // 默认规则：普通 LOF -> T+2；QDII-LOF -> T+3
+    // 说明：这里展示的是“申购确认后可卖出”的经验值，用于界面提示。
+    if (typeof fundType === 'string' && fundType.includes('QDII')) {
+        return 'T+3';
+    }
+    return 'T+2';
+}
+
+/**
+ * 计算套利难度评级（散户薅羊毛版）
+ * 说明：这是“可执行性/风险偏保守”的展示分。
+ * - QDII（尤其跨时区/汇率/估值滞后）风险更大：默认最多给到 3 星
+ * - 暂停申购：0（🚫）
+ * @param {object} fund - 基金信息
+ * @returns {number} 1-5 星评级，0 表示暂停申购
+ */
+function calculateDifficulty(fund) {
+    const { fund_id, volume, premium_rate, apply_status, fund_type } = fund;
+    const isPaused = (apply_status || '').includes('暂停');
+    const isQDII = typeof fund_type === 'string' && fund_type.includes('QDII');
+
+    const holdDays = getHoldDays(fund_id || '', fund_type);
+    const isLongHold = holdDays === 'T+3';
+
+    if (isPaused) {
+        return 0; // 暂停申购
+    }
+
+    // 基础评级：只看“溢价 + 流动性”粗筛
+    let difficulty = 1;
+
+    if (premium_rate >= 5 && volume >= 5000) {
+        difficulty = 5; // 强烈推荐
+    } else if (premium_rate >= 3.5 && volume >= 3000) {
+        difficulty = 4; // 推荐
+    } else if (premium_rate >= 2.5 && volume >= 2000) {
+        difficulty = 3; // 可尝试
+    } else if (premium_rate >= 2 && volume >= 1000) {
+        difficulty = 2; // 谨慎
+    } else {
+        difficulty = 1; // 不推荐
+    }
+
+    // 持有期更长（如 T+3）则降级：资金占用更久、波动暴露更长
+    if (isLongHold && difficulty > 1) {
+        difficulty = Math.max(1, difficulty - 1);
+    }
+
+    // 保守策略：QDII 的“高溢价”经常伴随额外风险（跨市场/汇率/估值滞后等），
+    // 即便满足高溢价/高成交额，也默认不打到 4-5 星。
+    if (isQDII && difficulty > 0) {
+        difficulty = Math.min(difficulty, 3);
+    }
+
+    // 📉 跌幅风控逻辑 (新增)
+    const changePct = fund.change_pct || 0;
+    // 跌停 (<-9%)：直接归零，风险极大
+    if (changePct <= -9.0) {
+        difficulty = 0;
+    }
+    // 大跌 (<-5%)：扣2星 (如果是T+3, 已经扣过1星了，这里再扣就很低了)
+    else if (changePct <= -5.0 && difficulty > 1) {
+        difficulty = Math.max(1, difficulty - 2);
+    }
+    // 中跌 (<-3%)：扣1星
+    else if (changePct <= -3.0 && difficulty > 1) {
+        difficulty = Math.max(1, difficulty - 1);
+    }
+
+    return difficulty;
+}
+
+/**
+ * 获取状态标签样式类
+ * @param {string} status - 申购状态
+ */
+function getBadgeClass(status) {
+    if (!status) return '';
+    if (status.includes('暂停')) return 'badge-paused';
+
+    // 解析限购金额：限100, 限1万, 限1000 等
+    if (status.startsWith('限')) {
+        let amountStr = status.replace('限', '');
+        let multiplier = 1;
+
+        if (amountStr.includes('万')) {
+            multiplier = 10000;
+            amountStr = amountStr.replace('万', '');
+        } else if (amountStr.includes('千')) {
+            multiplier = 1000;
+            amountStr = amountStr.replace('千', '');
+        }
+
+        // 去除非数字字符（如 '元'）
+        amountStr = amountStr.replace(/[^\d.]/g, '');
+
+        const amount = parseFloat(amountStr) * multiplier;
+
+        // 限额 > 1000 则显示橙色警告 (不包含 1000)
+        if (!isNaN(amount) && amount > 1000) {
+            return 'badge-warning';
+        }
+    }
+
+    return '';
+}
+
+/**
+ * 获取星级显示
+ * @param {number} difficulty - 难度评级
+ */
+function getStars(difficulty) {
+    if (difficulty === 0) {
+        return '🚫';
+    }
+    return '⭐'.repeat(difficulty);
+}
+
+/**
+ * 格式化成交额
+ * @param {number} volume - 成交额（万元）
+ */
+function formatVolume(volume) {
+    if (volume >= 10000) {
+        return `${(volume / 10000).toFixed(2)}亿`;
+    }
+    return `${volume.toFixed(0)}万`;
+}
+
+/**
+ * 显示加载提示
+ */
+function showLoading(title = '加载中...') {
+    wx.showLoading({
+        title: title,
+        mask: true
+    });
+}
+
+/**
+ * 隐藏加载提示
+ */
+function hideLoading() {
+    wx.hideLoading();
+}
+
+/**
+ * 显示错误提示
+ */
+function showError(message = '操作失败') {
+    wx.showToast({
+        title: message,
+        icon: 'none',
+        duration: 2000
+    });
+}
+
+module.exports = {
+    formatTime,
+    copyToClipboard,
+    isShanghai,
+    getExchange,
+    getHoldDays,
+    calculateDifficulty,
+    getStars,
+    formatVolume,
+    showLoading,
+    hideLoading,
+    showError,
+    getBadgeClass
+};

@@ -1,0 +1,179 @@
+/* pages/index/index.wxss */
+.page {
+  min-height: 100vh;
+  padding-bottom: 100rpx;
+}
+
+/* 头部样式 */
+.header {
+  color: white;
+  padding: 30rpx 30rpx 40rpx;
+  text-align: center;
+  border-radius: 0 0 30rpx 30rpx;
+  box-shadow: 0 6rpx 30rpx rgba(102, 126, 234, 0.3);
+}
+
+.header-title {
+  font-size: 40rpx;
+  margin-bottom: 8rpx;
+  font-weight: 600;
+}
+
+.header-subtitle {
+  font-size: 24rpx;
+  opacity: 0.9;
+  margin-bottom: 12rpx;
+}
+
+.update-time {
+  font-size: 22rpx;
+  opacity: 0.8;
+  margin-bottom: 20rpx;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+.toggle-switch {
+  margin-right: 10rpx;
+}
+
+.toggle-label {
+  margin-right: 10rpx;
+}
+
+.help-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36rpx;
+  height: 36rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+/* 内容区域 */
+.container {
+  max-width: 750rpx;
+  margin: -20rpx auto 0;
+  padding: 0 20rpx;
+}
+
+/* 基金列表 */
+.fund-list {
+  padding-top: 8rpx;
+}
+
+/* 刷新按钮 - 固定在屏幕右下角 */
+.refresh-btn {
+  position: fixed;
+  bottom: 40rpx;
+  right: 40rpx;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  color: white;
+  font-size: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 32rpx rgba(102, 126, 234, 0.5);
+  z-index: 9999;
+  transition: all 0.3s;
+}
+
+.refresh-btn:active {
+  transform: scale(0.9) rotate(180deg);
+}
+
+.refresh-icon {
+  display: block;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Modal Styles */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: white;
+  width: 600rpx;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  position: relative;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.2);
+  transform: translateY(-20rpx);
+}
+
+.close-btn {
+  position: absolute;
+  top: 24rpx;
+  right: 32rpx;
+  font-size: 44rpx;
+  color: #999;
+  line-height: 1;
+  padding: 10rpx;
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.modal-body {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.modal-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 24rpx;
+  line-height: 1.5;
+}
+
+.modal-icon {
+  margin-right: 16rpx;
+  font-size: 30rpx;
+}
+
+.modal-text {
+  flex: 1;
+}
+
+.modal-subtext {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  margin-top: 6rpx;
+}

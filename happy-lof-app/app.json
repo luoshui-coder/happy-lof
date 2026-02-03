@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/detail/detail"
+  ],
+  "window": {
+    "navigationBarTitleText": "今乐福",
+    "navigationBarBackgroundColor": "#667eea",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f7fa",
+    "backgroundTextStyle": "dark",
+    "enablePullDownRefresh": true
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
