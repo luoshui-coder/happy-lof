@@ -5,6 +5,7 @@ LOF 基金套利核心逻辑库
 包含数据获取 API 和数据模型
 """
 
+import os
 import requests
 import time
 from typing import Optional, List, Dict, Any
@@ -35,7 +36,7 @@ class JisiluAPI:
         "qdii_commodity": "/data/qdii/qdii_list/C",  # 商品型QDII（原油、黄金等）
     }
     
-    def __init__(self):
+    def __init__(self, cookie: Optional[str] = None):
         self.session = requests.Session()
         self.session.headers.update({
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -43,6 +44,11 @@ class JisiluAPI:
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
             "X-Requested-With": "XMLHttpRequest",
         })
+        
+        # 优先使用传入的 cookie，否则尝试从环境变量读取
+        self.cookie = cookie or os.environ.get("JISILU_COOKIE")
+        if self.cookie:
+            self.session.headers.update({"Cookie": self.cookie})
 
     def _get_timestamp(self) -> str:
         return f"LST___t={int(time.time() * 1000)}"

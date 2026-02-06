@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-今乐福 - Happy LOF 套利基金溢价查询
+今乐福 - LOF 基金套利基金溢价查询
 Flask 后端 API 服务
 """
 
@@ -13,9 +13,13 @@ import json
 from typing import Optional, List, Dict, Any
 from dataclasses import dataclass, asdict
 import os
+from dotenv import load_dotenv
 from database import LOFDatabase
 from scheduler import LOFScheduler
 from lof_lib import LOFInfo, JisiluAPI, filter_lof
+
+# 加载环境变量
+load_dotenv()
 
 app = Flask(__name__, static_folder='static')
 CORS(app)  # 允许跨域
@@ -30,8 +34,7 @@ scheduler.start()  # 启动定时任务
 api = JisiluAPI()
 
 
-# API 实例
-api = JisiluAPI()
+
 
 
 @app.route('/happy-lof')
@@ -113,6 +116,13 @@ if __name__ == '__main__':
     print(f"访问 http://127.0.0.1:{port} 查看页面")
     print(f"API: http://127.0.0.1:{port}/api/lof")
     print(f"调试模式: {'开启' if debug else '关闭'}")
+    
+    if os.environ.get('JISILU_COOKIE'):
+        print("状态: 已检测到集思录 Cookie，将尝试获取完整数据")
+    else:
+        print("提示: 未检测到 JISILU_COOKIE 环境变量，可能仅显示前20条数据")
+        print("      请设置 export JISILU_COOKIE='你的cookie' 后重启获取完整权限")
+        
     print("=" * 50)
     
     app.run(debug=debug, host='0.0.0.0', port=port)

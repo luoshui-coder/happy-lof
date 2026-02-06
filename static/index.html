@@ -579,8 +579,8 @@
 
 <body>
     <div class="header">
-        <h1>💰Happy LOF</h1>
-        <p>每日溢价查询 · 把握LOF基金的每一次价值偏离</p>
+        <h1>💰今乐福</h1>
+        <p>实时 LOF 基金套利溢价查询</p>
         <div class="update-time" id="updateTime">更新时间：加载中...</div>
         <div class="toggle-container">
             <label class="switch">
@@ -593,6 +593,9 @@
     </div>
 
     <div class="container" id="content">
+        <div style="text-align: center; color: #e0e0e0; font-size: 0.7em; margin-bottom: 8px; user-select: none;">
+            ↓ 下拉刷新
+        </div>
         <div class="loading">正在获取最新数据</div>
     </div>
 
@@ -615,7 +618,9 @@
         </div>
     </div>
 
-    <button class="refresh-btn" onclick="loadData()" title="刷新数据">↻</button>
+    <div style="text-align: center; padding: 20px; color: #ccc; font-size: 0.75em;">
+        <p>陕ICP备2024050461号-4</p>
+    </div>
 
     <script>
         // Modal functions
@@ -734,6 +739,7 @@
 
             if (displayList.length === 0) {
                 content.innerHTML = `
+                    <div style="text-align: center; color: #e0e0e0; font-size: 0.7em; margin-bottom: 8px; user-select: none;">↓ 下拉刷新</div>
                     <div class="empty-state">
                         <div class="empty-state-icon">📊</div>
                         <div>暂无符合条件的套利机会</div>
@@ -742,7 +748,7 @@
                 return;
             }
 
-            let html = '';
+            let html = '<div style="text-align: center; color: #e0e0e0; font-size: 0.7em; margin-bottom: 8px; user-select: none;">↓ 下拉刷新</div>';
 
             displayList.forEach(fund => {
                 const changeClass = fund.change_pct > 0 ? 'positive' : (fund.change_pct < 0 ? 'negative' : '');

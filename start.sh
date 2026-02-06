@@ -4,11 +4,16 @@
 echo "正在启动今乐福服务..."
 cd "$(dirname "$0")"
 
-# 检查依赖
-if ! pip3 show flask-cors > /dev/null 2>&1; then
-    echo "正在安装依赖..."
-    pip3 install -r requirements.txt
+# 检查 venv 是否存在，不存在则创建
+if [ ! -d "venv" ]; then
+    echo "创建虚拟环境..."
+    python3 -m venv venv
 fi
 
+# 检查依赖
+echo "检查依赖..."
+./venv/bin/pip install -r requirements.txt
+
 # 启动服务
-python3 app.py
+echo "启动端口: $(grep PORT .env | cut -d '=' -f2)"
+./venv/bin/python app.py

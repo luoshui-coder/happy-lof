@@ -45,3 +45,6 @@ lof_history.db
 backup/
 docs/
 
+
+# Environment variables
+.env
