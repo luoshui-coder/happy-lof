@@ -156,7 +156,7 @@
             width: 100% !important;
             height: 100% !important;
             max-height: 100% !important;
-            opacity: 0.4;
+            opacity: 0.15;
             pointer-events: none;
             z-index: 0;
         }
@@ -648,6 +648,162 @@
         .seo-section p {
             margin-bottom: 8px;
         }
+
+        /* Tutorial Styles */
+        .tutorial-view {
+            display: none;
+            padding-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tutorial-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .tutorial-card h2 {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            padding-left: 10px;
+        }
+
+        .tutorial-card h3 {
+            font-size: 1.1em;
+            color: #444;
+            margin: 16px 0 8px;
+        }
+
+        .intro-text {
+            font-size: 0.95em;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        details {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        details[open] {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        summary {
+            background: #fcfcfc;
+            padding: 12px 15px;
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none;
+            position: relative;
+            color: #333;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: '+';
+            position: absolute;
+            right: 15px;
+            color: #999;
+            font-weight: normal;
+            font-size: 1.2em;
+        }
+
+        details[open] summary {
+            background: #f8f9ff;
+            color: #667eea;
+            border-bottom: 1px solid #eee;
+        }
+
+        details[open] summary::after {
+            content: '-';
+            color: #667eea;
+        }
+
+        .details-content {
+            padding: 15px;
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .details-content ul,
+        .details-content ol {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+
+        .details-content li {
+            margin-bottom: 6px;
+        }
+
+        .highlight {
+            color: #e53e3e;
+            font-weight: 500;
+            background: #fff5f5;
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+
+        .tag-green {
+            background: #e6ffFA;
+            color: #2c7a7b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .tag-red {
+            background: #fff5f5;
+            color: #e53e3e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+            margin: 10px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #eee;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
@@ -675,17 +831,114 @@
         <div class="loading">正在获取最新数据</div>
     </div>
 
+    <div class="tutorial-view container" id="tutorial-view">
+        <div class="tutorial-card">
+            <h2>📘 LOF 套利入门教程</h2>
+            <p class="intro-text">LOF (Listed Open-Ended Fund)
+                即上市型开放式基金，既可以在一级市场申购赎回，又可以在二级市场买卖交易。当二级市场价格高于一级市场净值时，就产生了<b>溢价</b>。</p>
+            <p class="intro-text">通过“一级市场申购，二级市场卖出”的操作，投资者可以锁定中间的差价，这就是LOF套利的核心原理。</p>
+
+            <details>
+                <summary>🚀 原理：小白也能懂的套利逻辑</summary>
+                <div class="details-content">
+                    <p><b>核心公式：</b><span class="highlight">溢价率 = (市价 - 净值) / 净值</span></p>
+                    <p>当 <b>市价 > 净值</b> 时（溢价），存在套利空间。</p>
+                    <ul>
+                        <li><b>第一步（T日）：</b>在场内按净值<b>申购</b>基金份额（低价进货）。</li>
+                        <li><b>第二步（T+2日）：</b>份额到账后，在场内按市价<b>卖出</b>（高价出货）。</li>
+                        <li><b>利润来源：</b>不论市场涨跌，只要溢价没消失，就能赚取这部分的差价。</li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>⚔️ 策略：稳健底仓 vs 激进裸套</summary>
+                <div class="details-content">
+                    <h3>🟢 稳健型：底仓套利（0风险）</h3>
+                    <p><b>适用：</b>长期持有该基金（如富国天惠）的老基民。</p>
+                    <p><b>操作：</b>T日高价卖出原有持仓 👉 同一时间低价申购接回。</p>
+                    <p><b>优势：</b>没有锁定期风险，单纯降低持仓成本，白捡的钱。</p>
+                    <hr style="margin: 10px 0; border: 0; border-top: 1px dashed #eee;">
+                    <h3>🔴 激进型：裸套利（有风险）</h3>
+                    <p><b>适用：</b>没有持仓，纯博取差价。</p>
+                    <p><b>操作：</b>T日申购 👉 T+2日卖出。</p>
+                    <p><b>风险：</b>需要承担2天的净值波动。如果2天内基金跌幅 > 溢价率，就会亏损。</p>
+                </div>
+            </details>
+
+            <details>
+                <summary>🚜 进阶：账户倍增“拖拉机”</summary>
+                <div class="details-content">
+                    <p><b>痛点：</b>好做的基金通常限购（如每天限100元）。</p>
+                    <p><b>秘籍（仅限深市16开头）：</b>监管允许一个身份证在一家券商开立 6 个副账户。</p>
+                    <p><b>所谓“拖拉机（1拖6）”：</b>是指利用<b>6个深市股东账户</b>进行场内申购，再叠加<b>1笔场外申购</b>（并在到账后转托管至场内），从而实现单日<b>7倍</b>申购额度的操作。
+                    </p>
+                    <ul>
+                        <li><b>普通人：</b>1个号 × 100元 = 100元。</li>
+                        <li><b>拖拉机：</b>(6个深市账户 + 1个场外转托管) × 100元 = 700元。</li>
+                    </ul>
+                    <p><b>怎么开：</b>在华宝/银河等APP里搜索“股东账户管理”，一键下挂所有深市账号。</p>
+                </div>
+            </details>
+
+            <details>
+                <summary>🛠 准备：费率是生死线</summary>
+                <div class="details-content">
+                    <p>套利赚的是微薄差价，手续费太高不仅没利润，还可能亏本！</p>
+                    <table>
+                        <tr>
+                            <th>费用项</th>
+                            <th>标准费率（❌）</th>
+                            <th>套利费率（✅）</th>
+                        </tr>
+                        <tr>
+                            <td>申购费</td>
+                            <td>1.5% (不打折)</td>
+                            <td><span class="highlight">0.15% (1折)</span></td>
+                        </tr>
+                        <tr>
+                            <td>交易佣金</td>
+                            <td>最低5元</td>
+                            <td><span class="highlight">免5 (无低消)</span></td>
+                        </tr>
+                    </table>
+                    <p><b>避坑：</b>千万别用大银行APP或不打折的券商申购，费率高达1.5%，直接劝退。</p>
+                </div>
+            </details>
+
+            <details open>
+                <summary>📅 实操：每日 SOP (14:50)</summary>
+                <div class="details-content">
+                    <p><b>⏰ 最佳操作时间：14:45 - 14:55</b></p>
+                    <ol>
+                        <li><b>选基：</b>查看本站或集思录，筛选溢价率 > 3%（有底仓>1%）的标的。</li>
+                        <li><b>申购：</b>打开券商APP 👉 场内基金 👉 点击 <span class="highlight">申购</span> (不是买入！)。</li>
+                        <li><b>输入：</b>输入代码，勾选所有拖拉机账户，金额填限购额（如100）。</li>
+                        <li><b>卖出：</b>T+2日（QDII通常T+3日）持仓到账后，按市价卖出。</li>
+                    </ol>
+                    <p class="highlight">注意：T日申购是以<b>收盘净值</b>成交，不是你看到的实时价格。</p>
+                </div>
+            </details>
+
+            <details>
+                <summary>🛡 风控：三大必死陷阱</summary>
+                <div class="details-content">
+                    <ul>
+                        <li><b>🩸 踩踏风险：</b>看“新增份额”。如果某天新增几十亿份额，T+2日大家一起卖，必定跌停卖不掉。</li>
+                        <li><b>📉 假溢价：</b>QDII基金（如华宝油气）净值滞后一天。若昨晚美股大跌，软件显示的溢价是假的！一定要看<b>实时净值估算</b>。</li>
+                        <li><b>💸 汇率与波动：</b>白银、原油类LOF波动极大，建议安全垫（溢价率）至少 > 5% 甚至 10% 才参与。</li>
+                    </ul>
+                </div>
+            </details>
+        </div>
+    </div>
+
     <!-- 广告位占位 (后期可接入 Google AdSense) -->
     <div class="ad-banner" style="display: none;">
         <span>📢 广告位招租 / Ad Space</span>
     </div>
 
-    <!-- SEO Content Section -->
-    <div class="seo-section">
-        <h2>什么是 LOF 基金套利？</h2>
-        <p>LOF (Listed Open-Ended Fund) 即上市型开放式基金，既可以在一级市场申购赎回，又可以在二级市场买卖交易。当二级市场价格高于一级市场净值时，就产生了<b>溢价</b>。</p>
-        <p>通过“一级市场申购，二级市场卖出”的操作，投资者可以锁定中间的差价，这就是LOF套利的核心原理。主要关注品种包括<b>华宝油气</b>、<b>标普信息科技</b>、<b>纳指LOF</b>等热门QDII基金。</p>
-    </div>
+    <!-- SEO Content Section Removed -->
 
     <!-- Help Modal -->
     <div id="helpModal" class="modal">
@@ -696,6 +949,8 @@
                 <li><strong>🔗 跳转链接：</strong>点击基金名称可直达天天基金详情页。</li>
                 <li><strong>📋 复制代码：</strong>点击基金代码即可复制到剪贴板。</li>
                 <li><strong>📈 背景走势：</strong>卡片背景曲线为近 30 天的溢价率走势。</li>
+                <li><strong>🎨 曲线颜色：</strong><span style="color:#667eea">蓝色</span>(<2%) / <span style="color:#ed8936">
+                        橙色</span>(2-5%) / <span style="color:#f56565">红色</span>(>5%) 代表当前溢价率水平。</li>
 
                 <li><strong>⚠️ 免责声明：</strong>
                     <p class="small-text">数据仅供参考，不构成投资建议。</p>
@@ -717,6 +972,10 @@
         <div class="nav-item" onclick="switchTab('all')" id="tab-all">
             <span class="nav-icon">📊</span>
             <span>全部数据</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('tutorial')" id="tab-tutorial">
+            <span class="nav-icon">📘</span>
+            <span>入门教程</span>
         </div>
     </div>
 
@@ -794,7 +1053,24 @@
         function switchTab(tab) {
             // Update active state
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById(`tab-${tab}`).classList.add('active');
+            const activeTab = document.getElementById(`tab-${tab}`);
+            if (activeTab) activeTab.classList.add('active');
+
+            const content = document.getElementById('content');
+            const tutorialView = document.getElementById('tutorial-view');
+            const seoSection = document.querySelector('.seo-section');
+
+            if (tab === 'tutorial') {
+                if (content) content.style.display = 'none';
+                if (tutorialView) tutorialView.style.display = 'block';
+                if (seoSection) seoSection.style.display = 'none';
+                window.scrollTo(0, 0);
+                return;
+            } else {
+                if (content) content.style.display = 'block';
+                if (tutorialView) tutorialView.style.display = 'none';
+                if (seoSection) seoSection.style.display = 'block';
+            }
 
             // Set filter logic
             showPaused = (tab === 'all');
@@ -839,8 +1115,19 @@
 
             // 过滤逻辑
             const displayList = result.data.filter(fund => {
-                if (showPaused) return true; // 显示全部
-                return !fund.apply_status.includes('暂停'); // 默认不显示暂停
+                // "全部数据" Tab (showPaused=true)
+                if (showPaused) {
+                    // 过滤掉成交额小于 500 万的迷你基金
+                    if (fund.volume < 500) return false;
+                    return true;
+                }
+
+                // "有利可套" Tab -> 仅显示: 未暂停 + 溢价>=1% + 成交额>=1000万
+                if (fund.apply_status.includes('暂停')) return false;
+                if (fund.premium_rate < 1.0) return false;
+                if (fund.volume < 1000) return false;
+
+                return true;
             });
 
             if (displayList.length === 0) {
@@ -908,7 +1195,7 @@
                                 </div>
                                 <div class="detail-item">
                                     <div class="detail-label">溢价率</div>
-                                    <div class="detail-value" style="color: #ff6b9d;">${fund.premium_rate.toFixed(2)}%</div>
+                                    <div class="detail-value" style="color: ${fund.premium_rate < 0 ? '#48bb78' : '#ff6b9d'};">${fund.premium_rate.toFixed(2)}%</div>
                                 </div>
                             </div>
                         </div>
@@ -984,10 +1271,10 @@
                             data: displayData.map(d => d.premium_rate),
                             borderColor: baseColor,
                             backgroundColor: gradientFill,
-                            borderWidth: 2,
+                            borderWidth: 1.5,
                             fill: true,
                             tension: 0.4,
-                            pointRadius: 2,
+                            pointRadius: 0,
                             pointBackgroundColor: '#fff',
                             pointBorderColor: baseColor,
                             pointBorderWidth: 1,

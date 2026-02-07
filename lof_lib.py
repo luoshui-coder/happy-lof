@@ -32,6 +32,7 @@ class JisiluAPI:
     
     ENDPOINTS = {
         "index_lof": "/data/lof/index_lof_list/",
+        "stock_lof": "/data/lof/stock_lof_list/",
         "qdii_lof": "/data/qdii/qdii_list/E",
         "qdii_commodity": "/data/qdii/qdii_list/C",  # 商品型QDII（原油、黄金等）
     }
@@ -104,6 +105,14 @@ class JisiluAPI:
         )
         return self._parse_lof_data(data, "指数LOF")
 
+    def get_stock_lof(self) -> List[LOFInfo]:
+        """获取股票型 LOF 数据"""
+        data = self._make_request(
+            self.ENDPOINTS["stock_lof"],
+            referer=f"{self.BASE_URL}/data/lof/"
+        )
+        return self._parse_lof_data(data, "股票LOF")
+
     def get_qdii_lof(self) -> List[LOFInfo]:
         data = self._make_request(
             self.ENDPOINTS["qdii_lof"],
@@ -142,7 +151,7 @@ class JisiluAPI:
             except Exception as e:
                 print(f"解析失败: {e}")
         return result
-
+    
     def _parse_qdii_data(self, data: Dict, fund_type: str = "QDII") -> List[LOFInfo]:
         result = []
         for row in data.get("rows", []):
@@ -169,21 +178,23 @@ class JisiluAPI:
     def get_all_lof(self) -> List[LOFInfo]:
         all_data = []
         all_data.extend(self.get_index_lof())
+        all_data.extend(self.get_stock_lof())  # 新增
         all_data.extend(self.get_qdii_lof())
-        all_data.extend(self.get_qdii_commodity())  # 添加商品QDII
+        all_data.extend(self.get_qdii_commodity())
         return all_data
 
 
 def filter_lof(
     data: List[LOFInfo],
-    min_premium: float = 0.0,
+    min_premium: Optional[float] = None,
     min_volume: float = 0.0,
     only_limited: bool = False
 ) -> List[LOFInfo]:
     """筛选 LOF 基金"""
     filtered = data
     
-    if min_premium > 0:
+    # 允许传入负数作为筛选门槛
+    if min_premium is not None:
         filtered = [lof for lof in filtered if lof.premium_rate >= min_premium]
     
     if min_volume > 0:

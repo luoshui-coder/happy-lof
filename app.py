@@ -48,8 +48,8 @@ def get_lof_data():
     """获取 LOF 套利数据 API"""
     try:
         all_lof = api.get_all_lof()
-        # 筛选：溢价率 >= 1%，成交额 >= 1000万，非开放申购
-        filtered = filter_lof(all_lof, min_premium=1.0, min_volume=1000, only_limited=True)
+        # 获取全部数据，由前端进行筛选
+        filtered = filter_lof(all_lof, min_premium=-100, min_volume=0, only_limited=False)
         
         return jsonify({
             "success": True,

@@ -29,8 +29,9 @@ class LOFScheduler:
             # 获取所有LOF数据
             all_lof = self.api.get_all_lof()
             
-            # 只记录有溢价的基金（溢价率>0）
-            valid_lof = [lof for lof in all_lof if lof.premium_rate > 0]
+            # 记录所有 LOF 数据（包括折价），以便查看完整历史
+            # valid_lof = [lof for lof in all_lof if lof.premium_rate > 0]
+            valid_lof = all_lof
             
             # 转换为字典
             lof_dicts = [lof.__dict__ for lof in valid_lof]
