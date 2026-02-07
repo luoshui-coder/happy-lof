@@ -6,6 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>今乐福 - LOF基金溢价查询</title>
     <link rel="icon" type="image/png" href="chicken.png">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="专业实时的LOF基金溢价率查询工具。支持华宝油气、标普信息科技、纳指LOF等热门QDII基金的实时估值和溢价监测，助您精准捕捉跨市场套利机会，低风险获取稳定收益。">
+    <meta name="keywords" content="LOF基金,LOF套利,基金溢价率,场内基金,QDII套利,华宝油气,纳指LOF,标普信息科技,基金估值,跨市场套利,低风险投资">
+    <meta name="author" content="今乐福">
+
+    <!-- Open Graph Tags (For Social Media Sharing) -->
+    <meta property="og:title" content="今乐福 - 发现LOF基金套利的隐形红利">
+    <meta property="og:description" content="不预测涨跌，只收割价差。实时监测全网LOF基金溢价，把握每一次价值偏离的套利良机。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://luoshui.top/happy-lof/">
+    <meta property="og:image" content="chicken.png"> <!-- 建议替换为绝对路径的大图 -->
+    <meta property="og:site_name" content="今乐福">
+    <link rel="canonical" href="https://luoshui.top/happy-lof/">
     <style>
         * {
             margin: 0;
@@ -46,10 +61,49 @@
             opacity: 0.8;
         }
 
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 999;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-item {
+            text-align: center;
+            flex: 1;
+            padding: 6px 0;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            font-size: 1.4em;
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        /* Adjust container padding to not be hidden by bottom nav */
         .container {
             max-width: 600px;
             margin: -15px auto 0;
-            padding: 0 12px 60px;
+            padding: 0 12px 10px;
         }
 
         .group-title {
@@ -82,8 +136,10 @@
 
         .fund-card {
             background: white;
-            border-radius: 10px;
-            padding: 8px 10px;
+            border-radius: 8px;
+            /* Slightly smaller radius */
+            padding: 10px 12px;
+            /* Compressed padding */
             margin-bottom: 6px;
             box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
             transition: all 0.3s;
@@ -100,7 +156,7 @@
             width: 100% !important;
             height: 100% !important;
             max-height: 100% !important;
-            opacity: 0.1;
+            opacity: 0.4;
             pointer-events: none;
             z-index: 0;
         }
@@ -142,11 +198,14 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            /* Reduced margin */
         }
 
         .fund-info {
             flex: 1;
+            margin-right: 8px;
+            /* Avoid overlap with badge */
         }
 
         .fund-name {
@@ -154,13 +213,9 @@
             font-weight: 600;
             color: #333;
             margin-bottom: 2px;
-        }
-
-        .fund-name {
-            font-size: 0.9em;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .fund-name a {
@@ -185,20 +240,6 @@
             color: #667eea;
         }
 
-        .notice-link {
-            display: inline-block;
-            margin-left: 6px;
-            color: #667eea;
-            font-size: 0.85em;
-            text-decoration: none;
-            opacity: 0.6;
-            transition: opacity 0.2s;
-        }
-
-        .notice-link:hover {
-            opacity: 1;
-        }
-
         .premium-badge {
             background: linear-gradient(135deg, #ff6b9d 0%, #ff8e53 100%);
             color: white;
@@ -215,9 +256,11 @@
 
         .fund-details {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 8px;
+            grid-template-columns: 1.2fr 1fr 1fr 1fr;
+            /* Adjusted for 4 columns: Price needs more space for change%? */
+            gap: 4px;
+            margin-bottom: 0;
+            /* Remove bottom margin as there is no footer */
         }
 
         .detail-item {
@@ -225,27 +268,22 @@
         }
 
         .detail-label {
-            font-size: 0.7em;
+            font-size: 0.65em;
+            /* Smaller label */
             color: #999;
             margin-bottom: 2px;
         }
 
         .detail-value {
-            font-size: 1em;
+            font-size: 0.95em;
+            /* Slightly smaller value */
             font-weight: 600;
             color: #333;
         }
 
         .detail-sub {
-            font-size: 0.7em;
-            margin-top: 1px;
-        }
-
-        .difficulty-badge {
-            color: #ffa500;
-            padding: 0;
-            font-size: 1em;
-            white-space: nowrap;
+            font-size: 0.65em;
+            margin-top: 0;
         }
 
         .positive {
@@ -256,31 +294,27 @@
             color: #48bb78;
         }
 
-        .fund-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 8px;
-            border-top: 1px dashed #eee;
-        }
-
+        /* Reused for top-right status */
         .status-badge {
             background: #48bb78;
             color: white;
-            padding: 3px 8px;
-            border-radius: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
             font-size: 0.7em;
             font-weight: 500;
+            white-space: nowrap;
+            align-self: flex-start;
+            /* Align to top */
+        }
+
+        .badge-warning {
+            background: #ff9800;
+            box-shadow: 0 1px 4px rgba(255, 152, 0, 0.3);
         }
 
         .badge-paused {
             background: #9e9e9e;
             box-shadow: 0 1px 4px rgba(158, 158, 158, 0.3);
-        }
-
-        .volume-text {
-            font-size: 0.75em;
-            color: #666;
         }
 
         .loading {
@@ -381,7 +415,9 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
+            background: #333;
+            /* Solid background */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             color: white;
             padding: 12px 24px;
             border-radius: 8px;
@@ -573,30 +609,82 @@
             color: #999;
             margin-top: 4px;
         }
+
+        /* Ad Banner Style */
+        .ad-banner {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: #ccc;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+        }
+
+        /* SEO Text Section (Visible but unobtrusive) */
+        .seo-section {
+            max-width: 600px;
+            margin: 0 auto 20px;
+            padding: 0 20px;
+            color: #aaa;
+            font-size: 0.8em;
+            line-height: 1.6;
+        }
+
+        .seo-section h2 {
+            font-size: 1.1em;
+            color: #888;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+            padding-left: 8px;
+        }
+
+        .seo-section p {
+            margin-bottom: 8px;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Analytics: Baidu Tongji -->
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?3b7e3205c0d816473fd8662ed114e614";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
 </head>
 
 <body>
     <div class="header">
         <h1>💰今乐福</h1>
-        <p>实时 LOF 基金套利溢价查询</p>
+        <p style="font-size: 0.9em; letter-spacing: 1px; font-weight: 300;">每日溢价查询 · 把握LOF基金的每一次价值偏离</p>
         <div class="update-time" id="updateTime">更新时间：加载中...</div>
-        <div class="toggle-container">
-            <label class="switch">
-                <input type="checkbox" id="pausedToggle" onchange="togglePaused()">
-                <span class="slider"></span>
-            </label>
-            <span>显示暂停申购</span>
-            <span class="help-icon" onclick="showHelp()" title="帮助说明">?</span>
-        </div>
     </div>
 
     <div class="container" id="content">
-        <div style="text-align: center; color: #e0e0e0; font-size: 0.7em; margin-bottom: 8px; user-select: none;">
-            ↓ 下拉刷新
-        </div>
+
         <div class="loading">正在获取最新数据</div>
+    </div>
+
+    <!-- 广告位占位 (后期可接入 Google AdSense) -->
+    <div class="ad-banner" style="display: none;">
+        <span>📢 广告位招租 / Ad Space</span>
+    </div>
+
+    <!-- SEO Content Section -->
+    <div class="seo-section">
+        <h2>什么是 LOF 基金套利？</h2>
+        <p>LOF (Listed Open-Ended Fund) 即上市型开放式基金，既可以在一级市场申购赎回，又可以在二级市场买卖交易。当二级市场价格高于一级市场净值时，就产生了<b>溢价</b>。</p>
+        <p>通过“一级市场申购，二级市场卖出”的操作，投资者可以锁定中间的差价，这就是LOF套利的核心原理。主要关注品种包括<b>华宝油气</b>、<b>标普信息科技</b>、<b>纳指LOF</b>等热门QDII基金。</p>
     </div>
 
     <!-- Help Modal -->
@@ -608,9 +696,7 @@
                 <li><strong>🔗 跳转链接：</strong>点击基金名称可直达天天基金详情页。</li>
                 <li><strong>📋 复制代码：</strong>点击基金代码即可复制到剪贴板。</li>
                 <li><strong>📈 背景走势：</strong>卡片背景曲线为近 30 天的溢价率走势。</li>
-                <li><strong>⭐ 星级规则：</strong>
-                    <p class="small-text">基于溢价率、成交额综合评分。跌幅超过 -5% 扣星，接近跌停 (-9%) 直接 0 星。</p>
-                </li>
+
                 <li><strong>⚠️ 免责声明：</strong>
                     <p class="small-text">数据仅供参考，不构成投资建议。</p>
                 </li>
@@ -618,8 +704,20 @@
         </div>
     </div>
 
-    <div style="text-align: center; padding: 20px; color: #ccc; font-size: 0.75em;">
-        <p>陕ICP备2024050461号-4</p>
+    <div style="text-align: center; padding: 0 0 100px; color: #ccc; font-size: 0.75em; margin-top: -5px;">
+        <p>陕ICP备2024050461号-4 <span class="help-text" onclick="showHelp()"
+                style="margin-left:8px; cursor:pointer; text-decoration:underline; opacity: 0.7;">使用帮助</span></p>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('profit')" id="tab-profit">
+            <span class="nav-icon">🔥</span>
+            <span>有利可套</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('all')" id="tab-all">
+            <span class="nav-icon">📊</span>
+            <span>全部数据</span>
+        </div>
     </div>
 
     <script>
@@ -690,13 +788,21 @@
             });
         }
 
-        let showPaused = false;
-        let lastResult = null; // 缓存数据，避免切换开关时重新请求
+        let showPaused = false; // Default: 'profit' mode (hide paused)
+        let lastResult = null;
 
-        function togglePaused() {
-            showPaused = document.getElementById('pausedToggle').checked;
+        function switchTab(tab) {
+            // Update active state
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+
+            // Set filter logic
+            showPaused = (tab === 'all');
+
+            // Re-render
             if (lastResult) {
                 renderData(lastResult);
+                window.scrollTo(0, 0); // Scroll to top when switching
             } else {
                 loadData();
             }
@@ -739,7 +845,6 @@
 
             if (displayList.length === 0) {
                 content.innerHTML = `
-                    <div style="text-align: center; color: #e0e0e0; font-size: 0.7em; margin-bottom: 8px; user-select: none;">↓ 下拉刷新</div>
                     <div class="empty-state">
                         <div class="empty-state-icon">📊</div>
                         <div>暂无符合条件的套利机会</div>
@@ -748,7 +853,7 @@
                 return;
             }
 
-            let html = '<div style="text-align: center; color: #e0e0e0; font-size: 0.7em; margin-bottom: 8px; user-select: none;">↓ 下拉刷新</div>';
+            let html = '';
 
             displayList.forEach(fund => {
                 const changeClass = fund.change_pct > 0 ? 'positive' : (fund.change_pct < 0 ? 'negative' : '');
@@ -763,69 +868,29 @@
                 const exchange = isShanghai ? '沪' : '深';
                 const holdDays = (fund.fund_type && fund.fund_type.includes('QDII')) ? 'T+3' : 'T+2';
 
-                // 计算套利难度评级（散户薅羊毛版，偏保守展示）
-                // - 暂停申购：0（🚫）
-                // - QDII：默认最多 3 星（跨时区/汇率/估值滞后等风险更高）
-                let difficulty = 1;
-                const volume = fund.volume;
-                const premium = fund.premium_rate;
-                const isPaused = (fund.apply_status || '').includes('暂停');
-                const isQDII = typeof fund.fund_type === 'string' && fund.fund_type.includes('QDII');
-                const isLongHold = holdDays === 'T+3';
-
-                if (isPaused) {
-                    difficulty = 0;
-                } else if (premium >= 5 && volume >= 5000) {
-                    difficulty = 5; // 强烈推荐
-                } else if (premium >= 3.5 && volume >= 3000) {
-                    difficulty = 4; // 推荐
-                } else if (premium >= 2.5 && volume >= 2000) {
-                    difficulty = 3; // 可尝试
-                } else if (premium >= 2 && volume >= 1000) {
-                    difficulty = 2; // 谨慎
-                } else {
-                    difficulty = 1; // 不推荐
-                }
-
-                // 持有期更长（如 T+3）则降级：资金占用更久、波动暴露更长
-                if (isLongHold && difficulty > 1) {
-                    difficulty = Math.max(1, difficulty - 1);
-                }
-
-                // 保守策略：QDII 不给 4-5 星
-                if (isQDII && difficulty > 0) {
-                    difficulty = Math.min(difficulty, 3);
-                }
-
-                // 📉 跌幅风控逻辑 (新增)
-                // 跌停 (<-9%)：直接归零，风险极大
-                if (fund.change_pct <= -9.0) {
-                    difficulty = 0;
-                }
-                // 大跌 (<-5%)：扣2星 (如果是T+3, 已经扣过1星了，这里再扣就很低了)
-                else if (fund.change_pct <= -5.0 && difficulty > 1) {
-                    difficulty = Math.max(1, difficulty - 2);
-                }
-                // 中跌 (<-3%)：扣1星
-                else if (fund.change_pct <= -3.0 && difficulty > 1) {
-                    difficulty = Math.max(1, difficulty - 1);
-                }
-
-                const stars = (difficulty === 0) ? '🚫' : '⭐'.repeat(difficulty);
-
                 const isSuspended = fund.volume === 0;
-                const suspendedHtml = isSuspended ?
-                    `<span class="status-badge badge-paused" style="margin-left: 6px;">⛔ 停牌</span>` : '';
+                // Combine status and suspension info
+                let statusHtml = '';
+                const badgeClass = getBadgeClass(fund.apply_status);
+
+                if (isSuspended) {
+                    statusHtml = `<span class="status-badge badge-paused">⛔ 停牌</span>`;
+                } else if (fund.apply_status && !fund.apply_status.includes('开放') && fund.apply_status !== '') {
+                    // Show if paused or limited (ignore 'Open')
+                    // Show '⏸ Paused' or 'Limit...'
+                    const icon = fund.apply_status.includes('暂停') ? '⏸ ' : '';
+                    statusHtml = `<span class="status-badge ${badgeClass}">${icon}${fund.apply_status}</span>`;
+                }
 
                 html += `
-                        <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}">
+                        <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}" title="近30日溢价率走势">
                             <canvas class="chart-canvas" id="chart-${fund.fund_id}"></canvas>
                             <div class="fund-header">
                                 <div class="fund-info">
                                     <div class="fund-name"><a href="http://fund.eastmoney.com/${fund.fund_id}.html" target="_blank">${fund.fund_name}</a></div>
                                     <div class="fund-code" onclick="copyCode('${fund.fund_id}')" title="点击复制代码">${fund.fund_id} <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #bbb; font-size: 0.85em;">${exchange}</span> <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #ccc; font-size: 0.9em;">${fund.fund_type}</span> <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #bbb; font-size: 0.8em;">${holdDays}</span></div>
                                 </div>
-                                <div class="difficulty-badge" title="套利难度">${stars}</div>
+                                ${statusHtml}
                             </div>
                             <div class="fund-details">
                                 <div class="detail-item">
@@ -838,16 +903,13 @@
                                     <div class="detail-value">${fund.net_value.toFixed(3)}</div>
                                 </div>
                                 <div class="detail-item">
+                                    <div class="detail-label">成交额</div>
+                                    <div class="detail-value">${(fund.volume >= 10000) ? (fund.volume / 10000).toFixed(2) + '亿' : fund.volume.toFixed(0) + '万'}</div>
+                                </div>
+                                <div class="detail-item">
                                     <div class="detail-label">溢价率</div>
                                     <div class="detail-value" style="color: #ff6b9d;">${fund.premium_rate.toFixed(2)}%</div>
                                 </div>
-                            </div>
-                            <div class="fund-footer">
-                                <div style="display: flex; align-items: center;">
-                                    <span class="status-badge ${getBadgeClass(fund.apply_status)}">${fund.apply_status.includes('暂停') ? '⏸ ' : ''}${fund.apply_status}</span>
-                                    ${suspendedHtml}
-                                </div>
-                                <span class="volume-text">${volumeStr}</span>
                             </div>
                         </div>
                     `;
@@ -875,46 +937,82 @@
                     return;
                 }
 
+                // Prepare context
+                const ctx = canvas.getContext('2d');
+                // Ensure canvas resolution matches display size for sharpness
+                // Chart.js handles this automatically usually, but explicit sizing helps with absolute positioning
                 canvas.width = canvas.offsetWidth;
                 canvas.height = canvas.offsetHeight;
-                const ctx = canvas.getContext('2d');
-                const history = result.data;
+
+                // Data processing
+                // Data processing
+                const history = result.data; // Chronological (Old -> New)
 
                 let displayData = history;
-                if (history.length >= 30) {
+                if (history.length > 30) {
                     displayData = history.slice(-30);
-                } else if (history.length >= 7) {
-                    displayData = history.slice(-7);
                 }
 
-                new Chart(ctx, {
+                if (displayData.length < 2) return;
+
+                // Determine color
+                const latestPremium = displayData[displayData.length - 1].premium_rate;
+                let baseColor = '#667eea';
+                if (latestPremium >= 5) baseColor = '#f56565';
+                else if (latestPremium >= 2) baseColor = '#ed8936';
+
+                // Gradient
+                const gradientFill = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                function getRgb(hex) {
+                    const bigint = parseInt(hex.substring(1), 16);
+                    return `${(bigint >> 16) & 255}, ${(bigint >> 8) & 255}, ${bigint & 255}`;
+                }
+                const rgb = getRgb(baseColor);
+                gradientFill.addColorStop(0, `rgba(${rgb}, 0.2)`);
+                gradientFill.addColorStop(1, `rgba(${rgb}, 0.0)`);
+
+                if (window.chartInstances && window.chartInstances[fundId]) {
+                    window.chartInstances[fundId].destroy();
+                }
+                if (!window.chartInstances) window.chartInstances = {};
+
+                window.chartInstances[fundId] = new Chart(ctx, {
                     type: 'line',
                     data: {
                         labels: displayData.map(d => d.date.slice(5)),
                         datasets: [{
                             data: displayData.map(d => d.premium_rate),
-                            borderColor: '#667eea',
-                            borderWidth: 1.5,
-                            fill: false,
-                            tension: 0.3,
-                            pointRadius: 0
+                            borderColor: baseColor,
+                            backgroundColor: gradientFill,
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 2,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: baseColor,
+                            pointBorderWidth: 1,
+                            pointHoverRadius: 4
                         }]
                     },
                     options: {
                         responsive: false,
                         maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: { enabled: false }
-                        },
+                        animation: false, // Disable animation for performance/flicker reduction in lists
+                        plugins: { legend: false, tooltip: false },
                         scales: {
                             x: { display: false },
-                            y: { display: false }
+                            y: { display: false, grace: '5%' }
+                        },
+                        layout: { padding: 0 },
+                        elements: {
+                            line: {
+                                capBezierPoints: true
+                            }
                         }
                     }
                 });
             } catch (error) {
-                console.error(`绘制走势图失败 ${fundId}:`, error);
+                console.error(`Draw chart failed ${fundId}:`, error);
             }
         }
 
