@@ -60,7 +60,7 @@ class JisiluAPI:
         
         request_params = {
             "___jsl": self._get_timestamp(),
-            "rp": "100",
+            "rp": "500",
             "page": "1",
         }
         if params:

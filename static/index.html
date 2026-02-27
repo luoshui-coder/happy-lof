@@ -1167,15 +1167,13 @@
 
             // 过滤逻辑
             const displayList = result.data.filter(fund => {
-                // "全部数据" Tab (showPaused=true)
+                // "全部数据" Tab (showPaused=true) -> 完全不过滤，全部显示
                 if (showPaused) {
-                    // 过滤掉成交额小于 500 万的迷你基金
-                    if (fund.volume < 500) return false;
                     return true;
                 }
 
-                // "有利可套" Tab -> 仅显示: 未暂停 + 溢价>=1% + 成交额>=1000万
-                if (fund.apply_status.includes('暂停')) return false;
+                // "有利可套" Tab -> 仅显示: 有限购额度 + 溢价>=1% + 成交额>=1000万
+                if (!fund.apply_status.includes('限')) return false;
                 if (fund.premium_rate < 1.0) return false;
                 if (fund.volume < 1000) return false;
 
@@ -1253,6 +1251,23 @@
                         </div>
                     `;
             });
+
+            // "有利可套" Tab 底部追加筛选规则说明
+            if (!showPaused) {
+                html += `
+                    <div style="max-width:600px; margin: 12px auto 0; padding: 14px 16px; background: #f8f9ff; border-radius: 10px; border: 1px solid #e8ecff; font-size: 0.82em; color: #888; line-height: 1.7;">
+                        <div style="font-weight:600; color:#667eea; margin-bottom:6px;">📋 当前筛选条件</div>
+                        <ul style="margin:0; padding-left:18px;">
+                            <li>申购状态为<b>限购</b>（如限100、限1000等）</li>
+                            <li>溢价率 <b>≥ 1%</b></li>
+                            <li>成交额 <b>≥ 1000 万</b></li>
+                        </ul>
+                        <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #e0e0e0; color:#bbb; font-size:0.95em;">
+                            ⚠️ 数据仅供参考，不构成投资建议。投资有风险，决策需谨慎。
+                        </div>
+                    </div>
+                `;
+            }
 
             content.innerHTML = html;
 
