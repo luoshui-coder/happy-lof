@@ -29,6 +29,8 @@ class JisiluAPI:
     """集思录 API 封装类"""
     
     BASE_URL = "https://www.jisilu.cn"
+    # 经验阈值：正常登录态下 index_lof 行数通常远高于游客态
+    GUEST_INDEX_THRESHOLD = 80
     
     ENDPOINTS = {
         "index_lof": "/data/lof/index_lof_list/",
@@ -50,6 +52,14 @@ class JisiluAPI:
         self.cookie = cookie or os.environ.get("JISILU_COOKIE")
         if self.cookie:
             self.session.headers.update({"Cookie": self.cookie})
+
+        # 鉴权状态缓存（用于 API 返回给前端）
+        self.auth_status = {
+            "status": "unknown",  # ok | suspect_guest | no_cookie | unknown
+            "message": "尚未检测",
+            "checked_at": None,
+            "index_rows": None,
+        }
 
     def _get_timestamp(self) -> str:
         return f"LST___t={int(time.time() * 1000)}"
@@ -73,6 +83,38 @@ class JisiluAPI:
         except Exception as e:
             print(f"请求失败: {e}")
             return {"rows": []}
+
+    def _check_auth_status(self, index_rows: int) -> Dict[str, Any]:
+        """根据指数LOF条数粗略判断是否退化到游客态"""
+        checked_at = time.strftime("%Y-%m-%d %H:%M:%S")
+
+        if not self.cookie:
+            self.auth_status = {
+                "status": "no_cookie",
+                "message": "未配置 JISILU_COOKIE，可能仅能获取游客数据",
+                "checked_at": checked_at,
+                "index_rows": index_rows,
+            }
+        elif index_rows < self.GUEST_INDEX_THRESHOLD:
+            self.auth_status = {
+                "status": "suspect_guest",
+                "message": f"疑似 cookie 失效（index_lof={index_rows} < {self.GUEST_INDEX_THRESHOLD}），建议更新 JISILU_COOKIE",
+                "checked_at": checked_at,
+                "index_rows": index_rows,
+            }
+            print(f"[AUTH] {self.auth_status['message']}")
+        else:
+            self.auth_status = {
+                "status": "ok",
+                "message": f"cookie 看起来有效（index_lof={index_rows}）",
+                "checked_at": checked_at,
+                "index_rows": index_rows,
+            }
+
+        return self.auth_status
+
+    def get_auth_status(self) -> Dict[str, Any]:
+        return self.auth_status
 
     def _parse_percentage(self, value: Any) -> float:
         if value is None:
@@ -103,6 +145,8 @@ class JisiluAPI:
             self.ENDPOINTS["index_lof"],
             referer=f"{self.BASE_URL}/data/lof/"
         )
+        rows = data.get("rows", [])
+        self._check_auth_status(len(rows))
         return self._parse_lof_data(data, "指数LOF")
 
     def get_stock_lof(self) -> List[LOFInfo]:

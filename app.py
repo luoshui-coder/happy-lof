@@ -55,7 +55,8 @@ def get_lof_data():
             "success": True,
             "data": [asdict(lof) for lof in filtered],
             "total": len(filtered),
-            "update_time": time.strftime("%Y-%m-%d %H:%M:%S")
+            "update_time": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "auth_status": api.get_auth_status()
         })
     except Exception as e:
         return jsonify({
@@ -76,7 +77,8 @@ def get_all_lof_data():
             "success": True,
             "data": [asdict(lof) for lof in filtered],
             "total": len(filtered),
-            "update_time": time.strftime("%Y-%m-%d %H:%M:%S")
+            "update_time": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "auth_status": api.get_auth_status()
         })
     except Exception as e:
         return jsonify({
@@ -122,6 +124,14 @@ if __name__ == '__main__':
     else:
         print("提示: 未检测到 JISILU_COOKIE 环境变量，可能仅显示前20条数据")
         print("      请设置 export JISILU_COOKIE='你的cookie' 后重启获取完整权限")
+
+    # 启动前做一次鉴权自检，明确打印 cookie 状态
+    try:
+        api.get_index_lof()
+        auth_status = api.get_auth_status()
+        print(f"鉴权自检: {auth_status.get('status')} - {auth_status.get('message')}")
+    except Exception as e:
+        print(f"鉴权自检失败: {e}")
         
     print("=" * 50)
     
