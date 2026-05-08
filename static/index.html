@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>今乐福 - LOF基金溢价查询</title>
-    <link rel="icon" type="image/png" href="chicken.png">
+    <link rel="icon" type="image/png" href="/static/chicken.png">
 
     <!-- SEO Meta Tags -->
     <meta name="description"
@@ -18,147 +18,175 @@
     <meta property="og:description" content="不预测涨跌，只收割价差。实时监测全网LOF基金溢价，把握每一次价值偏离的套利良机。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://luoshui.top/happy-lof/">
-    <meta property="og:image" content="chicken.png"> <!-- 建议替换为绝对路径的大图 -->
+    <meta property="og:image" content="/static/chicken.png"> <!-- 建议替换为绝对路径的大图 -->
     <meta property="og:site_name" content="今乐福">
     <link rel="canonical" href="https://luoshui.top/happy-lof/">
     <style>
+        :root {
+            --paper: #fbf6ea;
+            --paper-strong: #fffaf0;
+            --ink: #1d2424;
+            --muted: #6d746f;
+            --hairline: #dfd5c1;
+            --brand: #9f2f25;
+            --brand-dark: #672018;
+            --gold: #b98723;
+            --green: #177b66;
+            --green-soft: #e4f1eb;
+            --red-soft: #fff0ec;
+            --shadow: 0 16px 40px rgba(64, 49, 31, 0.12);
+            --mono: "SFMono-Regular", "Menlo", "Consolas", monospace;
+            --body: "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            --display: "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", sans-serif;
-            background: #f5f7fa;
+            margin: 0;
             min-height: 100vh;
-            padding: 0;
+            padding: 0 0 calc(84px + env(safe-area-inset-bottom));
+            font-family: var(--body);
+            background:
+                linear-gradient(90deg, rgba(103, 32, 24, 0.04) 1px, transparent 1px) 0 0 / 28px 28px,
+                radial-gradient(circle at 18% -5%, rgba(185, 135, 35, 0.2), transparent 26rem),
+                linear-gradient(180deg, #fffaf0 0%, var(--paper) 44%, #f3ead8 100%);
+            text-rendering: optimizeLegibility;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            background-image: linear-gradient(rgba(29, 36, 36, 0.025) 1px, transparent 1px);
+            background-size: 100% 9px;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button,
+        summary,
+        [role="button"] {
+            font: inherit;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        summary:focus-visible,
+        .fund-code:focus-visible {
+            outline: 3px solid rgba(185, 135, 35, 0.45);
+            outline-offset: 3px;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px 20px 25px;
-            text-align: center;
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 18px max(18px, env(safe-area-inset-left)) 24px max(18px, env(safe-area-inset-right));
+            color: var(--paper-strong);
+            background:
+                linear-gradient(135deg, rgba(103, 32, 24, 0.98), rgba(29, 36, 36, 0.95)),
+                linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.07) 50%, transparent 100%);
+            border-bottom: 1px solid rgba(255, 250, 240, 0.18);
+            box-shadow: 0 14px 36px rgba(29, 36, 36, 0.2);
         }
 
-        .header h1 {
-            font-size: 1.6em;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
-        .header p {
-            font-size: 0.85em;
-            opacity: 0.9;
-            margin-bottom: 8px;
-        }
-
-        .update-time {
-            font-size: 0.75em;
-            opacity: 0.8;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-            z-index: 999;
-            border-top: 1px solid #eee;
-        }
-
-        .nav-item {
-            text-align: center;
-            flex: 1;
-            padding: 6px 0;
-            color: #999;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.85em;
-            display: flex;
-            flex-direction: column;
+        .header-inner {
+            width: min(960px, 100%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 12px 14px;
             align-items: center;
         }
 
-        .nav-item.active {
-            color: #667eea;
-            font-weight: 600;
+        .brand-mark {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #fff6dc;
+            border: 1px solid rgba(255, 250, 240, 0.35);
+            box-shadow: inset 0 0 0 2px rgba(103, 32, 24, 0.12);
         }
 
-        .nav-icon {
-            font-size: 1.4em;
-            margin-bottom: 2px;
-            display: block;
+        .brand-copy {
+            min-width: 0;
         }
 
-        /* Adjust container padding to not be hidden by bottom nav */
+        .header h1 {
+            margin: 0;
+            font-family: var(--display);
+            font-size: clamp(1.55rem, 5vw, 2.35rem);
+            font-weight: 700;
+            letter-spacing: 0;
+            line-height: 1.05;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: rgba(255, 250, 240, 0.78);
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        .update-time {
+            grid-column: 1 / -1;
+            width: fit-content;
+            padding: 5px 9px;
+            border: 1px solid rgba(255, 250, 240, 0.2);
+            border-radius: 6px;
+            color: rgba(255, 250, 240, 0.86);
+            background: rgba(255, 250, 240, 0.08);
+            font-family: var(--mono);
+            font-size: 0.72rem;
+        }
+
         .container {
-            max-width: 600px;
-            margin: -15px auto 0;
-            padding: 0 12px 10px;
-        }
-
-        .group-title {
-            text-align: center;
-            color: #667eea;
-            font-weight: 600;
-            font-size: 0.8em;
-            margin: 15px 0 10px;
-            letter-spacing: 1px;
-            position: relative;
-        }
-
-        .group-title::before,
-        .group-title::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 30%;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #ddd, transparent);
-        }
-
-        .group-title::before {
-            left: 0;
-        }
-
-        .group-title::after {
-            right: 0;
+            width: min(960px, 100%);
+            margin: 0 auto;
+            padding: 16px 14px 8px;
         }
 
         .fund-card {
-            background: white;
-            border-radius: 8px;
-            /* Slightly smaller radius */
-            padding: 10px 12px;
-            /* Compressed padding */
-            margin-bottom: 6px;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            display: grid;
+            gap: 10px;
+            min-height: 116px;
+            margin-bottom: 10px;
+            padding: 13px 14px;
+            background: rgba(255, 250, 240, 0.9);
+            border: 1px solid rgba(103, 32, 24, 0.13);
+            border-left: 4px solid var(--brand);
+            border-radius: 8px;
+            box-shadow: 0 7px 22px rgba(64, 49, 31, 0.08);
+            transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
         }
 
-        .chart-canvas {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            max-height: 100% !important;
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 0;
+        .fund-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(103, 32, 24, 0.26);
+            box-shadow: var(--shadow);
+        }
+
+        .fund-card.paused {
+            opacity: 0.68;
+            filter: grayscale(0.45);
+            border-left-color: #8b8f88;
         }
 
         .fund-card>* {
@@ -166,546 +194,457 @@
             z-index: 1;
         }
 
-        .fund-card.paused {
-            opacity: 0.6;
-            filter: grayscale(0.6);
-            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
-        }
-
-        .fund-card.paused::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.4);
+        .chart-canvas {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            opacity: 0.13;
             pointer-events: none;
             z-index: 0;
         }
 
-        .fund-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .fund-card.paused:hover {
-            transform: none;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-        }
-
         .fund-header {
             display: flex;
-            justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 6px;
-            /* Reduced margin */
+            justify-content: space-between;
+            gap: 10px;
         }
 
         .fund-info {
-            flex: 1;
-            margin-right: 8px;
-            /* Avoid overlap with badge */
+            min-width: 0;
         }
 
         .fund-name {
-            font-size: 0.9em;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 2px;
-            white-space: nowrap;
+            max-width: 100%;
             overflow: hidden;
+            color: var(--ink);
+            font-family: var(--display);
+            font-size: 1.02rem;
+            font-weight: 700;
+            line-height: 1.25;
             text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .fund-name a {
-            color: #333;
             text-decoration: none;
-            transition: color 0.2s;
         }
 
         .fund-name a:hover {
-            color: #667eea;
+            color: var(--brand);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
         }
 
         .fund-code {
-            font-size: 0.7em;
-            color: #999;
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+            margin-top: 5px;
+            padding: 0;
+            color: var(--muted);
+            background: transparent;
+            border: 0;
             cursor: pointer;
-            user-select: none;
-            transition: color 0.2s;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            line-height: 1.5;
+            text-align: left;
         }
 
-        .fund-code:hover {
-            color: #667eea;
+        .meta-dot {
+            color: #b6aa94;
         }
 
-        .premium-badge {
-            background: linear-gradient(135deg, #ff6b9d 0%, #ff8e53 100%);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-size: 0.85em;
-            font-weight: 600;
+        .status-badge {
+            flex: 0 0 auto;
+            padding: 4px 7px;
+            color: #fffaf0;
+            background: var(--green);
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(23, 123, 102, 0.18);
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1.1;
             white-space: nowrap;
         }
 
-        .premium-medium {
-            background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+        .badge-warning {
+            background: var(--gold);
+            color: #271c09;
+            box-shadow: 0 4px 10px rgba(185, 135, 35, 0.18);
+        }
+
+        .badge-paused {
+            background: #777b75;
+            box-shadow: none;
         }
 
         .fund-details {
             display: grid;
-            grid-template-columns: 1.2fr 1fr 1fr 1fr;
-            /* Adjusted for 4 columns: Price needs more space for change%? */
-            gap: 4px;
-            margin-bottom: 0;
-            /* Remove bottom margin as there is no footer */
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
         }
 
         .detail-item {
-            text-align: center;
+            min-width: 0;
+            padding: 8px 6px;
+            background: rgba(255, 255, 255, 0.38);
+            border: 1px solid rgba(223, 213, 193, 0.7);
+            border-radius: 7px;
+            text-align: left;
         }
 
         .detail-label {
-            font-size: 0.65em;
-            /* Smaller label */
-            color: #999;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
+            color: var(--muted);
+            font-size: 0.68rem;
+            line-height: 1;
         }
 
         .detail-value {
-            font-size: 0.95em;
-            /* Slightly smaller value */
-            font-weight: 600;
-            color: #333;
+            overflow-wrap: anywhere;
+            color: var(--ink);
+            font-family: var(--mono);
+            font-size: clamp(0.88rem, 3vw, 1rem);
+            font-weight: 800;
+            line-height: 1.15;
         }
 
         .detail-sub {
-            font-size: 0.65em;
-            margin-top: 0;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 0.68rem;
+            line-height: 1.2;
         }
 
-        .positive {
-            color: #f56565;
+        .positive,
+        .premium-up {
+            color: var(--brand);
         }
 
-        .negative {
-            color: #48bb78;
+        .negative,
+        .premium-down {
+            color: var(--green);
         }
 
-        /* Reused for top-right status */
-        .status-badge {
-            background: #48bb78;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.7em;
-            font-weight: 500;
-            white-space: nowrap;
-            align-self: flex-start;
-            /* Align to top */
+        .loading,
+        .empty-state,
+        .error,
+        .filter-note {
+            background: rgba(255, 250, 240, 0.82);
+            border: 1px solid rgba(103, 32, 24, 0.12);
+            border-radius: 8px;
+            box-shadow: 0 7px 22px rgba(64, 49, 31, 0.08);
         }
 
-        .badge-warning {
-            background: #ff9800;
-            box-shadow: 0 1px 4px rgba(255, 152, 0, 0.3);
-        }
-
-        .badge-paused {
-            background: #9e9e9e;
-            box-shadow: 0 1px 4px rgba(158, 158, 158, 0.3);
-        }
-
-        .loading {
+        .loading,
+        .empty-state,
+        .error {
+            margin: 8px 0;
+            padding: 42px 18px;
+            color: var(--muted);
             text-align: center;
-            padding: 60px 20px;
-            color: #667eea;
-            font-size: 1.1em;
         }
 
         .loading::after {
-            content: '...';
+            content: "...";
             animation: dots 1.5s infinite;
         }
 
         .error {
-            text-align: center;
-            padding: 60px 20px;
-            color: #f56565;
-            background: white;
-            border-radius: 16px;
-            margin: 20px;
-        }
-
-        .refresh-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            animation: pulse 2s infinite;
-        }
-
-        .refresh-btn:hover {
-            transform: scale(1.15) rotate(180deg);
-            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.6), 0 0 0 8px rgba(102, 126, 234, 0.1);
-            animation: none;
-        }
-
-        .refresh-btn:active {
-            transform: scale(0.95) rotate(180deg);
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5), 0 0 0 0 rgba(102, 126, 234, 0.4);
-            }
-
-            50% {
-                box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5), 0 0 0 8px rgba(102, 126, 234, 0);
-            }
-        }
-
-        @keyframes dots {
-
-            0%,
-            20% {
-                content: '.';
-            }
-
-            40% {
-                content: '..';
-            }
-
-            60%,
-            100% {
-                content: '...';
-            }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
+            color: var(--brand);
         }
 
         .empty-state-icon {
-            font-size: 3em;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 2.4rem;
+        }
+
+        .filter-note {
+            margin: 14px 0 0;
+            padding: 14px 16px;
+            color: var(--muted);
+            font-size: 0.84rem;
+            line-height: 1.7;
+        }
+
+        .filter-note-title {
+            margin-bottom: 6px;
+            color: var(--brand-dark);
+            font-weight: 800;
+        }
+
+        .filter-note ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .filter-note-extra {
+            margin-top: 8px;
+            color: #887d69;
+        }
+
+        .filter-note-risk {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--hairline);
+            color: #958873;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 999;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            width: min(560px, calc(100% - 20px));
+            margin: 0 auto calc(10px + env(safe-area-inset-bottom));
+            padding: 7px;
+            background: rgba(29, 36, 36, 0.9);
+            border: 1px solid rgba(255, 250, 240, 0.14);
+            border-radius: 12px;
+            box-shadow: 0 18px 48px rgba(29, 36, 36, 0.28);
+            backdrop-filter: blur(14px);
+        }
+
+        .nav-item {
+            display: flex;
+            min-width: 0;
+            min-height: 48px;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 7px 8px;
+            color: rgba(255, 250, 240, 0.66);
+            background: transparent;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 700;
+            line-height: 1.1;
+            transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+        }
+
+        .nav-item:hover {
+            color: #fffaf0;
+            background: rgba(255, 250, 240, 0.08);
+        }
+
+        .nav-item.active {
+            color: #261b11;
+            background: #f0c76a;
+            box-shadow: inset 0 -2px 0 rgba(103, 32, 24, 0.18);
+        }
+
+        .nav-icon {
+            font-size: 1.05rem;
+            line-height: 1;
         }
 
         .toast {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background: #333;
-            /* Solid background */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            color: white;
-            padding: 12px 24px;
+            z-index: 10001;
+            padding: 12px 18px;
+            color: #fffaf0;
+            background: rgba(29, 36, 36, 0.94);
+            border: 1px solid rgba(255, 250, 240, 0.12);
             border-radius: 8px;
-            font-size: 0.9em;
-            z-index: 9999;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.26);
+            font-size: 0.9rem;
+            transform: translate(-50%, -50%);
             animation: fadeInOut 1s ease-in-out;
         }
 
-        @keyframes fadeInOut {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.9);
-            }
-
-            20% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            80% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.9);
-            }
-        }
-
-        .badge-warning {
-            background: #ff9800;
-            /* Orange */
-            box-shadow: 0 1px 4px rgba(255, 152, 0, 0.3);
-        }
-
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 15px;
-            font-size: 0.85em;
-            opacity: 0.9;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 36px;
-            height: 20px;
-            margin-right: 8px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.3);
-            transition: .4s;
-            border-radius: 20px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider {
-            background-color: rgba(255, 255, 255, 0.6);
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(16px);
-        }
-
-        /* Help Icon & Modal */
-        .help-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 18px;
-            height: 18px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            margin-left: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .help-icon:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-
         .modal {
-            display: none;
             position: fixed;
+            inset: 0;
             z-index: 10000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
+            display: none;
             align-items: center;
             justify-content: center;
+            padding: 18px;
+            background: rgba(29, 36, 36, 0.62);
+            backdrop-filter: blur(8px);
         }
 
         .modal-content {
-            background-color: white;
-            padding: 24px;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 400px;
             position: relative;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            animation: modalFadeIn 0.3s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            width: min(430px, 100%);
+            max-height: min(78vh, 720px);
+            overflow: auto;
+            padding: 24px;
+            background: var(--paper-strong);
+            border: 1px solid rgba(103, 32, 24, 0.16);
+            border-radius: 10px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+            animation: modalFadeIn 0.22s ease;
         }
 
         .close-btn {
             position: absolute;
-            top: 16px;
-            right: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #aaa;
+            top: 12px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+            color: var(--muted);
+            background: rgba(103, 32, 24, 0.06);
+            border: 1px solid rgba(103, 32, 24, 0.1);
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 1.25rem;
             line-height: 1;
         }
 
         .close-btn:hover {
-            color: #333;
+            color: var(--ink);
+            background: rgba(103, 32, 24, 0.1);
         }
 
         .modal h3 {
-            margin-bottom: 16px;
-            color: #333;
-            text-align: center;
+            margin: 0 38px 16px 0;
+            color: var(--ink);
+            font-family: var(--display);
+            font-size: 1.35rem;
         }
 
         .modal ul {
-            list-style: none;
+            margin: 0;
             padding: 0;
+            list-style: none;
         }
 
         .modal li {
             margin-bottom: 12px;
-            font-size: 0.9em;
-            color: #555;
-            line-height: 1.5;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.55;
         }
 
         .modal strong {
-            color: #333;
-            font-weight: 600;
+            color: var(--ink);
         }
 
         .small-text {
-            font-size: 0.85em;
-            color: #999;
             margin-top: 4px;
+            color: var(--muted);
+            font-size: 0.84rem;
         }
 
-        /* Ad Banner Style */
-        .ad-banner {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #fff;
-            border: 1px dashed #ddd;
-            border-radius: 8px;
-            padding: 20px;
+        .footer {
+            width: min(960px, 100%);
+            margin: 0 auto;
+            padding: 0 14px 18px;
+            color: #a09581;
+            font-size: 0.75rem;
             text-align: center;
-            color: #ccc;
-            font-size: 0.9em;
+        }
+
+        .help-text {
+            margin-left: 8px;
+            padding: 0;
+            color: inherit;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .ad-banner {
             display: flex;
+            width: min(600px, calc(100% - 28px));
+            min-height: 80px;
             align-items: center;
             justify-content: center;
-            min-height: 80px;
+            margin: 20px auto;
+            padding: 20px;
+            color: #a09581;
+            background: rgba(255, 250, 240, 0.66);
+            border: 1px dashed var(--hairline);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
         }
 
-        /* SEO Text Section (Visible but unobtrusive) */
         .seo-section {
-            max-width: 600px;
+            width: min(960px, 100%);
             margin: 0 auto 20px;
             padding: 0 20px;
-            color: #aaa;
-            font-size: 0.8em;
-            line-height: 1.6;
+            color: #8d836f;
+            font-size: 0.82rem;
+            line-height: 1.65;
         }
 
         .seo-section h2 {
-            font-size: 1.1em;
-            color: #888;
             margin-bottom: 10px;
-            border-left: 3px solid #667eea;
             padding-left: 8px;
+            color: var(--ink);
+            border-left: 3px solid var(--brand);
+            font-size: 1.05rem;
         }
 
-        .seo-section p {
-            margin-bottom: 8px;
-        }
-
-        /* Tutorial Styles */
         .tutorial-view {
             display: none;
-            padding-bottom: 20px;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.28s ease;
         }
 
         .tutorial-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 18px;
+            background: rgba(255, 250, 240, 0.88);
+            border: 1px solid rgba(103, 32, 24, 0.12);
+            border-radius: 8px;
+            box-shadow: 0 7px 22px rgba(64, 49, 31, 0.08);
         }
 
         .tutorial-card h2 {
-            font-size: 1.3em;
-            color: #333;
-            margin-bottom: 12px;
-            border-left: 4px solid #667eea;
-            padding-left: 10px;
+            margin: 0 0 12px;
+            color: var(--ink);
+            font-family: var(--display);
+            font-size: clamp(1.25rem, 5vw, 1.75rem);
+            line-height: 1.2;
         }
 
-        .tutorial-card h3 {
-            font-size: 1.1em;
-            color: #444;
-            margin: 16px 0 8px;
+        .tutorial-card h3,
+        .tutorial-card h4 {
+            color: var(--ink);
         }
 
-        .intro-text {
-            font-size: 0.95em;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 15px;
+        .intro-text,
+        .details-content {
+            color: var(--muted);
+            line-height: 1.75;
         }
 
         details {
-            border: 1px solid #eee;
-            border-radius: 8px;
             margin-bottom: 10px;
             overflow: hidden;
-            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.36);
+            border: 1px solid rgba(103, 32, 24, 0.1);
+            border-radius: 8px;
         }
 
         details[open] {
-            border-color: #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+            border-color: rgba(159, 47, 37, 0.35);
+            box-shadow: 0 10px 24px rgba(64, 49, 31, 0.08);
         }
 
         summary {
-            background: #fcfcfc;
-            padding: 12px 15px;
-            font-weight: 600;
-            cursor: pointer;
-            list-style: none;
             position: relative;
-            color: #333;
+            padding: 13px 42px 13px 14px;
+            color: var(--ink);
+            cursor: pointer;
+            font-weight: 800;
+            list-style: none;
         }
 
         summary::-webkit-details-marker {
@@ -713,95 +652,192 @@
         }
 
         summary::after {
-            content: '+';
+            content: "+";
             position: absolute;
+            top: 50%;
             right: 15px;
-            color: #999;
-            font-weight: normal;
-            font-size: 1.2em;
+            color: var(--brand);
+            font-size: 1.2rem;
+            transform: translateY(-50%);
         }
 
         details[open] summary {
-            background: #f8f9ff;
-            color: #667eea;
-            border-bottom: 1px solid #eee;
+            background: rgba(159, 47, 37, 0.06);
+            border-bottom: 1px solid rgba(103, 32, 24, 0.1);
         }
 
         details[open] summary::after {
-            content: '-';
-            color: #667eea;
+            content: "-";
         }
 
         .details-content {
             padding: 15px;
-            font-size: 0.9em;
-            color: #555;
-            line-height: 1.7;
+            font-size: 0.92rem;
         }
 
         .details-content ul,
         .details-content ol {
-            padding-left: 20px;
             margin-bottom: 10px;
+            padding-left: 20px;
         }
 
         .details-content li {
             margin-bottom: 6px;
         }
 
+        .highlight,
+        .tag-red {
+            color: var(--brand);
+            background: var(--red-soft);
+            border-radius: 4px;
+        }
+
         .highlight {
-            color: #e53e3e;
-            font-weight: 500;
-            background: #fff5f5;
             padding: 0 4px;
-            border-radius: 3px;
+            font-weight: 700;
         }
 
         .tag-green {
-            background: #e6ffFA;
-            color: #2c7a7b;
             padding: 2px 6px;
+            color: var(--green);
+            background: var(--green-soft);
             border-radius: 4px;
-            font-size: 0.85em;
+            font-size: 0.85rem;
         }
 
         .tag-red {
-            background: #fff5f5;
-            color: #e53e3e;
             padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.85em;
+            font-size: 0.85rem;
+        }
+
+        .section-rule {
+            margin: 15px 0;
+            border: 0;
+            border-top: 1px dashed var(--hairline);
+        }
+
+        .legend-blue {
+            color: #315f8f;
+        }
+
+        .legend-orange {
+            color: var(--gold);
+        }
+
+        .legend-red {
+            color: var(--brand);
+        }
+
+        .is-hidden {
+            display: none !important;
         }
 
         table {
+            display: block;
             width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85em;
             margin: 10px 0;
+            overflow-x: auto;
+            border-collapse: collapse;
+            font-size: 0.85rem;
         }
 
         th,
         td {
-            border: 1px solid #eee;
-            padding: 8px;
+            min-width: 86px;
+            padding: 9px;
+            border: 1px solid var(--hairline);
             text-align: left;
+            vertical-align: top;
         }
 
         th {
-            background: #f7fafc;
-            font-weight: 600;
-            color: #4a5568;
+            color: var(--ink);
+            background: rgba(103, 32, 24, 0.06);
+            font-weight: 800;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: "."; }
+            40% { content: ".."; }
+            60%, 100% { content: "..."; }
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+            20%, 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (min-width: 720px) {
+            body {
+                padding-bottom: 96px;
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .header {
+                position: static;
+                padding-top: 28px;
+                padding-bottom: 32px;
+            }
+
+            .header-inner {
+                grid-template-columns: auto 1fr auto;
+            }
+
+            .update-time {
+                grid-column: auto;
+                align-self: end;
+            }
+
+            .container {
+                padding-top: 22px;
+            }
+
+            .fund-card {
+                grid-template-columns: minmax(260px, 1fr) minmax(420px, 1.3fr);
+                align-items: center;
+                min-height: 104px;
+                padding: 15px 16px;
+            }
+
+            .fund-header {
+                min-width: 0;
+            }
+
+            .fund-details {
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .fund-details {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .nav-item {
+                gap: 4px;
+                padding-inline: 4px;
+                font-size: 0.76rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.001ms !important;
             }
         }
     </style>
@@ -821,9 +857,14 @@
 
 <body>
     <div class="header">
-        <h1>💰今乐福</h1>
-        <p style="font-size: 0.9em; letter-spacing: 1px; font-weight: 300;">每日溢价查询 · 把握LOF基金的每一次价值偏离</p>
-        <div class="update-time" id="updateTime">更新时间：加载中...</div>
+        <div class="header-inner">
+            <img class="brand-mark" src="/static/chicken.png" alt="今乐福">
+            <div class="brand-copy">
+                <h1>今乐福</h1>
+                <p>每日溢价查询 · 把握 LOF 基金的每一次价值偏离</p>
+            </div>
+            <div class="update-time" id="updateTime" aria-live="polite">更新时间：加载中...</div>
+        </div>
     </div>
 
     <div class="container" id="content">
@@ -841,7 +882,7 @@
             <p class="intro-text">当市价与净值出现偏离时，就产生了<b>无风险</b>或<b>低风险</b>的套利机会。</p>
 
             <details>
-                <summary>� 核心原理：钱是怎么赚的？</summary>
+                <summary>核心原理：钱是怎么赚的？</summary>
                 <div class="details-content">
                     <p>套利的核心在于捕捉<b>价格（Price）</b>与<b>净值（NAV）</b>的差额。</p>
 
@@ -888,7 +929,7 @@
             </details>
 
             <details>
-                <summary>� 实战流程：T+N 只要看这张表</summary>
+                <summary>实战流程：T+N 只要看这张表</summary>
                 <div class="details-content">
                     <p>LOF套利最大的风险来自于<b>时间</b>。不同类型的LOF，到账时间不同。</p>
 
@@ -945,7 +986,7 @@
                     </p>
                     <p><b>优势：</b>即使T+2日价格跌了，你只是持仓成本变了，但你成功赚到了当天的差价。<b>这是真正的无风险套利。</b></p>
 
-                    <hr style="margin: 15px 0; border: 0; border-top: 1px dashed #eee;">
+                    <hr class="section-rule">
 
                     <h4>2. 裸套利（投机策略）🗡️</h4>
                     <p><b>适用：</b>手中无持仓，纯博价差。</p>
@@ -960,19 +1001,19 @@
             </details>
 
             <details>
-                <summary>� 避坑指南：专家才懂的陷阱</summary>
+                <summary>避坑指南：专家才懂的陷阱</summary>
                 <div class="details-content">
                     <ul>
                         <li><b>📉 估值陷阱：</b>
                             <br>行情软件显示的“实时估值”对于QDII往往不准！因为它们可能用的是昨天的期货数据，或者汇率没更新。
-                            <br>👉 <b>对策：</b>参考专业机构（如集思录）的实时IOPV，主要看期货走势。
+                            <br>👉 <b>对策：</b>优先参考实时 IOPV 和标的期货走势。
                         </li>
                         <li><b>🚗 踩踏风险：</b>
                             <br>当一个基金溢价率高达20%且不限购时，全市场的人都会冲进去申购。
                             <br>T+2日可能有数亿新增份额抛压，直接把价格打到<b>跌停</b>。
                             <br>👉 <b>对策：</b>关注“场内流通份额”，如果套利大军规模过大，尽早撤退。
                         </li>
-                        <li><b>� 暂停申购：</b>
+                        <li><b>暂停申购：</b>
                             <br>溢价虽高，但基金公司“暂停申购”了，你就买不进去了。或者限制“单日100元”，大资金无法参与。
                             <br>👉 <b>对策：</b>使用本工具的“有利可套”筛选，自动剔除暂停申购的品种。
                         </li>
@@ -986,23 +1027,23 @@
     </div>
 
     <!-- 广告位占位 (后期可接入 Google AdSense) -->
-    <div class="ad-banner" style="display: none;">
+    <div class="ad-banner is-hidden">
         <span>📢 广告位招租 / Ad Space</span>
     </div>
 
     <!-- SEO Content Section Removed -->
 
     <!-- Help Modal -->
-    <div id="helpModal" class="modal">
+    <div id="helpModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeHelp()">&times;</span>
-            <h3>使用帮助</h3>
+            <button class="close-btn" type="button" onclick="closeHelp()" aria-label="关闭使用帮助">&times;</button>
+            <h3 id="helpTitle">使用帮助</h3>
             <ul>
                 <li><strong>🔗 跳转链接：</strong>点击基金名称可直达天天基金详情页。</li>
                 <li><strong>📋 复制代码：</strong>点击基金代码即可复制到剪贴板。</li>
-                <li><strong>📈 背景走势：</strong>卡片背景曲线为近 30 天的溢价率走势。</li>
-                <li><strong>🎨 曲线颜色：</strong><span style="color:#667eea">蓝色</span>(<2%) / <span style="color:#ed8936">
-                        橙色</span>(2-5%) / <span style="color:#f56565">红色</span>(>5%) 代表当前溢价率水平。</li>
+                <li><strong>📈 背景走势：</strong>卡片背景曲线为近 30 天的实时溢价率走势。</li>
+                <li><strong>曲线颜色：</strong><span class="legend-blue">蓝色</span>(&lt;2%) / <span class="legend-orange">
+                        橙色</span>(2-5%) / <span class="legend-red">红色</span>(&gt;5%) 代表当前实时溢价率水平。</li>
 
                 <li><strong>⚠️ 免责声明：</strong>
                     <p class="small-text">数据仅供参考，不构成投资建议。</p>
@@ -1011,31 +1052,31 @@
         </div>
     </div>
 
-    <div style="text-align: center; padding: 0 0 100px; color: #ccc; font-size: 0.75em; margin-top: -5px;">
-        <p>陕ICP备2024050461号-4 <span class="help-text" onclick="showHelp()"
-                style="margin-left:8px; cursor:pointer; text-decoration:underline; opacity: 0.7;">使用帮助</span></p>
+    <div class="footer">
+        <p>陕ICP备2024050461号-4 <button class="help-text" type="button" onclick="showHelp()">使用帮助</button></p>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('profit')" id="tab-profit">
+    <nav class="bottom-nav" aria-label="主导航">
+        <button class="nav-item active" type="button" onclick="switchTab('profit')" id="tab-profit" aria-pressed="true">
             <span class="nav-icon">🔥</span>
             <span>有利可套</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('all')" id="tab-all">
+        </button>
+        <button class="nav-item" type="button" onclick="switchTab('all')" id="tab-all" aria-pressed="false">
             <span class="nav-icon">📊</span>
             <span>全部数据</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('tutorial')" id="tab-tutorial">
+        </button>
+        <button class="nav-item" type="button" onclick="switchTab('tutorial')" id="tab-tutorial" aria-pressed="false">
             <span class="nav-icon">📘</span>
             <span>入门教程</span>
-        </div>
-    </div>
+        </button>
+    </nav>
 
     <script>
         // Modal functions
         function showHelp() {
             const modal = document.getElementById('helpModal');
             modal.style.display = 'flex';
+            document.querySelector('.close-btn')?.focus();
         }
 
         function closeHelp() {
@@ -1049,6 +1090,20 @@
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+
+        window.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeHelp();
+        });
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char]));
         }
 
         function getBadgeClass(status) {
@@ -1082,31 +1137,50 @@
             return '';
         }
 
-        function copyCode(code) {
-            navigator.clipboard.writeText(code).then(() => {
-                // 显示复制成功提示
+        async function copyCode(code) {
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(code);
+                } else {
+                    const input = document.createElement('textarea');
+                    input.value = code;
+                    input.setAttribute('readonly', '');
+                    input.style.position = 'fixed';
+                    input.style.opacity = '0';
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                }
+
                 const toast = document.createElement('div');
                 toast.className = 'toast';
+                toast.setAttribute('role', 'status');
                 toast.textContent = `已复制 ${code}`;
                 document.body.appendChild(toast);
 
-                // 1秒后自动移除
                 setTimeout(() => {
-                    document.body.removeChild(toast);
+                    toast.remove();
                 }, 1000);
-            }).catch(err => {
+            } catch (err) {
                 console.error('复制失败:', err);
-            });
+            }
         }
 
         let showPaused = false; // Default: 'profit' mode (hide paused)
         let lastResult = null;
+        const historyCache = new Map();
+        let chartObserver = null;
 
         function switchTab(tab) {
             // Update active state
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.setAttribute('aria-pressed', 'false'));
             const activeTab = document.getElementById(`tab-${tab}`);
-            if (activeTab) activeTab.classList.add('active');
+            if (activeTab) {
+                activeTab.classList.add('active');
+                activeTab.setAttribute('aria-pressed', 'true');
+            }
 
             const content = document.getElementById('content');
             const tutorialView = document.getElementById('tutorial-view');
@@ -1195,15 +1269,14 @@
             displayList.forEach(fund => {
                 const changeClass = fund.change_pct > 0 ? 'positive' : (fund.change_pct < 0 ? 'negative' : '');
                 const changeSign = fund.change_pct > 0 ? '+' : '';
-                const premiumClass = fund.premium_rate >= 5 ? 'premium-badge' : 'premium-badge premium-medium';
-                const volumeStr = fund.volume >= 10000 ?
-                    `成交额 ${(fund.volume / 10000).toFixed(2)}亿` :
-                    `成交额 ${fund.volume.toFixed(0)}万`;
-
                 // 判断交易所和持有天数（用于界面提示）
                 const isShanghai = fund.fund_id.startsWith('50') || fund.fund_id.startsWith('51');
                 const exchange = isShanghai ? '沪' : '深';
                 const holdDays = (fund.fund_type && fund.fund_type.includes('QDII')) ? 'T+3' : 'T+2';
+                const premiumTone = fund.premium_rate < 0 ? 'premium-down' : 'premium-up';
+                const sourceLabel = fund.premium_source && fund.premium_source !== '接口'
+                    ? `<div class="detail-sub" title="实时溢价率由场内价格和${escapeHtml(fund.premium_source)}计算">实时${escapeHtml(fund.premium_source)}</div>`
+                    : '';
 
                 const isSuspended = fund.volume === 0;
                 // Combine status and suspension info
@@ -1211,21 +1284,29 @@
                 const badgeClass = getBadgeClass(fund.apply_status);
 
                 if (isSuspended) {
-                    statusHtml = `<span class="status-badge badge-paused">⛔ 停牌</span>`;
+                    statusHtml = `<span class="status-badge badge-paused">停牌</span>`;
                 } else if (fund.apply_status && !fund.apply_status.includes('开放') && fund.apply_status !== '') {
                     // Show if paused or limited (ignore 'Open')
                     // Show '⏸ Paused' or 'Limit...'
-                    const icon = fund.apply_status.includes('暂停') ? '⏸ ' : '';
-                    statusHtml = `<span class="status-badge ${badgeClass}">${icon}${fund.apply_status}</span>`;
+                    const prefix = fund.apply_status.includes('暂停') ? '暂停 · ' : '';
+                    statusHtml = `<span class="status-badge ${badgeClass}">${prefix}${escapeHtml(fund.apply_status)}</span>`;
                 }
 
                 html += `
-                        <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}" title="近30日溢价率走势">
+                        <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}" title="近30日实时溢价率走势">
                             <canvas class="chart-canvas" id="chart-${fund.fund_id}"></canvas>
                             <div class="fund-header">
                                 <div class="fund-info">
-                                    <div class="fund-name"><a href="http://fund.eastmoney.com/${fund.fund_id}.html" target="_blank">${fund.fund_name}</a></div>
-                                    <div class="fund-code" onclick="copyCode('${fund.fund_id}')" title="点击复制代码">${fund.fund_id} <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #bbb; font-size: 0.85em;">${exchange}</span> <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #ccc; font-size: 0.9em;">${fund.fund_type}</span> <span style="color: #ddd; margin-left: 4px;">·</span> <span style="color: #bbb; font-size: 0.8em;">${holdDays}</span></div>
+                                    <div class="fund-name"><a href="http://fund.eastmoney.com/${fund.fund_id}.html" target="_blank" rel="noopener noreferrer">${escapeHtml(fund.fund_name)}</a></div>
+                                    <button class="fund-code" type="button" onclick="copyCode('${escapeHtml(fund.fund_id)}')" title="点击复制代码" aria-label="复制基金代码 ${escapeHtml(fund.fund_id)}">
+                                        <span>${escapeHtml(fund.fund_id)}</span>
+                                        <span class="meta-dot">·</span>
+                                        <span>${exchange}</span>
+                                        <span class="meta-dot">·</span>
+                                        <span>${escapeHtml(fund.fund_type)}</span>
+                                        <span class="meta-dot">·</span>
+                                        <span>${holdDays}</span>
+                                    </button>
                                 </div>
                                 ${statusHtml}
                             </div>
@@ -1244,9 +1325,9 @@
                                     <div class="detail-value">${(fund.volume >= 10000) ? (fund.volume / 10000).toFixed(2) + '亿' : fund.volume.toFixed(0) + '万'}</div>
                                 </div>
                                 <div class="detail-item">
-                                    <div class="detail-label">溢价率</div>
-                                    <div class="detail-value" style="color: ${fund.premium_rate < 0 ? '#48bb78' : '#ff6b9d'};">${fund.premium_rate.toFixed(2)}%</div>
-                                    ${(fund.premium_source && fund.premium_source !== '接口') ? `<div class="detail-sub" style="color:#bbb; font-size:0.72em;" title="集思录原始溢价率缺失，前端按 price/${fund.premium_source} 自算">自算·${fund.premium_source}</div>` : ''}
+                                    <div class="detail-label">实时溢价率</div>
+                                    <div class="detail-value ${premiumTone}">${fund.premium_rate.toFixed(2)}%</div>
+                                    ${sourceLabel}
                                 </div>
                             </div>
                         </div>
@@ -1256,18 +1337,18 @@
             // "有利可套" Tab 底部追加筛选规则说明
             if (!showPaused) {
                 html += `
-                    <div style="max-width:600px; margin: 12px auto 0; padding: 14px 16px; background: #f8f9ff; border-radius: 10px; border: 1px solid #e8ecff; font-size: 0.82em; color: #888; line-height: 1.7;">
-                        <div style="font-weight:600; color:#667eea; margin-bottom:6px;">📋 当前筛选条件</div>
-                        <ul style="margin:0; padding-left:18px;">
+                    <div class="filter-note">
+                        <div class="filter-note-title">当前筛选条件</div>
+                        <ul>
                             <li>申购状态为<b>限购</b>（如限100、限1万等）</li>
-                            <li>溢价率 <b>≥ 1%</b></li>
+                            <li>实时溢价率 <b>≥ 1%</b></li>
                             <li>成交额 <b>≥ 1000 万</b></li>
                         </ul>
-                        <div style="margin-top:8px; color:#aaa; font-size:0.95em;">
-                            ℹ️ 集思录原始溢价率字段临时缺失时，会根据 <b>场内价格 / 基金净值（或盘中估值）</b> 自算，卡片溢价率下方会标注「自算·估值」或「自算·净值」以便识别。
+                        <div class="filter-note-extra">
+                            实时溢价率会根据 <b>场内价格 / 基金净值（或盘中估值）</b> 计算。
                         </div>
-                        <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #e0e0e0; color:#bbb; font-size:0.95em;">
-                            ⚠️ 数据仅供参考，不构成投资建议。投资有风险，决策需谨慎。
+                        <div class="filter-note-risk">
+                            数据仅供参考，不构成投资建议。投资有风险，决策需谨慎。
                         </div>
                     </div>
                 `;
@@ -1275,20 +1356,56 @@
 
             content.innerHTML = html;
 
-            // 绘制所有基金的走势图
-            result.data.forEach(fund => {
-                drawMiniChart(fund.fund_id);
-            });
+            scheduleMiniCharts(displayList.map(fund => fund.fund_id));
 
+        }
+
+        function scheduleMiniCharts(fundIds) {
+            const visibleIds = new Set(fundIds);
+
+            if (window.chartInstances) {
+                Object.keys(window.chartInstances).forEach(fundId => {
+                    if (!visibleIds.has(fundId)) {
+                        window.chartInstances[fundId].destroy();
+                        delete window.chartInstances[fundId];
+                    }
+                });
+            }
+
+            if (chartObserver) chartObserver.disconnect();
+
+            const canvases = fundIds
+                .map(fundId => document.getElementById(`chart-${fundId}`))
+                .filter(Boolean);
+
+            if (!('IntersectionObserver' in window)) {
+                canvases.slice(0, 20).forEach(canvas => drawMiniChart(canvas.id.replace('chart-', '')));
+                return;
+            }
+
+            chartObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const fundId = entry.target.id.replace('chart-', '');
+                    drawMiniChart(fundId);
+                    chartObserver.unobserve(entry.target);
+                });
+            }, { rootMargin: '240px 0px' });
+
+            canvases.forEach(canvas => chartObserver.observe(canvas));
         }
 
         async function drawMiniChart(fundId) {
             try {
-                const response = await fetch(`api/lof/history/${fundId}?days=30`);
-                const result = await response.json();
-
                 const canvas = document.getElementById(`chart-${fundId}`);
                 if (!canvas) return;
+
+                let result = historyCache.get(fundId);
+                if (!result) {
+                    const response = await fetch(`api/lof/history/${fundId}?days=30`);
+                    result = await response.json();
+                    historyCache.set(fundId, result);
+                }
 
                 if (!result.success || !result.data || result.data.length < 2) {
                     canvas.style.display = "none";
@@ -1315,9 +1432,9 @@
 
                 // Determine color
                 const latestPremium = displayData[displayData.length - 1].premium_rate;
-                let baseColor = '#667eea';
-                if (latestPremium >= 5) baseColor = '#f56565';
-                else if (latestPremium >= 2) baseColor = '#ed8936';
+                let baseColor = '#315f8f';
+                if (latestPremium >= 5) baseColor = '#9f2f25';
+                else if (latestPremium >= 2) baseColor = '#b98723';
 
                 // Gradient
                 const gradientFill = ctx.createLinearGradient(0, 0, 0, canvas.height);
