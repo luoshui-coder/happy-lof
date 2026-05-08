@@ -23,6 +23,9 @@ class LOFInfo:
     volume: float
     apply_status: str
     fund_type: str
+    estimate_value: float = 0.0
+    nav_date: str = ""
+    premium_source: str = ""  # "接口" | "估值" | "净值" | "无"
 
 
 class JisiluAPI:
@@ -140,6 +143,47 @@ class JisiluAPI:
         except:
             return 0.0
 
+    def _has_value(self, raw: Any) -> bool:
+        """原始字段是否确实有值（区分'字段被屏蔽'与'确为 0'）"""
+        if raw is None:
+            return False
+        s = str(raw).replace("%", "").replace(",", "").strip()
+        return s not in ("", "-", "--")
+
+    def _compute_premium(
+        self,
+        cell: Dict,
+        price: float,
+        api_premium_raw: Any,
+        prefer_estimate: bool,
+    ) -> (float, str):
+        """
+        计算溢价率，返回 (premium_rate, source_label)。
+
+        优先级：
+        1. 接口自带溢价率非空 -> 直接使用（后向兼容集思录字段恢复）
+        2. 按 prefer_estimate 顺序挑参考净值并用 price 自算
+        3. 都不可用 -> (0.0, "无")
+        """
+        if self._has_value(api_premium_raw):
+            return self._parse_percentage(api_premium_raw), "接口"
+
+        estimate = self._parse_float(cell.get("estimate_value"))
+        fund_nav = self._parse_float(cell.get("fund_nav"))
+
+        candidates = (
+            [("估值", estimate), ("净值", fund_nav)]
+            if prefer_estimate
+            else [("净值", fund_nav), ("估值", estimate)]
+        )
+
+        if price > 0:
+            for label, ref in candidates:
+                if ref > 0:
+                    return (price / ref - 1) * 100, label
+
+        return 0.0, "无"
+
     def get_index_lof(self) -> List[LOFInfo]:
         data = self._make_request(
             self.ENDPOINTS["index_lof"],
@@ -179,40 +223,63 @@ class JisiluAPI:
         for row in data.get("rows", []):
             cell = row.get("cell", {})
             try:
-                net_value = self._parse_float(cell.get("fund_nav")) or self._parse_float(cell.get("estimate_value"))
+                price = self._parse_float(cell.get("price"))
+                estimate_value = self._parse_float(cell.get("estimate_value"))
+                fund_nav = self._parse_float(cell.get("fund_nav"))
+                net_value = fund_nav or estimate_value
+                premium_rate, premium_source = self._compute_premium(
+                    cell, price, cell.get("discount_rt"), prefer_estimate=True
+                )
                 lof = LOFInfo(
                     fund_id=cell.get("fund_id", ""),
                     fund_name=cell.get("fund_nm", ""),
-                    price=self._parse_float(cell.get("price")),
+                    price=price,
                     change_pct=self._parse_percentage(cell.get("increase_rt")),
                     net_value=net_value,
-                    premium_rate=self._parse_percentage(cell.get("discount_rt")),
+                    premium_rate=premium_rate,
                     volume=self._parse_float(cell.get("volume")),
                     apply_status=cell.get("apply_status", ""),
-                    fund_type=fund_type
+                    fund_type=fund_type,
+                    estimate_value=estimate_value,
+                    nav_date=cell.get("fund_nav_dt", "") or cell.get("nav_dt", ""),
+                    premium_source=premium_source,
                 )
                 result.append(lof)
             except Exception as e:
                 print(f"解析失败: {e}")
         return result
-    
+
     def _parse_qdii_data(self, data: Dict, fund_type: str = "QDII") -> List[LOFInfo]:
         result = []
         for row in data.get("rows", []):
             cell = row.get("cell", {})
             try:
-                net_value = self._parse_float(cell.get("fund_nav")) or self._parse_float(cell.get("estimate_value"))
-                premium = cell.get("discount_rt") or cell.get("t1_premium_rate")
+                price = self._parse_float(cell.get("price"))
+                estimate_value = self._parse_float(cell.get("estimate_value"))
+                fund_nav = self._parse_float(cell.get("fund_nav"))
+                net_value = fund_nav or estimate_value
+                # QDII 接口溢价率字段可能是 discount_rt 或 t1_premium_rate，取第一个有值的
+                api_premium_raw = (
+                    cell.get("discount_rt")
+                    if self._has_value(cell.get("discount_rt"))
+                    else cell.get("t1_premium_rate")
+                )
+                premium_rate, premium_source = self._compute_premium(
+                    cell, price, api_premium_raw, prefer_estimate=False
+                )
                 lof = LOFInfo(
                     fund_id=cell.get("fund_id", ""),
                     fund_name=cell.get("fund_nm", ""),
-                    price=self._parse_float(cell.get("price")),
+                    price=price,
                     change_pct=self._parse_percentage(cell.get("increase_rt")),
                     net_value=net_value,
-                    premium_rate=self._parse_percentage(premium),
+                    premium_rate=premium_rate,
                     volume=self._parse_float(cell.get("volume")),
                     apply_status=cell.get("apply_status", ""),
-                    fund_type=fund_type
+                    fund_type=fund_type,
+                    estimate_value=estimate_value,
+                    nav_date=cell.get("fund_nav_dt", "") or cell.get("nav_dt", ""),
+                    premium_source=premium_source,
                 )
                 result.append(lof)
             except Exception as e:

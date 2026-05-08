@@ -1246,6 +1246,7 @@
                                 <div class="detail-item">
                                     <div class="detail-label">溢价率</div>
                                     <div class="detail-value" style="color: ${fund.premium_rate < 0 ? '#48bb78' : '#ff6b9d'};">${fund.premium_rate.toFixed(2)}%</div>
+                                    ${(fund.premium_source && fund.premium_source !== '接口') ? `<div class="detail-sub" style="color:#bbb; font-size:0.72em;" title="集思录原始溢价率缺失，前端按 price/${fund.premium_source} 自算">自算·${fund.premium_source}</div>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -1258,10 +1259,13 @@
                     <div style="max-width:600px; margin: 12px auto 0; padding: 14px 16px; background: #f8f9ff; border-radius: 10px; border: 1px solid #e8ecff; font-size: 0.82em; color: #888; line-height: 1.7;">
                         <div style="font-weight:600; color:#667eea; margin-bottom:6px;">📋 当前筛选条件</div>
                         <ul style="margin:0; padding-left:18px;">
-                            <li>申购状态为<b>限购</b>（如限100、限1000等）</li>
+                            <li>申购状态为<b>限购</b>（如限100、限1万等）</li>
                             <li>溢价率 <b>≥ 1%</b></li>
                             <li>成交额 <b>≥ 1000 万</b></li>
                         </ul>
+                        <div style="margin-top:8px; color:#aaa; font-size:0.95em;">
+                            ℹ️ 集思录原始溢价率字段临时缺失时，会根据 <b>场内价格 / 基金净值（或盘中估值）</b> 自算，卡片溢价率下方会标注「自算·估值」或「自算·净值」以便识别。
+                        </div>
                         <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #e0e0e0; color:#bbb; font-size:0.95em;">
                             ⚠️ 数据仅供参考，不构成投资建议。投资有风险，决策需谨慎。
                         </div>
