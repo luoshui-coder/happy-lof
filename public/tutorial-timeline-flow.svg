@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">LOF 套利 T+N 时间线信息流程图</title>
+  <desc id="desc">展示从 T 日申购到 T+2 或 T+3 卖出的时间过程，以及等待期间的主要风险。</desc>
+  <defs>
+    <style>
+      .bg{fill:#fff8ea}.lane{fill:#fffdf5;stroke:#dfd5c1;stroke-width:3}.head{fill:#1d2424;font:700 38px "PingFang SC","Microsoft YaHei",sans-serif}.sub{fill:#6d746f;font:24px "PingFang SC","Microsoft YaHei",sans-serif}.node{fill:#fffaf0;stroke:#b98723;stroke-width:5}.node2{fill:#e4f1eb;stroke:#177b66;stroke-width:5}.node3{fill:#fff0ec;stroke:#9f2f25;stroke-width:5}.title{fill:#672018;font:700 25px "PingFang SC","Microsoft YaHei",sans-serif}.body{fill:#1d2424;font:21px "PingFang SC","Microsoft YaHei",sans-serif}.small{fill:#6d746f;font:18px "PingFang SC","Microsoft YaHei",sans-serif}.red{fill:#9f2f25}.arrow{stroke:#b98723;stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto">
+      <path d="M2 2l8 4-8 4z" fill="#b98723"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="72" text-anchor="middle" class="head">T+2 / T+3：套利最大的风险在等待</text>
+  <text x="600" y="112" text-anchor="middle" class="sub">今天看到的市价，不等于份额到账那天还能卖到的价格</text>
+
+  <rect x="80" y="160" width="1040" height="250" rx="24" class="lane"/>
+  <text x="120" y="205" class="title">普通 LOF 常见节奏</text>
+  <circle cx="190" cy="300" r="52" class="node"/>
+  <circle cx="455" cy="300" r="52" class="node"/>
+  <circle cx="720" cy="300" r="52" class="node2"/>
+  <path d="M245 300h150M510 300h150" class="arrow" marker-end="url(#arrow)"/>
+  <text x="190" y="294" text-anchor="middle" class="body">T 日</text>
+  <text x="190" y="322" text-anchor="middle" class="small">申购</text>
+  <text x="455" y="294" text-anchor="middle" class="body">T+1</text>
+  <text x="455" y="322" text-anchor="middle" class="small">确认</text>
+  <text x="720" y="294" text-anchor="middle" class="body">T+2</text>
+  <text x="720" y="322" text-anchor="middle" class="small">常见可卖</text>
+  <rect x="840" y="250" width="220" height="95" rx="16" fill="#e4f1eb" stroke="#177b66" stroke-width="3"/>
+  <text x="950" y="287" text-anchor="middle" class="body">等待短一些</text>
+  <text x="950" y="320" text-anchor="middle" class="small">但仍有波动</text>
+
+  <rect x="80" y="450" width="1040" height="180" rx="24" fill="#fffdf5" stroke="#dfd5c1" stroke-width="3"/>
+  <text x="120" y="497" class="title">QDII / 跨境 LOF 常见节奏</text>
+  <circle cx="240" cy="560" r="45" class="node"/>
+  <circle cx="455" cy="560" r="45" class="node"/>
+  <circle cx="670" cy="560" r="45" class="node"/>
+  <circle cx="885" cy="560" r="45" class="node3"/>
+  <path d="M288 560h112M503 560h112M718 560h112" class="arrow" marker-end="url(#arrow)"/>
+  <text x="240" y="568" text-anchor="middle" class="body">T</text>
+  <text x="455" y="568" text-anchor="middle" class="body">T+1</text>
+  <text x="670" y="568" text-anchor="middle" class="body">T+2</text>
+  <text x="885" y="568" text-anchor="middle" class="body">T+3</text>
+  <text x="1010" y="548" text-anchor="middle" class="body red">多等一晚</text>
+  <text x="1010" y="582" text-anchor="middle" class="small">海外市场 + 汇率风险</text>
+</svg>

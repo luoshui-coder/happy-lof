@@ -48,3 +48,6 @@ docs/
 
 # Environment variables
 .env
+.env.bak.*
+.vercel
+.vercel-disabled-*/

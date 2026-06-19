@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">LOF 双通道原理信息流程图</title>
+  <desc id="desc">说明 LOF 同时存在基金公司申购通道和证券市场交易通道，价差来自净值与市价偏离。</desc>
+  <defs>
+    <style>
+      .bg{fill:#fff8ea}.panel{fill:#fffdf5;stroke:#dfd5c1;stroke-width:3}.head{fill:#1d2424;font:700 38px "PingFang SC","Microsoft YaHei",sans-serif}.sub{fill:#6d746f;font:24px "PingFang SC","Microsoft YaHei",sans-serif}.label{fill:#672018;font:700 28px "PingFang SC","Microsoft YaHei",sans-serif}.body{fill:#1d2424;font:22px "PingFang SC","Microsoft YaHei",sans-serif}.small{fill:#6d746f;font:19px "PingFang SC","Microsoft YaHei",sans-serif}.tag{fill:#fffaf0;stroke:#b98723;stroke-width:2}.arrow{stroke:#b98723;stroke-width:8;fill:none;stroke-linecap:round;stroke-linejoin:round}.red{fill:#9f2f25}.green{fill:#177b66}.gold{fill:#b98723}
+    </style>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
+      <path d="M2 2l8 4-8 4z" fill="#b98723"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="72" text-anchor="middle" class="head">LOF 为什么能套利：同一份基金有两条通道</text>
+  <text x="600" y="112" text-anchor="middle" class="sub">先看懂“净值”和“市价”分别从哪里来，再看价差是否值得做</text>
+
+  <rect x="70" y="165" width="300" height="310" rx="22" class="panel"/>
+  <text x="220" y="215" text-anchor="middle" class="label">场外通道</text>
+  <text x="220" y="255" text-anchor="middle" class="body">基金公司 / 申购赎回</text>
+  <rect x="108" y="286" width="224" height="48" rx="12" class="tag"/>
+  <text x="220" y="318" text-anchor="middle" class="body">价格锚点：净值 NAV</text>
+  <text x="105" y="380" class="small">你用净值申购，像从</text>
+  <text x="105" y="412" class="small">批发窗口订一篮货。</text>
+  <text x="105" y="444" class="small">优点：成本接近真实价值。</text>
+
+  <rect x="450" y="220" width="300" height="210" rx="22" fill="#fffaf0" stroke="#b98723" stroke-width="4"/>
+  <circle cx="600" cy="285" r="40" fill="#f1d6b0" stroke="#672018" stroke-width="4"/>
+  <path d="M570 306h60M565 326h70M580 265h40" stroke="#672018" stroke-width="8" stroke-linecap="round"/>
+  <text x="600" y="375" text-anchor="middle" class="label">同一份 LOF 份额</text>
+  <text x="600" y="408" text-anchor="middle" class="small">本质没有变，报价来源不同</text>
+
+  <rect x="830" y="165" width="300" height="310" rx="22" class="panel"/>
+  <text x="980" y="215" text-anchor="middle" class="label">场内通道</text>
+  <text x="980" y="255" text-anchor="middle" class="body">证券市场 / 实时买卖</text>
+  <rect x="868" y="286" width="224" height="48" rx="12" class="tag"/>
+  <text x="980" y="318" text-anchor="middle" class="body">价格锚点：市价 Price</text>
+  <text x="865" y="380" class="small">你按市场价卖出，像在</text>
+  <text x="865" y="412" class="small">摊位上看买家愿意出多少。</text>
+  <text x="865" y="444" class="small">特点：会被情绪和抢购推高。</text>
+
+  <path d="M370 320h72" class="arrow" marker-end="url(#arrow)"/>
+  <path d="M750 320h72" class="arrow" marker-end="url(#arrow)"/>
+
+  <rect x="165" y="540" width="870" height="86" rx="18" fill="#f7ebd5" stroke="#dfd5c1" stroke-width="3"/>
+  <text x="600" y="575" text-anchor="middle" class="body">套利直觉</text>
+  <text x="600" y="610" text-anchor="middle" class="small">如果“场内市价”明显高于“场外净值”，就可能出现：按净值申购 → 到账后按市价卖出的机会</text>
+</svg>

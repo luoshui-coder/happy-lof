@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">LOF 套利下单前检查流程图</title>
+  <desc id="desc">展示套利前检查安全垫、成交额、申购状态、底仓情况的决策流程。</desc>
+  <defs>
+    <style>
+      .bg{fill:#fff8ea}.box{fill:#fffdf5;stroke:#dfd5c1;stroke-width:3}.yes{fill:#e4f1eb;stroke:#177b66;stroke-width:3}.no{fill:#fff0ec;stroke:#9f2f25;stroke-width:3}.wait{fill:#f7ebd5;stroke:#b98723;stroke-width:3}.head{fill:#1d2424;font:700 38px "PingFang SC","Microsoft YaHei",sans-serif}.sub{fill:#6d746f;font:24px "PingFang SC","Microsoft YaHei",sans-serif}.title{fill:#672018;font:700 24px "PingFang SC","Microsoft YaHei",sans-serif}.body{fill:#1d2424;font:21px "PingFang SC","Microsoft YaHei",sans-serif}.small{fill:#6d746f;font:18px "PingFang SC","Microsoft YaHei",sans-serif}.red{fill:#9f2f25}.green{fill:#177b66}.arrow{stroke:#b98723;stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto">
+      <path d="M2 2l8 4-8 4z" fill="#b98723"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="1200" height="720"/>
+  <text x="600" y="72" text-anchor="middle" class="head">看到高溢价后，按这个顺序检查</text>
+  <text x="600" y="112" text-anchor="middle" class="sub">不要先问“赚多少”，先问“能不能做、会不会卖不掉”</text>
+
+  <rect x="90" y="180" width="220" height="110" rx="18" class="box"/>
+  <text x="200" y="222" text-anchor="middle" class="title">1. 安全垫</text>
+  <text x="200" y="257" text-anchor="middle" class="small">溢价是否覆盖费用和波动？</text>
+
+  <rect x="380" y="180" width="220" height="110" rx="18" class="box"/>
+  <text x="490" y="222" text-anchor="middle" class="title">2. 成交额</text>
+  <text x="490" y="257" text-anchor="middle" class="small">卖出时会不会滑点太大？</text>
+
+  <rect x="670" y="180" width="220" height="110" rx="18" class="box"/>
+  <text x="780" y="222" text-anchor="middle" class="title">3. 申购状态</text>
+  <text x="780" y="257" text-anchor="middle" class="small">限购可做，暂停不可做</text>
+
+  <rect x="960" y="180" width="170" height="110" rx="18" class="box"/>
+  <text x="1045" y="222" text-anchor="middle" class="title">4. 底仓</text>
+  <text x="1045" y="257" text-anchor="middle" class="small">有底仓更稳</text>
+
+  <path d="M310 235h60M600 235h60M890 235h60" class="arrow" marker-end="url(#arrow)"/>
+
+  <rect x="120" y="395" width="260" height="128" rx="20" class="yes"/>
+  <text x="250" y="440" text-anchor="middle" class="title green">全部通过</text>
+  <text x="250" y="478" text-anchor="middle" class="body">小资金试做</text>
+  <text x="250" y="510" text-anchor="middle" class="small">确认券商费率和到账规则</text>
+
+  <rect x="470" y="395" width="260" height="128" rx="20" class="wait"/>
+  <text x="600" y="440" text-anchor="middle" class="title">有一项不确定</text>
+  <text x="600" y="478" text-anchor="middle" class="body">先观察</text>
+  <text x="600" y="510" text-anchor="middle" class="small">别为了高溢价硬冲</text>
+
+  <rect x="820" y="395" width="260" height="128" rx="20" class="no"/>
+  <text x="950" y="440" text-anchor="middle" class="title red">出现红灯</text>
+  <text x="950" y="478" text-anchor="middle" class="body">放弃</text>
+  <text x="950" y="510" text-anchor="middle" class="small">暂停申购 / 成交太小 / 安全垫太薄</text>
+
+  <path d="M600 300v62" class="arrow" marker-end="url(#arrow)"/>
+  <path d="M600 362c-120 0-230 18-350 33" class="arrow" marker-end="url(#arrow)"/>
+  <path d="M600 362v22" class="arrow" marker-end="url(#arrow)"/>
+  <path d="M600 362c120 0 230 18 350 33" class="arrow" marker-end="url(#arrow)"/>
+
+  <rect x="180" y="585" width="840" height="68" rx="16" fill="#fffaf0" stroke="#dfd5c1" stroke-width="3"/>
+  <text x="600" y="627" text-anchor="middle" class="body">口诀：先看门开不开，再看路宽不宽，最后看垫子够不够厚</text>
+</svg>

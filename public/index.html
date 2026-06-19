@@ -1,0 +1,2470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今乐福 - LOF基金溢价查询</title>
+    <link rel="icon" type="image/png" href="chicken.png">
+    <link rel="apple-touch-icon" href="chicken.png">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="专业实时的LOF基金溢价率查询工具。支持华宝油气、标普信息科技、纳指LOF等热门QDII基金的实时估值和溢价监测，助您精准捕捉跨市场套利机会，低风险获取稳定收益。">
+    <meta name="keywords" content="LOF基金,LOF套利,基金溢价率,场内基金,QDII套利,华宝油气,纳指LOF,标普信息科技,基金估值,跨市场套利,低风险投资">
+    <meta name="author" content="今乐福">
+
+    <!-- Open Graph Tags (For Social Media Sharing) -->
+    <meta property="og:title" content="今乐福 - 发现LOF基金套利的隐形红利">
+    <meta property="og:description" content="不预测涨跌，只收割价差。实时监测全网LOF基金溢价，把握每一次价值偏离的套利良机。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://8.134.134.156/happy-lof/">
+    <meta property="og:image" content="http://8.134.134.156/happy-lof/chicken.png">
+    <meta property="og:site_name" content="今乐福">
+    <link rel="canonical" href="http://8.134.134.156/happy-lof/">
+    <style>
+        :root {
+            --paper: #f4f0e6;
+            --paper-strong: #fffdf6;
+            --ink: #17211f;
+            --muted: #65716d;
+            --hairline: #d8dece;
+            --brand: #b73a2f;
+            --brand-dark: #651d19;
+            --gold: #c59a39;
+            --green: #0f7d69;
+            --green-soft: #dff0e9;
+            --blue: #255c85;
+            --blue-soft: #dbeaf2;
+            --red-soft: #fff0ec;
+            --shadow: 0 18px 46px rgba(42, 52, 47, 0.14);
+            --mono: "SFMono-Regular", "Menlo", "Consolas", monospace;
+            --body: "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            --display: "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            background: var(--paper);
+            color: var(--ink);
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 0 0 calc(84px + env(safe-area-inset-bottom));
+            font-family: var(--body);
+            background:
+                linear-gradient(90deg, rgba(37, 92, 133, 0.035) 1px, transparent 1px) 0 0 / 30px 30px,
+                radial-gradient(circle at 12% -8%, rgba(15, 125, 105, 0.18), transparent 28rem),
+                radial-gradient(circle at 92% 0%, rgba(183, 58, 47, 0.13), transparent 24rem),
+                linear-gradient(180deg, #fffdf6 0%, var(--paper) 48%, #e7eee7 100%);
+            text-rendering: optimizeLegibility;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            background-image: linear-gradient(rgba(29, 36, 36, 0.025) 1px, transparent 1px);
+            background-size: 100% 9px;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button,
+        summary,
+        [role="button"] {
+            font: inherit;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        summary:focus-visible,
+        .fund-code:focus-visible,
+        .detail-btn:focus-visible,
+        .range-btn:focus-visible {
+            outline: 3px solid rgba(185, 135, 35, 0.45);
+            outline-offset: 3px;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            padding: 18px max(18px, env(safe-area-inset-left)) 24px max(18px, env(safe-area-inset-right));
+            color: var(--paper-strong);
+            background:
+                linear-gradient(135deg, rgba(103, 32, 24, 0.98), rgba(29, 36, 36, 0.95)),
+                linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.07) 50%, transparent 100%);
+            border-bottom: 1px solid rgba(255, 250, 240, 0.18);
+            box-shadow: 0 14px 36px rgba(29, 36, 36, 0.2);
+        }
+
+        .header-inner {
+            width: min(960px, 100%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 12px 14px;
+            align-items: center;
+        }
+
+        .brand-mark {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #fff6dc;
+            border: 1px solid rgba(255, 250, 240, 0.35);
+            box-shadow: inset 0 0 0 2px rgba(103, 32, 24, 0.12);
+        }
+
+        .brand-copy {
+            min-width: 0;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-family: var(--display);
+            font-size: clamp(1.55rem, 5vw, 2.35rem);
+            font-weight: 700;
+            letter-spacing: 0;
+            line-height: 1.05;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: rgba(255, 250, 240, 0.78);
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        .update-time {
+            grid-column: 1 / -1;
+            width: fit-content;
+            padding: 5px 9px;
+            border: 1px solid rgba(255, 250, 240, 0.2);
+            border-radius: 6px;
+            color: rgba(255, 250, 240, 0.86);
+            background: rgba(255, 250, 240, 0.08);
+            font-family: var(--mono);
+            font-size: 0.72rem;
+        }
+
+        .container {
+            width: min(960px, 100%);
+            margin: 0 auto;
+            padding: 18px 14px 10px;
+        }
+
+        .fund-card {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            gap: 12px;
+            min-height: 118px;
+            margin-bottom: 12px;
+            padding: 15px;
+            background:
+                linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(246, 248, 239, 0.88)),
+                linear-gradient(90deg, rgba(183, 58, 47, 0.08), transparent 42%);
+            border: 1px solid rgba(103, 32, 24, 0.13);
+            border-left: 5px solid var(--brand);
+            border-radius: 8px;
+            box-shadow: 0 9px 24px rgba(64, 49, 31, 0.08);
+            transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+        }
+
+        .fund-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 42%;
+            pointer-events: none;
+            background: linear-gradient(90deg, rgba(185, 135, 35, 0.11), transparent);
+            opacity: 0.58;
+        }
+
+        .fund-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(103, 32, 24, 0.26);
+            background:
+                linear-gradient(135deg, rgba(255, 253, 246, 1), rgba(246, 250, 241, 0.96)),
+                linear-gradient(90deg, rgba(183, 58, 47, 0.1), transparent 48%);
+            box-shadow: 0 18px 46px rgba(42, 52, 47, 0.13);
+        }
+
+        .fund-card.paused {
+            opacity: 0.68;
+            filter: grayscale(0.45);
+            border-left-color: #8b8f88;
+        }
+
+        .fund-card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .fund-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .fund-info {
+            min-width: 0;
+        }
+
+        .fund-name {
+            max-width: 100%;
+            overflow: hidden;
+            color: var(--ink);
+            font-family: var(--display);
+            font-size: 1.08rem;
+            font-weight: 700;
+            line-height: 1.25;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .fund-name a {
+            text-decoration: none;
+        }
+
+        .fund-name a:hover {
+            color: var(--brand);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+
+        .fund-code {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+            margin-top: 5px;
+            padding: 0;
+            color: var(--muted);
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .fund-actions {
+            display: flex;
+            flex: 0 0 auto;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+
+        .detail-btn {
+            min-height: 27px;
+            padding: 5px 10px;
+            color: var(--brand-dark);
+            background: rgba(185, 135, 35, 0.14);
+            border: 1px solid rgba(185, 135, 35, 0.35);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-weight: 800;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        .detail-btn:hover {
+            background: rgba(185, 135, 35, 0.24);
+        }
+
+        .meta-dot {
+            color: #b6aa94;
+        }
+
+        .status-badge {
+            flex: 0 0 auto;
+            min-height: 27px;
+            padding: 6px 8px 5px;
+            color: #fffaf0;
+            background: var(--green);
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(23, 123, 102, 0.18);
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        .badge-warning {
+            background: var(--gold);
+            color: #271c09;
+            box-shadow: 0 4px 10px rgba(185, 135, 35, 0.18);
+        }
+
+        .badge-paused {
+            background: #777b75;
+            box-shadow: none;
+        }
+
+        .fund-details {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 9px;
+        }
+
+        .detail-item {
+            min-width: 0;
+            padding: 10px 8px;
+            background: rgba(255, 255, 255, 0.46);
+            border: 1px solid rgba(223, 213, 193, 0.76);
+            border-radius: 7px;
+            text-align: left;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+        }
+
+        .detail-label {
+            margin-bottom: 4px;
+            color: var(--muted);
+            font-size: 0.68rem;
+            line-height: 1;
+        }
+
+        .detail-value {
+            overflow-wrap: anywhere;
+            color: var(--ink);
+            font-family: var(--mono);
+            font-size: clamp(0.88rem, 3vw, 1rem);
+            font-weight: 800;
+            line-height: 1.15;
+        }
+
+        .detail-sub {
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 0.68rem;
+            line-height: 1.2;
+        }
+
+        .positive,
+        .premium-up {
+            color: var(--brand);
+        }
+
+        .negative,
+        .premium-down {
+            color: var(--green);
+        }
+
+        .loading,
+        .empty-state,
+        .error,
+        .filter-note {
+            background: rgba(255, 250, 240, 0.82);
+            border: 1px solid rgba(103, 32, 24, 0.12);
+            border-radius: 8px;
+            box-shadow: 0 7px 22px rgba(64, 49, 31, 0.08);
+        }
+
+        .loading,
+        .empty-state,
+        .error {
+            margin: 8px 0;
+            padding: 42px 18px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .loading::after {
+            content: "...";
+            animation: dots 1.5s infinite;
+        }
+
+        .error {
+            color: var(--brand);
+        }
+
+        .empty-state-icon {
+            margin-bottom: 8px;
+            font-size: 2.4rem;
+        }
+
+        .filter-note {
+            margin: 14px 0 0;
+            padding: 14px 16px;
+            color: var(--muted);
+            font-size: 0.84rem;
+            line-height: 1.7;
+        }
+
+        .filter-note-title {
+            margin-bottom: 6px;
+            color: var(--brand-dark);
+            font-weight: 800;
+        }
+
+        .filter-note ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .filter-note-extra {
+            margin-top: 8px;
+            color: #887d69;
+        }
+
+        .filter-note-risk {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--hairline);
+            color: #958873;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 999;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px;
+            width: min(560px, calc(100% - 22px));
+            margin: 0 auto calc(11px + env(safe-area-inset-bottom));
+            padding: 7px;
+            background: rgba(255, 253, 246, 0.88);
+            border: 1px solid rgba(103, 32, 24, 0.16);
+            border-radius: 12px;
+            box-shadow: 0 18px 44px rgba(42, 52, 47, 0.2);
+            backdrop-filter: blur(18px);
+        }
+
+        .nav-item {
+            display: flex;
+            min-width: 0;
+            min-height: 48px;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 7px 8px;
+            color: #6b6252;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 700;
+            line-height: 1.1;
+            transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+        }
+
+        .nav-item:hover {
+            color: var(--ink);
+            background: rgba(103, 32, 24, 0.06);
+        }
+
+        .nav-item.active {
+            color: #fffaf0;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-color: rgba(103, 32, 24, 0.42);
+            box-shadow: 0 8px 18px rgba(103, 32, 24, 0.18);
+        }
+
+        .nav-icon {
+            font-size: 1.05rem;
+            line-height: 1;
+        }
+
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            z-index: 10001;
+            padding: 12px 18px;
+            color: #fffaf0;
+            background: rgba(29, 36, 36, 0.94);
+            border: 1px solid rgba(255, 250, 240, 0.12);
+            border-radius: 8px;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.26);
+            font-size: 0.9rem;
+            transform: translate(-50%, -50%);
+            animation: fadeInOut 1s ease-in-out;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(20, 27, 25, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: relative;
+            width: min(430px, 100%);
+            max-height: min(78vh, 720px);
+            overflow: auto;
+            padding: 24px;
+            background: var(--paper-strong);
+            border: 1px solid rgba(103, 32, 24, 0.16);
+            border-radius: 10px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+            animation: modalFadeIn 0.22s ease;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
+            color: var(--muted);
+            background: rgba(103, 32, 24, 0.06);
+            border: 1px solid rgba(103, 32, 24, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--ink);
+            background: rgba(103, 32, 24, 0.1);
+        }
+
+        .modal h3 {
+            margin: 0 38px 16px 0;
+            color: var(--ink);
+            font-family: var(--display);
+            font-size: 1.35rem;
+        }
+
+        .modal ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .modal li {
+            margin-bottom: 12px;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
+
+        .modal strong {
+            color: var(--ink);
+        }
+
+        .history-modal-content {
+            width: min(1140px, 100%);
+            max-height: min(90vh, 900px);
+            padding: 0;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 4% 0%, rgba(15, 125, 105, 0.1), transparent 20rem),
+                radial-gradient(circle at 92% 2%, rgba(183, 58, 47, 0.1), transparent 20rem),
+                linear-gradient(135deg, rgba(255, 253, 246, 0.98), rgba(238, 244, 235, 0.96));
+            border-color: rgba(23, 33, 31, 0.14);
+            border-radius: 18px;
+            box-shadow: 0 30px 90px rgba(20, 27, 25, 0.32);
+        }
+
+        .history-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 8px;
+            align-items: start;
+            padding: 30px 84px 20px 36px;
+            border-bottom: 1px solid rgba(23, 33, 31, 0.1);
+            background:
+                linear-gradient(90deg, rgba(15, 125, 105, 0.1), transparent 62%),
+                linear-gradient(180deg, rgba(255, 253, 246, 0.9), rgba(255, 253, 246, 0.38));
+        }
+
+        .history-title {
+            margin: 0;
+            color: var(--ink);
+            font-family: var(--display);
+            font-size: clamp(1.35rem, 3vw, 1.95rem);
+            line-height: 1.18;
+        }
+
+        .history-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .history-meta span {
+            padding: 3px 7px;
+            background: rgba(255, 250, 240, 0.72);
+            border: 1px solid rgba(103, 32, 24, 0.12);
+            border-radius: 6px;
+        }
+
+        .range-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 18px 36px 0;
+            margin: 0;
+        }
+
+        .range-btn {
+            min-width: 64px;
+            min-height: 36px;
+            padding: 8px 13px;
+            color: #665845;
+            background: rgba(255, 250, 240, 0.74);
+            border: 1px solid rgba(103, 32, 24, 0.14);
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 800;
+            transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+        }
+
+        .range-btn:hover {
+            transform: translateY(-1px);
+            border-color: rgba(103, 32, 24, 0.26);
+            background: rgba(255, 250, 240, 0.96);
+        }
+
+        .range-btn.active {
+            color: #fffaf0;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-color: rgba(103, 32, 24, 0.52);
+            box-shadow: 0 8px 18px rgba(103, 32, 24, 0.18);
+        }
+
+        .history-panel {
+            display: grid;
+            gap: 20px;
+            padding: 20px 36px 34px;
+            max-height: calc(min(90vh, 900px) - 164px);
+            overflow: auto;
+        }
+
+        .history-visual-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(218px, 260px);
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .history-summary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .history-stat {
+            min-width: 0;
+            padding: 15px 16px;
+            background:
+                linear-gradient(135deg, rgba(255, 253, 246, 0.9), rgba(242, 247, 239, 0.74));
+            border: 1px solid rgba(23, 33, 31, 0.1);
+            border-radius: 12px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62), 0 10px 22px rgba(42, 52, 47, 0.05);
+        }
+
+        .history-stat-label {
+            color: #8a7d68;
+            font-size: 0.73rem;
+            line-height: 1.1;
+        }
+
+        .history-stat-value {
+            margin-top: 9px;
+            color: var(--ink);
+            font-family: var(--mono);
+            font-size: clamp(1.05rem, 2.4vw, 1.32rem);
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .history-stat-sub {
+            min-height: 16px;
+            margin-top: 5px;
+            color: #978a74;
+            font-size: 0.7rem;
+            line-height: 1.25;
+        }
+
+        .chart-wrap {
+            position: relative;
+            min-height: 432px;
+            padding: 20px 20px 16px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            background:
+                linear-gradient(180deg, rgba(255, 253, 246, 0.92), rgba(255, 255, 255, 0.42)),
+                linear-gradient(rgba(37, 92, 133, 0.06) 1px, transparent 1px) 0 0 / 100% 58px,
+                linear-gradient(90deg, rgba(103, 32, 24, 0.035) 1px, transparent 1px) 0 0 / 72px 100%;
+            border: 1px solid rgba(23, 33, 31, 0.12);
+            border-radius: 14px;
+            box-shadow: 0 16px 36px rgba(42, 52, 47, 0.08);
+        }
+
+        .chart-wrap::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            border-top: 3px solid rgba(15, 125, 105, 0.2);
+        }
+
+        .history-chart {
+            position: relative;
+            display: block;
+            width: 100%;
+            min-width: 0;
+            height: 348px;
+        }
+
+        .chart-heading {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 8px 12px;
+            margin-bottom: 12px;
+            color: var(--ink);
+        }
+
+        .chart-heading b {
+            font-family: var(--display);
+            font-size: 1.08rem;
+        }
+
+        .chart-heading span {
+            color: #7c877f;
+            font-size: 0.76rem;
+        }
+
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 8px 12px;
+            margin-top: 12px;
+            color: #746851;
+            font-size: 0.76rem;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            padding: 4px 7px;
+            background: rgba(255, 250, 240, 0.64);
+            border: 1px solid rgba(103, 32, 24, 0.1);
+            border-radius: 6px;
+        }
+
+        .legend-line {
+            width: 20px;
+            height: 3px;
+            border-radius: 999px;
+        }
+
+        .line-price {
+            background: var(--brand);
+        }
+
+        .line-nav {
+            background: repeating-linear-gradient(
+                90deg,
+                var(--green) 0 7px,
+                transparent 7px 12px
+            );
+        }
+
+        .history-note {
+            padding: 15px 17px;
+            color: #766954;
+            background: rgba(219, 234, 242, 0.45);
+            border: 1px solid rgba(37, 92, 133, 0.12);
+            border-radius: 12px;
+            font-size: 0.78rem;
+            line-height: 1.65;
+        }
+
+        .history-table-wrap {
+            width: 100%;
+            overflow: hidden;
+            background: rgba(255, 253, 246, 0.7);
+            border: 1px solid rgba(23, 33, 31, 0.12);
+            border-radius: 14px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42);
+        }
+
+        .history-table {
+            display: table;
+            width: 100%;
+            min-width: 0;
+            margin: 0;
+            border-collapse: collapse;
+            table-layout: fixed;
+            background: transparent;
+            font-size: 0.78rem;
+        }
+
+        .history-table th,
+        .history-table td {
+            min-width: 0;
+            padding: 11px 8px;
+            border: 0;
+            border-bottom: 1px solid rgba(23, 33, 31, 0.08);
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .history-table th:first-child,
+        .history-table td:first-child {
+            text-align: left;
+        }
+
+        .history-table th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            color: #766954;
+            background: rgba(234, 240, 226, 0.96);
+            font-weight: 800;
+        }
+
+        .history-table td {
+            color: var(--ink);
+            font-family: var(--mono);
+        }
+
+        .history-table th:nth-child(3),
+        .history-table th:nth-child(6),
+        .history-table .change-cell,
+        .history-table .premium-cell {
+            text-align: center;
+        }
+
+        .history-table tbody tr:hover {
+            background: rgba(185, 135, 35, 0.08);
+        }
+
+        .history-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .history-table .premium-cell {
+            font-weight: 900;
+        }
+
+        .percent-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 62px;
+            min-height: 22px;
+            padding: 2px 7px;
+            border: 1px solid rgba(103, 32, 24, 0.08);
+            border-radius: 999px;
+            background: rgba(255, 250, 240, 0.64);
+            font-family: var(--mono);
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .percent-pill::before {
+            display: none;
+        }
+
+        .percent-pill.positive,
+        .percent-pill.premium-up {
+            color: var(--brand);
+            background: rgba(159, 47, 37, 0.08);
+            border-color: rgba(159, 47, 37, 0.16);
+        }
+
+        .percent-pill.negative,
+        .percent-pill.premium-down {
+            color: var(--green);
+            background: rgba(23, 123, 102, 0.08);
+            border-color: rgba(23, 123, 102, 0.16);
+        }
+
+        .percent-pill.positive::before,
+        .percent-pill.premium-up::before {
+            background: var(--brand);
+        }
+
+        .percent-pill.negative::before,
+        .percent-pill.premium-down::before {
+            background: var(--green);
+        }
+
+        .history-state {
+            padding: 54px 16px;
+            color: var(--muted);
+            background: rgba(255, 250, 240, 0.56);
+            border: 1px dashed rgba(103, 32, 24, 0.16);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .small-text {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 0.84rem;
+        }
+
+        .footer {
+            width: min(960px, 100%);
+            margin: 0 auto;
+            padding: 0 14px 18px;
+            color: #a09581;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        .help-text {
+            margin-left: 8px;
+            padding: 0;
+            color: inherit;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .ad-banner {
+            display: flex;
+            width: min(600px, calc(100% - 28px));
+            min-height: 80px;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            padding: 20px;
+            color: #a09581;
+            background: rgba(255, 250, 240, 0.66);
+            border: 1px dashed var(--hairline);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .seo-section {
+            width: min(960px, 100%);
+            margin: 0 auto 20px;
+            padding: 0 20px;
+            color: #8d836f;
+            font-size: 0.82rem;
+            line-height: 1.65;
+        }
+
+        .seo-section h2 {
+            margin-bottom: 10px;
+            padding-left: 8px;
+            color: var(--ink);
+            border-left: 3px solid var(--brand);
+            font-size: 1.05rem;
+        }
+
+        .tutorial-view {
+            display: none;
+            animation: fadeIn 0.28s ease;
+        }
+
+        .tutorial-card {
+            padding: 0;
+            overflow: hidden;
+            background: rgba(255, 250, 240, 0.88);
+            border: 1px solid rgba(103, 32, 24, 0.12);
+            border-radius: 8px;
+            box-shadow: 0 7px 22px rgba(64, 49, 31, 0.08);
+        }
+
+        .tutorial-hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1.08fr) minmax(220px, 0.92fr);
+            gap: 18px;
+            align-items: center;
+            padding: 20px;
+            background:
+                linear-gradient(135deg, rgba(159, 47, 37, 0.1), rgba(185, 135, 35, 0.1)),
+                rgba(255, 250, 240, 0.7);
+            border-bottom: 1px solid rgba(103, 32, 24, 0.1);
+        }
+
+        .tutorial-kicker {
+            display: inline-flex;
+            width: fit-content;
+            margin-bottom: 8px;
+            padding: 4px 8px;
+            color: var(--brand);
+            background: rgba(159, 47, 37, 0.08);
+            border: 1px solid rgba(159, 47, 37, 0.16);
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 800;
+        }
+
+        .tutorial-hero-img,
+        .tutorial-figure img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .tutorial-hero-img {
+            background: rgba(255, 250, 240, 0.62);
+            border: 1px solid rgba(103, 32, 24, 0.12);
+            box-shadow: 0 12px 26px rgba(64, 49, 31, 0.08);
+        }
+
+        .tutorial-card h2 {
+            margin: 0 0 12px;
+            color: var(--ink);
+            font-family: var(--display);
+            font-size: clamp(1.25rem, 5vw, 1.75rem);
+            line-height: 1.2;
+        }
+
+        .tutorial-card h3 {
+            margin: 20px 20px 10px;
+            font-family: var(--display);
+            font-size: 1.14rem;
+            line-height: 1.3;
+        }
+
+        .tutorial-card h3,
+        .tutorial-card h4 {
+            color: var(--ink);
+        }
+
+        .intro-text,
+        .details-content {
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        details {
+            margin-bottom: 10px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.36);
+            border: 1px solid rgba(103, 32, 24, 0.1);
+            border-radius: 8px;
+        }
+
+        details[open] {
+            border-color: rgba(159, 47, 37, 0.35);
+            box-shadow: 0 10px 24px rgba(64, 49, 31, 0.08);
+        }
+
+        summary {
+            position: relative;
+            padding: 13px 42px 13px 14px;
+            color: var(--ink);
+            cursor: pointer;
+            font-weight: 800;
+            list-style: none;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: "+";
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            color: var(--brand);
+            font-size: 1.2rem;
+            transform: translateY(-50%);
+        }
+
+        details[open] summary {
+            background: rgba(159, 47, 37, 0.06);
+            border-bottom: 1px solid rgba(103, 32, 24, 0.1);
+        }
+
+        details[open] summary::after {
+            content: "-";
+        }
+
+        .details-content {
+            padding: 15px;
+            font-size: 0.92rem;
+        }
+
+        .tutorial-hero .intro-text {
+            margin-bottom: 10px;
+        }
+
+        .tutorial-path {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .path-step {
+            min-height: 72px;
+            padding: 10px;
+            color: var(--ink);
+            background: rgba(255, 250, 240, 0.78);
+            border: 1px solid rgba(103, 32, 24, 0.12);
+            border-radius: 8px;
+        }
+
+        .path-step b {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--brand);
+            font-size: 0.82rem;
+        }
+
+        .path-step span {
+            color: var(--muted);
+            font-size: 0.76rem;
+            line-height: 1.45;
+        }
+
+        .tutorial-section-intro {
+            margin: 0 20px 12px;
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .analogy-box,
+        .rule-box,
+        .warning-box {
+            margin: 12px 0;
+            padding: 12px;
+            border-radius: 8px;
+            line-height: 1.75;
+        }
+
+        .analogy-box {
+            color: #4a3a24;
+            background: rgba(185, 135, 35, 0.12);
+            border: 1px solid rgba(185, 135, 35, 0.22);
+        }
+
+        .rule-box {
+            color: #244b3e;
+            background: rgba(23, 123, 102, 0.1);
+            border: 1px solid rgba(23, 123, 102, 0.18);
+        }
+
+        .warning-box {
+            color: #6a251e;
+            background: rgba(159, 47, 37, 0.08);
+            border: 1px solid rgba(159, 47, 37, 0.18);
+        }
+
+        .tutorial-figure {
+            margin: 14px 0;
+        }
+
+        .tutorial-figure img {
+            background: rgba(255, 250, 240, 0.72);
+            border: 1px solid rgba(103, 32, 24, 0.12);
+        }
+
+        .tutorial-figure figcaption {
+            margin-top: 6px;
+            color: #8d836f;
+            font-size: 0.78rem;
+            line-height: 1.55;
+            text-align: center;
+        }
+
+        .tutorial-master-figure {
+            margin: 22px 0 28px;
+        }
+
+        .tutorial-master-figure img {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid rgba(103, 32, 24, 0.12);
+            box-shadow: 0 18px 42px rgba(71, 35, 23, 0.12);
+            background: #fff;
+        }
+
+        .tutorial-master-figure figcaption {
+            margin-top: 8px;
+            color: #8d836f;
+            font-size: 0.8rem;
+            line-height: 1.65;
+            text-align: center;
+        }
+
+        .mini-steps {
+            display: grid;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .mini-step {
+            display: grid;
+            grid-template-columns: 34px 1fr;
+            gap: 10px;
+            align-items: start;
+            padding: 10px;
+            background: rgba(255, 250, 240, 0.56);
+            border: 1px solid rgba(103, 32, 24, 0.09);
+            border-radius: 8px;
+        }
+
+        .mini-step-num {
+            display: grid;
+            width: 30px;
+            height: 30px;
+            place-items: center;
+            color: #fffaf0;
+            background: var(--brand);
+            border-radius: 50%;
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            font-weight: 800;
+        }
+
+        .mini-step p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.65;
+        }
+
+        .decision-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .decision-card {
+            min-height: 104px;
+            padding: 12px;
+            background: rgba(255, 250, 240, 0.6);
+            border: 1px solid rgba(103, 32, 24, 0.1);
+            border-radius: 8px;
+        }
+
+        .decision-card b {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--ink);
+        }
+
+        .decision-card span {
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+
+        .details-content ul,
+        .details-content ol {
+            margin-bottom: 10px;
+            padding-left: 20px;
+        }
+
+        .details-content li {
+            margin-bottom: 6px;
+        }
+
+        .highlight,
+        .tag-red {
+            color: var(--brand);
+            background: var(--red-soft);
+            border-radius: 4px;
+        }
+
+        .highlight {
+            padding: 0 4px;
+            font-weight: 700;
+        }
+
+        .tag-green {
+            padding: 2px 6px;
+            color: var(--green);
+            background: var(--green-soft);
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .tag-red {
+            padding: 2px 6px;
+            font-size: 0.85rem;
+        }
+
+        .section-rule {
+            margin: 15px 0;
+            border: 0;
+            border-top: 1px dashed var(--hairline);
+        }
+
+        .legend-blue {
+            color: #315f8f;
+        }
+
+        .legend-orange {
+            color: var(--gold);
+        }
+
+        .legend-red {
+            color: var(--brand);
+        }
+
+        .is-hidden {
+            display: none !important;
+        }
+
+        table {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            overflow-x: auto;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        th,
+        td {
+            min-width: 86px;
+            padding: 9px;
+            border: 1px solid var(--hairline);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            color: var(--ink);
+            background: rgba(103, 32, 24, 0.06);
+            font-weight: 800;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: "."; }
+            40% { content: ".."; }
+            60%, 100% { content: "..."; }
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+            20%, 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (min-width: 720px) {
+            body {
+                padding-bottom: 96px;
+            }
+
+            .header {
+                position: static;
+                padding-top: 28px;
+                padding-bottom: 32px;
+            }
+
+            .header-inner {
+                grid-template-columns: auto 1fr auto;
+            }
+
+            .update-time {
+                grid-column: auto;
+                align-self: end;
+            }
+
+            .container {
+                padding-top: 22px;
+            }
+
+            .fund-card {
+                grid-template-columns: minmax(260px, 1fr) minmax(420px, 1.3fr);
+                align-items: center;
+                min-height: 104px;
+                padding: 15px 16px;
+            }
+
+            .fund-header {
+                min-width: 0;
+            }
+
+            .fund-details {
+                gap: 10px;
+            }
+
+            .history-modal-content {
+                width: min(1160px, calc(100% - 32px));
+            }
+        }
+
+        @media (max-width: 380px) {
+            .fund-details {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .history-summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-item {
+                gap: 4px;
+                padding-inline: 4px;
+                font-size: 0.76rem;
+            }
+        }
+
+        @media (max-width: 719px) {
+            .modal {
+                align-items: stretch;
+                padding: 10px;
+            }
+
+            .history-modal-content {
+                width: 100%;
+                max-height: calc(100vh - 20px);
+            }
+
+            .history-head {
+                padding: 18px 66px 14px 16px;
+            }
+
+            .history-meta {
+                font-size: 0.68rem;
+            }
+
+            .range-tabs,
+            .history-panel {
+                padding-right: 16px;
+                padding-left: 16px;
+            }
+
+            .range-tabs {
+                gap: 5px;
+            }
+
+            .range-btn {
+                flex: 1 1 calc(50% - 5px);
+                min-width: 0;
+            }
+
+            .history-panel {
+                max-height: calc(100vh - 176px);
+            }
+
+            .history-visual-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .history-summary-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .chart-wrap {
+                min-height: 330px;
+                padding: 10px;
+            }
+
+            .history-chart {
+                height: 270px;
+            }
+
+            .chart-legend {
+                justify-content: flex-start;
+            }
+
+            .history-table {
+                font-size: 0.68rem;
+            }
+
+            .history-table th,
+            .history-table td {
+                padding: 9px 4px;
+            }
+
+            .percent-pill {
+                min-width: 52px;
+                padding-inline: 4px;
+            }
+
+            .tutorial-hero,
+            .tutorial-path,
+            .decision-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tutorial-hero {
+                padding: 16px;
+            }
+
+            .tutorial-card h3,
+            .tutorial-section-intro,
+            details {
+                margin-right: 14px;
+                margin-left: 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+    </style>
+    <!-- Analytics: Baidu Tongji -->
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?3b7e3205c0d816473fd8662ed114e614";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-inner">
+            <img class="brand-mark" src="chicken.png" width="48" height="48" alt="今乐福">
+            <div class="brand-copy">
+                <h1>今乐福</h1>
+                <p>LOF 溢价查询 · 把握基金的每一次价值偏离</p>
+            </div>
+            <div class="update-time" id="updateTime" aria-live="polite">更新时间：加载中...</div>
+        </div>
+    </div>
+
+    <div class="container" id="content">
+
+        <div class="loading">正在获取最新数据</div>
+    </div>
+
+    <div class="tutorial-view container" id="tutorial-view">
+        <div class="tutorial-card">
+            <section class="tutorial-hero">
+                <div>
+                    <span class="tutorial-kicker">给第一次看 LOF 的人</span>
+                    <h2>LOF 套利入门：先别背公式，先看懂“价差”</h2>
+                    <p class="intro-text">
+                        你可以把 LOF 想成一篮同样的货：一边在<b>基金公司</b>按净值进货，一边在<b>证券市场</b>按市价买卖。
+                        当两边价格不一样，价差就出现了。
+                    </p>
+                    <p class="intro-text">
+                        本页只讲一件事：怎么判断“看起来有便宜可捡”的机会，是真的能做，还是只是一个会夹手的抽屉。
+                    </p>
+                    <div class="tutorial-path" aria-label="学习路径">
+                        <div class="path-step"><b>第一步</b><span>看懂两扇门：净值和市价。</span></div>
+                        <div class="path-step"><b>第二步</b><span>看懂水位差：溢价从哪里来。</span></div>
+                        <div class="path-step"><b>第三步</b><span>看懂等待期：T+2/T+3 的风险。</span></div>
+                        <div class="path-step"><b>第四步</b><span>看三盏灯：再决定做不做。</span></div>
+                    </div>
+                </div>
+                <img class="tutorial-hero-img" src="tutorial-market-flow.svg" alt="LOF 像两扇门：基金公司按净值申购，证券市场按市价买卖" loading="lazy">
+            </section>
+
+            <figure class="tutorial-master-figure">
+                <img src="lof-arbitrage-full-flow.png" alt="LOF 溢价套利全流程图：发现溢价、判断安全垫、确认申购、下单申购、等待到账、场内卖出" loading="lazy">
+                <figcaption>先看完整地图：LOF 溢价套利不是只看一个溢价率，而是从发现价差开始，一路确认安全垫、申购状态、到账时间、成交深度和费用滑点。</figcaption>
+            </figure>
+
+            <h3>一、LOF 像一个有两扇门的市场</h3>
+            <p class="tutorial-section-intro">
+                普通基金通常只有“基金公司”这扇门；股票只有“交易市场”这扇门。LOF 特别的地方，是两扇门都开着。
+            </p>
+
+            <details open>
+                <summary>用菜市场打比方：同一篮菜，两边报价不同</summary>
+                <div class="details-content">
+                    <div class="analogy-box">
+                        想象你要买一篮菜。批发窗口说“这篮菜今天值 100 元”，隔壁摊位因为大家抢着买，已经有人愿意出 103 元。
+                        这 3 元不是菜突然变多了，而是<b>交易市场的人愿意出更高价格</b>。
+                    </div>
+                    <figure class="tutorial-figure">
+                        <img src="tutorial-market-flow.svg" alt="一篮基金份额同时连接基金公司和证券市场两种渠道" loading="lazy">
+                        <figcaption>同一份 LOF 份额，可以从基金公司这扇门申购，也可以从证券市场这扇门卖出。</figcaption>
+                    </figure>
+                    <div class="mini-steps">
+                        <div class="mini-step">
+                            <span class="mini-step-num">1</span>
+                            <p><b>净值</b>像批发窗口的标价：基金底层资产合起来大概值多少钱。</p>
+                        </div>
+                        <div class="mini-step">
+                            <span class="mini-step-num">2</span>
+                            <p><b>市价</b>像摊位现场成交价：市场上有人愿意用多少钱买卖。</p>
+                        </div>
+                        <div class="mini-step">
+                            <span class="mini-step-num">3</span>
+                            <p><b>套利</b>就是试图从便宜门进、从贵门出。但门不是瞬移门，中间要等份额到账。</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <details open>
+                <summary>最常见的是“溢价套利”</summary>
+                <div class="details-content">
+                    <figure class="tutorial-figure">
+                        <img src="tutorial-gap-flow.svg" alt="溢价像两杯水之间的水位差" loading="lazy">
+                        <figcaption>净值像左边水位，市价像右边水位；右边更高，中间的高度差就是溢价空间。</figcaption>
+                    </figure>
+                    <p>
+                        <b>溢价</b>就是市价高于净值。比如净值 1.000 元，市场价 1.030 元，粗略看就是 3% 溢价。
+                        你的想法是：按 1.000 申购，到账后按接近 1.030 卖掉。
+                    </p>
+                    <div class="rule-box">
+                        入门先记一句话：<b>溢价不是利润，溢价只是安全垫。</b>
+                        真正利润要扣掉申购费、交易佣金，还要扛住等待期间的价格波动。
+                    </div>
+                </div>
+            </details>
+
+            <h3>二、为什么不是看到溢价就能捡钱？</h3>
+            <p class="tutorial-section-intro">
+                因为你申购后，份额不是马上能卖。套利最容易误解的地方，就是把“今天看到的价差”当成“已经到手的钱”。
+            </p>
+
+            <details open>
+                <summary>T+2 / T+3：像点菜，要等出锅</summary>
+                <div class="details-content">
+                    <figure class="tutorial-figure">
+                        <img src="tutorial-timeline-flow.svg" alt="LOF 申购后需要等待 T+2 或 T+3 才能卖出" loading="lazy">
+                        <figcaption>你在 T 日下单，真正能卖出往往要等到 T+2 或 T+3；等待的几天里，价格可能已经变了。</figcaption>
+                    </figure>
+                    <div class="mini-steps">
+                        <div class="mini-step">
+                            <span class="mini-step-num">T</span>
+                            <p>今天 15:00 前申购，成本通常按今天收盘后的净值确认。此时你还不能马上卖。</p>
+                        </div>
+                        <div class="mini-step">
+                            <span class="mini-step-num">+2</span>
+                            <p>多数普通 LOF 到 T+2 左右才有份额可卖。中间市场价格可能涨，也可能跌。</p>
+                        </div>
+                        <div class="mini-step">
+                            <span class="mini-step-num">+3</span>
+                            <p>QDII 跨境基金常见要等更久，还要多承担海外市场和汇率波动。</p>
+                        </div>
+                    </div>
+                    <div class="warning-box">
+                        所以，看到 2% 溢价并不等于稳赚 2%。如果等待期间标的跌 4%，那 2% 安全垫可能不够。
+                    </div>
+                </div>
+            </details>
+
+            <h3>三、下手前先看三盏灯</h3>
+            <p class="tutorial-section-intro">
+                新手不要一上来追最高溢价。更稳的方式，是把每个机会当成过马路：三盏灯都看过，再走。
+            </p>
+
+            <details open>
+                <summary>三盏灯：安全垫、成交额、申购状态</summary>
+                <div class="details-content">
+                    <figure class="tutorial-figure">
+                        <img src="tutorial-risk-flow.svg" alt="LOF 套利前检查安全垫、成交额、申购状态三盏灯" loading="lazy">
+                        <figcaption>绿灯越多越稳；只要有一盏红灯，就先别急着冲。</figcaption>
+                    </figure>
+                    <div class="decision-grid">
+                        <div class="decision-card">
+                            <b>安全垫够不够</b>
+                            <span>普通 LOF 低溢价要谨慎；QDII 等待更久，通常需要更厚的安全垫。</span>
+                        </div>
+                        <div class="decision-card">
+                            <b>成交额够不够</b>
+                            <span>成交太小，卖出时可能砸出很大滑点，就像窄门里大家一起挤。</span>
+                        </div>
+                        <div class="decision-card">
+                            <b>能不能申购</b>
+                            <span>暂停申购就是门关了；限购很低则只能小资金参与。</span>
+                        </div>
+                    </div>
+                    <div class="rule-box">
+                        本工具“有利可套”默认帮你先筛：申购状态含限购、实时溢价率不低、成交额不太小。
+                        它不是替你做决定，而是先把明显不适合看的项目过滤掉。
+                    </div>
+                </div>
+            </details>
+
+            <details>
+                <summary>稳健做法：有底仓，比裸冲更容易理解</summary>
+                <div class="details-content">
+                    <div class="analogy-box">
+                        底仓套利像你家里本来就有一篮菜。市场突然有人高价买，你先把家里的老篮子卖掉，
+                        再从批发窗口订一篮新的补回来。这样你锁住的是“今天这一下高价”。
+                    </div>
+                    <ul>
+                        <li><b>有底仓：</b>T 日先卖老份额，再申购新份额补回，等待期间更像调仓。</li>
+                        <li><b>无底仓：</b>纯靠申购后未来卖出，必须承担等待期间价格下跌风险。</li>
+                        <li><b>新手建议：</b>先用小资金理解流程，不要因为溢价数字高就重仓。</li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>一句话总结：套利看的是“可落袋的价差”</summary>
+                <div class="details-content">
+                    <p>
+                        真正要问的不是“溢价有多高”，而是：
+                        <b>扣掉费用、等到账、考虑滑点和波动后，这个价差还够不够厚？</b>
+                    </p>
+                    <div class="warning-box">
+                        数据仅供学习和参考，不构成投资建议。实际交易前，请在券商 App 内确认申购状态、费率、到账规则和实时行情。
+                    </div>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <!-- 广告位占位 (后期可接入 Google AdSense) -->
+    <div class="ad-banner is-hidden">
+        <span>📢 广告位招租 / Ad Space</span>
+    </div>
+
+    <!-- SEO Content Section Removed -->
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+        <div class="modal-content">
+            <button class="close-btn" type="button" onclick="closeHelp()" aria-label="关闭使用帮助">&times;</button>
+            <h3 id="helpTitle">使用帮助</h3>
+            <ul>
+                <li><strong>🔗 跳转链接：</strong>点击基金名称可直达天天基金详情页。</li>
+                <li><strong>📋 复制代码：</strong>点击基金代码即可复制到剪贴板。</li>
+                <li><strong>📘 套利指南：</strong>底部菜单可查看 LOF 溢价套利的图文解释。</li>
+                <li><strong>📊 数据口径：</strong>实时溢价率会优先使用接口字段，必要时按场内价格与净值或估值计算。</li>
+
+                <li><strong>⚠️ 免责声明：</strong>
+                    <p class="small-text">数据仅供参考，不构成投资建议。</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="historyModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+        <div class="modal-content history-modal-content">
+            <button class="close-btn" type="button" onclick="closeHistory()" aria-label="关闭基金详情">&times;</button>
+            <div class="history-head">
+                <div>
+                    <h3 id="historyTitle" class="history-title">基金详情</h3>
+                    <div id="historyMeta" class="history-meta"></div>
+                </div>
+            </div>
+            <div class="range-tabs" aria-label="历史区间">
+                <button class="range-btn active" type="button" onclick="setHistoryRange('1w')" data-range="1w">近一周</button>
+                <button class="range-btn" type="button" onclick="setHistoryRange('1m')" data-range="1m">一个月</button>
+                <button class="range-btn" type="button" onclick="setHistoryRange('3m')" data-range="3m">三个月</button>
+                <button class="range-btn" type="button" onclick="setHistoryRange('1y')" data-range="1y">一年</button>
+            </div>
+            <div id="historyContent" class="history-panel">
+                <div class="history-state">点击基金后加载历史数据</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>陕ICP备2024050461号-4 <button class="help-text" type="button" onclick="showHelp()">使用帮助</button></p>
+    </div>
+
+    <nav class="bottom-nav" aria-label="主导航">
+        <button class="nav-item active" type="button" onclick="switchTab('profit')" id="tab-profit" aria-pressed="true">
+            <span class="nav-icon">🔥</span>
+            <span>有利可套</span>
+        </button>
+        <button class="nav-item" type="button" onclick="switchTab('all')" id="tab-all" aria-pressed="false">
+            <span class="nav-icon">📊</span>
+            <span>全部数据</span>
+        </button>
+        <button class="nav-item" type="button" onclick="switchTab('tutorial')" id="tab-tutorial" aria-pressed="false">
+            <span class="nav-icon">📘</span>
+            <span>套利指南</span>
+        </button>
+    </nav>
+
+    <script>
+        // Modal functions
+        function showHelp() {
+            const modal = document.getElementById('helpModal');
+            modal.style.display = 'flex';
+            document.querySelector('.close-btn')?.focus();
+        }
+
+        function closeHelp() {
+            const modal = document.getElementById('helpModal');
+            modal.style.display = 'none';
+        }
+
+        function closeHistory() {
+            const modal = document.getElementById('historyModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const helpModal = document.getElementById('helpModal');
+            const historyModal = document.getElementById('historyModal');
+            if (event.target == helpModal) {
+                helpModal.style.display = "none";
+            }
+            if (event.target == historyModal) {
+                historyModal.style.display = "none";
+            }
+        }
+
+        window.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                closeHelp();
+                closeHistory();
+            }
+        });
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char]));
+        }
+
+        function getBadgeClass(status) {
+            if (!status) return '';
+            if (status.includes('暂停')) return 'badge-paused';
+
+            // 解析限购金额：限100, 限1万, 限1000 等
+            if (status.startsWith('限')) {
+                let amountStr = status.replace('限', '');
+                let multiplier = 1;
+
+                if (amountStr.includes('万')) {
+                    multiplier = 10000;
+                    amountStr = amountStr.replace('万', '');
+                } else if (amountStr.includes('千')) {
+                    multiplier = 1000;
+                    amountStr = amountStr.replace('千', '');
+                }
+
+                // 去除非数字字符（如 '元'）
+                amountStr = amountStr.replace(/[^\d.]/g, '');
+
+                const amount = parseFloat(amountStr) * multiplier;
+
+                // 限额 > 1000 则显示橙色警告 (不包含 1000)
+                if (!isNaN(amount) && amount > 1000) {
+                    return 'badge-warning';
+                }
+            }
+
+            return '';
+        }
+
+        async function copyCode(code) {
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(code);
+                } else {
+                    const input = document.createElement('textarea');
+                    input.value = code;
+                    input.setAttribute('readonly', '');
+                    input.style.position = 'fixed';
+                    input.style.opacity = '0';
+                    document.body.appendChild(input);
+                    input.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(input);
+                }
+
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.setAttribute('role', 'status');
+                toast.textContent = `已复制 ${code}`;
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 1000);
+            } catch (err) {
+                console.error('复制失败:', err);
+            }
+        }
+
+        let showPaused = false; // Default: 'profit' mode (hide paused)
+        let lastResult = null;
+        let activeHistoryFundId = null;
+        let activeHistoryRange = '1w';
+        const historyCache = {};
+
+        function switchTab(tab) {
+            // Update active state
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.setAttribute('aria-pressed', 'false'));
+            const activeTab = document.getElementById(`tab-${tab}`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+                activeTab.setAttribute('aria-pressed', 'true');
+            }
+
+            const content = document.getElementById('content');
+            const tutorialView = document.getElementById('tutorial-view');
+            const seoSection = document.querySelector('.seo-section');
+
+            if (tab === 'tutorial') {
+                if (content) content.style.display = 'none';
+                if (tutorialView) tutorialView.style.display = 'block';
+                if (seoSection) seoSection.style.display = 'none';
+                window.scrollTo(0, 0);
+                return;
+            } else {
+                if (content) content.style.display = 'block';
+                if (tutorialView) tutorialView.style.display = 'none';
+                if (seoSection) seoSection.style.display = 'block';
+            }
+
+            // Set filter logic
+            showPaused = (tab === 'all');
+
+            // Re-render
+            if (lastResult) {
+                renderData(lastResult);
+                window.scrollTo(0, 0); // Scroll to top when switching
+            } else {
+                loadData();
+            }
+        }
+
+        function findFund(fundId) {
+            return (lastResult?.data || []).find(item => item.fund_id === fundId) || null;
+        }
+
+        function setHistoryRange(rangeKey) {
+            activeHistoryRange = rangeKey;
+            document.querySelectorAll('.range-btn').forEach(button => {
+                button.classList.toggle('active', button.dataset.range === rangeKey);
+            });
+            if (activeHistoryFundId && historyCache[activeHistoryFundId]) {
+                renderHistory(historyCache[activeHistoryFundId]);
+            }
+        }
+
+        async function openFundDetail(fundId) {
+            activeHistoryFundId = fundId;
+            activeHistoryRange = '1w';
+            document.querySelectorAll('.range-btn').forEach(button => {
+                button.classList.toggle('active', button.dataset.range === activeHistoryRange);
+            });
+
+            const modal = document.getElementById('historyModal');
+            const title = document.getElementById('historyTitle');
+            const meta = document.getElementById('historyMeta');
+            const content = document.getElementById('historyContent');
+            const fund = findFund(fundId);
+
+            title.textContent = fund ? `${fund.fund_name} 历史详情` : `${fundId} 历史详情`;
+            meta.innerHTML = fund
+                ? `
+                    <span>${escapeHtml(fund.fund_id)}</span>
+                    <span>${escapeHtml(fund.fund_type)}</span>
+                    <span>当前净值 ${formatNumber(fund.net_value, 3)}</span>
+                    <span>实时溢价 ${formatSignedPercent(fund.premium_rate)}</span>
+                  `
+                : `<span>${escapeHtml(fundId)}</span>`;
+            content.innerHTML = '<div class="history-state">正在加载历史数据</div>';
+            modal.style.display = 'flex';
+
+            if (historyCache[fundId]) {
+                renderHistory(historyCache[fundId]);
+                return;
+            }
+
+            try {
+                const response = await fetch(`api/lof/${encodeURIComponent(fundId)}/history?range=1y`);
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.error || '历史数据获取失败');
+                }
+                historyCache[fundId] = result;
+                renderHistory(result);
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="history-state error">
+                        历史数据加载失败<br>${escapeHtml(error.message)}
+                    </div>
+                `;
+            }
+        }
+
+        function filterHistoryRows(rows, rangeKey) {
+            const daysMap = { '1w': 7, '1m': 31, '3m': 92, '1y': 370 };
+            const days = daysMap[rangeKey] || daysMap['1y'];
+            const validRows = (rows || []).filter(row => row.close !== null || row.unit_nav !== null);
+            if (validRows.length === 0) return [];
+
+            const lastDate = new Date(validRows[validRows.length - 1].date);
+            const startDate = new Date(lastDate);
+            startDate.setDate(startDate.getDate() - days);
+            return validRows.filter(row => new Date(row.date) >= startDate);
+        }
+
+        function formatNumber(value, digits = 3) {
+            if (value === null || value === undefined || Number.isNaN(Number(value))) return '-';
+            return Number(value).toFixed(digits);
+        }
+
+        function formatSignedPercent(value, digits = 2) {
+            if (value === null || value === undefined || Number.isNaN(Number(value))) return '-';
+            const number = Number(value);
+            return `${number > 0 ? '+' : ''}${number.toFixed(digits)}%`;
+        }
+
+        function percentTone(value, positiveClass = 'positive', negativeClass = 'negative') {
+            if (value === null || value === undefined || Number.isNaN(Number(value))) return 'neutral';
+            const number = Number(value);
+            if (number > 0) return positiveClass;
+            if (number < 0) return negativeClass;
+            return 'neutral';
+        }
+
+        function formatDateShort(value) {
+            if (!value) return '-';
+            const parts = String(value).split('-');
+            if (parts.length !== 3) return escapeHtml(value);
+            return `${parts[1]}/${parts[2]}`;
+        }
+
+        function formatMoneyWanFromThousand(value) {
+            if (value === null || value === undefined || Number.isNaN(Number(value))) return '-';
+            const wan = Number(value) / 10;
+            return wan >= 10000 ? `${(wan / 10000).toFixed(2)}亿` : `${wan.toFixed(0)}万`;
+        }
+
+        function buildChartPoints(rows, key, minValue, maxValue, width, height, padding) {
+            const range = maxValue - minValue || 1;
+            const validRows = rows
+                .map((row, index) => ({ value: row[key], index }))
+                .filter(item => item.value !== null && item.value !== undefined);
+            const count = rows.length;
+            if (count === 0 || validRows.length === 0) return [];
+
+            return validRows.map(({ value, index }) => {
+                const x = padding + (count === 1 ? 0 : index * (width - padding * 2) / (count - 1));
+                const y = height - padding - ((Number(value) - minValue) / range) * (height - padding * 2);
+                return { x, y };
+            });
+        }
+
+        function buildSmoothPathFromPoints(points) {
+            if (!points.length) return '';
+            if (points.length === 1) {
+                return `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
+            }
+
+            const segments = [`M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`];
+            for (let i = 0; i < points.length - 1; i += 1) {
+                const p0 = points[Math.max(i - 1, 0)];
+                const p1 = points[i];
+                const p2 = points[i + 1];
+                const p3 = points[Math.min(i + 2, points.length - 1)];
+                const c1x = p1.x + (p2.x - p0.x) / 6;
+                const c1y = p1.y + (p2.y - p0.y) / 6;
+                const c2x = p2.x - (p3.x - p1.x) / 6;
+                const c2y = p2.y - (p3.y - p1.y) / 6;
+                segments.push(
+                    `C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`
+                );
+            }
+            return segments.join(' ');
+        }
+
+        function buildSmoothPath(rows, key, minValue, maxValue, width, height, padding) {
+            return buildSmoothPathFromPoints(buildChartPoints(rows, key, minValue, maxValue, width, height, padding));
+        }
+
+        function buildAreaPath(rows, key, minValue, maxValue, width, height, padding) {
+            const points = buildChartPoints(rows, key, minValue, maxValue, width, height, padding);
+            const line = buildSmoothPathFromPoints(points);
+            if (!line) return '';
+            const baseY = height - padding;
+            const first = points[0];
+            const last = points[points.length - 1];
+            return `${line} L ${last.x.toFixed(1)} ${baseY} L ${first.x.toFixed(1)} ${baseY} Z`;
+        }
+
+        function buildPolyline(rows, key, minValue, maxValue, width, height, padding) {
+            return buildChartPoints(rows, key, minValue, maxValue, width, height, padding)
+                .map(({ x, y }) => `${x.toFixed(1)},${y.toFixed(1)}`)
+                .join(' ');
+        }
+
+        function buildAreaPolygon(rows, key, minValue, maxValue, width, height, padding) {
+            const line = buildPolyline(rows, key, minValue, maxValue, width, height, padding);
+            if (!line) return '';
+            const firstX = padding;
+            const lastX = width - padding;
+            const baseY = height - padding;
+            return `${firstX},${baseY} ${line} ${lastX},${baseY}`;
+        }
+
+        function renderHistorySummary(rows) {
+            const first = rows[0] || {};
+            const last = rows[rows.length - 1] || {};
+            const closeChange = first.close && last.close ? (last.close / first.close - 1) * 100 : null;
+            const navChange = first.unit_nav && last.unit_nav ? (last.unit_nav / first.unit_nav - 1) * 100 : null;
+            const premiumText = last.premium === null || last.premium === undefined
+                ? '-'
+                : formatSignedPercent(last.premium);
+            const closeClass = closeChange > 0 ? 'positive' : (closeChange < 0 ? 'negative' : '');
+            const premiumClass = last.premium > 0 ? 'premium-up' : (last.premium < 0 ? 'premium-down' : '');
+
+            return `
+                <div class="history-summary-grid">
+                    <div class="history-stat">
+                        <div class="history-stat-label">最新收盘</div>
+                        <div class="history-stat-value">${formatNumber(last.close, 3)}</div>
+                        <div class="history-stat-sub ${closeClass}">${formatSignedPercent(closeChange)} 区间涨跌</div>
+                    </div>
+                    <div class="history-stat">
+                        <div class="history-stat-label">最新净值</div>
+                        <div class="history-stat-value">${formatNumber(last.unit_nav, 4)}</div>
+                        <div class="history-stat-sub">${escapeHtml(last.nav_date || '-')} 净值日</div>
+                    </div>
+                    <div class="history-stat">
+                        <div class="history-stat-label">最新价差</div>
+                        <div class="history-stat-value ${premiumClass}">${premiumText}</div>
+                        <div class="history-stat-sub">市价相对已公布净值</div>
+                    </div>
+                    <div class="history-stat">
+                        <div class="history-stat-label">成交额</div>
+                        <div class="history-stat-value">${formatMoneyWanFromThousand(last.amount)}</div>
+                        <div class="history-stat-sub">净值区间涨跌 ${formatSignedPercent(navChange)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHistoryChart(rows) {
+            const width = 980;
+            const height = 348;
+            const padding = 48;
+            const allValues = rows.flatMap(row => [row.close, row.unit_nav]).filter(value => value !== null && value !== undefined);
+            if (rows.length < 2 || allValues.length < 2) {
+                return '<div class="history-state">当前区间数据不足，无法绘制曲线</div>';
+            }
+
+            const minValue = Math.min(...allValues);
+            const maxValue = Math.max(...allValues);
+            const valueRange = maxValue - minValue || 1;
+            const paddedMin = Math.max(0, minValue - valueRange * 0.08);
+            const paddedMax = maxValue + valueRange * 0.08;
+            const priceLine = buildSmoothPath(rows, 'close', paddedMin, paddedMax, width, height, padding);
+            const navLine = buildSmoothPath(rows, 'unit_nav', paddedMin, paddedMax, width, height, padding);
+            const priceArea = buildAreaPath(rows, 'close', paddedMin, paddedMax, width, height, padding);
+            const firstDate = rows[0]?.date || '';
+            const lastDate = rows[rows.length - 1]?.date || '';
+            const gridLines = [0, 0.25, 0.5, 0.75, 1].map(ratio => {
+                const y = padding + ratio * (height - padding * 2);
+                const value = paddedMax - ratio * (paddedMax - paddedMin);
+                return `
+                    <line x1="${padding}" y1="${y.toFixed(1)}" x2="${width - padding}" y2="${y.toFixed(1)}" stroke="rgba(103,32,24,.10)" />
+                    <text x="8" y="${(y + 4).toFixed(1)}" fill="#8a7d68" font-size="11">${formatNumber(value, 3)}</text>
+                `;
+            }).join('');
+            const xMarkers = [0, 0.25, 0.5, 0.75, 1].map(ratio => {
+                const x = padding + ratio * (width - padding * 2);
+                return `<line x1="${x.toFixed(1)}" y1="${padding}" x2="${x.toFixed(1)}" y2="${height - padding}" stroke="rgba(103,32,24,.055)" />`;
+            }).join('');
+
+            return `
+                <div class="chart-wrap">
+                    <div class="chart-heading">
+                        <b>价格与净值对照</b>
+                        <span>${escapeHtml(firstDate)} - ${escapeHtml(lastDate)} · ${rows.length} 个交易点</span>
+                    </div>
+                    <svg class="history-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="场内价格和基金净值走势图">
+                        <defs>
+                            <linearGradient id="priceFill" x1="0" x2="0" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#9f2f25" stop-opacity="0.18" />
+                                <stop offset="100%" stop-color="#9f2f25" stop-opacity="0.01" />
+                            </linearGradient>
+                            <filter id="lineGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#672018" flood-opacity="0.15" />
+                            </filter>
+                        </defs>
+                        ${gridLines}
+                        ${xMarkers}
+                        <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="rgba(103,32,24,.18)" />
+                        <text x="${padding}" y="${height - 10}" fill="#8a7d68" font-size="12">${escapeHtml(formatDateShort(firstDate))}</text>
+                        <text x="${width - padding - 44}" y="${height - 10}" fill="#8a7d68" font-size="12">${escapeHtml(formatDateShort(lastDate))}</text>
+                        <path d="${priceArea}" fill="url(#priceFill)" />
+                        <path d="${priceLine}" fill="none" stroke="#9f2f25" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#lineGlow)" />
+                        <path d="${navLine}" fill="none" stroke="#177b66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 7" />
+                    </svg>
+                    <div class="chart-legend">
+                        <span class="legend-item"><span class="legend-line line-price"></span>场内收盘价</span>
+                        <span class="legend-item"><span class="legend-line line-nav"></span>单位净值</span>
+                        <span class="legend-item">${escapeHtml(firstDate)} 至 ${escapeHtml(lastDate)}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHistoryTable(rows) {
+            const tableRows = rows.slice(-30).reverse().map(row => `
+                <tr>
+                    <td>${escapeHtml(row.date)}</td>
+                    <td>${formatNumber(row.close, 3)}</td>
+                    <td class="change-cell"><span class="percent-pill ${percentTone(row.pct_chg)}">${formatSignedPercent(row.pct_chg)}</span></td>
+                    <td>${formatNumber(row.unit_nav, 4)}</td>
+                    <td>${escapeHtml(row.nav_date || '-')}</td>
+                    <td class="premium-cell"><span class="percent-pill ${percentTone(row.premium, 'premium-up', 'premium-down')}">${formatSignedPercent(row.premium)}</span></td>
+                    <td>${formatMoneyWanFromThousand(row.amount)}</td>
+                </tr>
+            `).join('');
+
+            return `
+                <div class="history-table-wrap">
+                    <table class="history-table">
+                        <colgroup>
+                            <col style="width: 16%">
+                            <col style="width: 12%">
+                            <col style="width: 12%">
+                            <col style="width: 13%">
+                            <col style="width: 16%">
+                            <col style="width: 12%">
+                            <col style="width: 19%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>交易日</th>
+                                <th>收盘价</th>
+                                <th>涨跌幅</th>
+                                <th>单位净值</th>
+                                <th>净值日</th>
+                                <th>价差</th>
+                                <th>成交额</th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderHistory(result) {
+            const content = document.getElementById('historyContent');
+            const rows = filterHistoryRows(result.comparison, activeHistoryRange);
+            if (rows.length === 0) {
+                content.innerHTML = '<div class="history-state">当前区间没有可展示的历史数据</div>';
+                return;
+            }
+
+            content.innerHTML = `
+                <div class="history-visual-grid">
+                    ${renderHistoryChart(rows)}
+                    ${renderHistorySummary(rows)}
+                </div>
+                <div class="history-note">
+                    数据源：${result.source === 'tushare' ? 'Tushare' : '东方财富 / 腾讯行情'}。场内价格使用基金日线收盘价；净值使用该交易日之前最近一次已公布单位净值，QDII 基金净值可能天然滞后。
+                </div>
+                ${renderHistoryTable(rows)}
+            `;
+        }
+
+        async function loadData() {
+            const content = document.getElementById('content');
+            const updateTimeEl = document.getElementById('updateTime');
+
+            if (!lastResult) {
+                content.innerHTML = '<div class="loading">正在获取最新数据</div>';
+            }
+
+            try {
+                const response = await fetch('api/lof');
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || '数据获取失败');
+                }
+
+                lastResult = result;
+                updateTimeEl.textContent = `更新时间：${result.update_time || result.timestamp || '刚刚更新'}`;
+                renderData(result);
+
+            } catch (error) {
+                console.error('加载失败:', error);
+                content.innerHTML = `<div class="error">❌ 数据加载失败<br>${error.message}</div>`;
+            }
+        }
+
+        function renderData(result) {
+            const content = document.getElementById('content');
+
+            // 过滤逻辑
+            const displayList = result.data.filter(fund => {
+                // "全部数据" Tab (showPaused=true) -> 完全不过滤，全部显示
+                if (showPaused) {
+                    return true;
+                }
+
+                // "有利可套" Tab -> 仅显示: 有限购额度 + 溢价>=1% + 成交额>=1000万
+                if (!fund.apply_status.includes('限')) return false;
+                if (fund.premium_rate < 1.0) return false;
+                if (fund.volume < 1000) return false;
+
+                return true;
+            });
+
+            if (displayList.length === 0) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <div>暂无符合条件的套利机会</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+
+            displayList.forEach(fund => {
+                const changeClass = fund.change_pct > 0 ? 'positive' : (fund.change_pct < 0 ? 'negative' : '');
+                const changeSign = fund.change_pct > 0 ? '+' : '';
+                // 判断交易所和持有天数（用于界面提示）
+                const isShanghai = fund.fund_id.startsWith('50') || fund.fund_id.startsWith('51');
+                const exchange = isShanghai ? '沪' : '深';
+                const holdDays = (fund.fund_type && fund.fund_type.includes('QDII')) ? 'T+3' : 'T+2';
+                const premiumTone = fund.premium_rate < 0 ? 'premium-down' : 'premium-up';
+                const sourceLabel = '';
+
+                const isSuspended = fund.volume === 0;
+                // Combine status and suspension info
+                let statusHtml = '';
+                const badgeClass = getBadgeClass(fund.apply_status);
+
+                if (isSuspended) {
+                    statusHtml = `<span class="status-badge badge-paused">停牌</span>`;
+                } else if (fund.apply_status && !fund.apply_status.includes('开放') && fund.apply_status !== '') {
+                    // Show if paused or limited (ignore 'Open')
+                    // Show '⏸ Paused' or 'Limit...'
+                    const prefix = fund.apply_status.includes('暂停') ? '暂停 · ' : '';
+                    statusHtml = `<span class="status-badge ${badgeClass}">${prefix}${escapeHtml(fund.apply_status)}</span>`;
+                }
+
+                html += `
+                        <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}">
+                            <div class="fund-header">
+                                <div class="fund-info">
+                                    <div class="fund-name"><a href="http://fund.eastmoney.com/${fund.fund_id}.html" target="_blank" rel="noopener noreferrer">${escapeHtml(fund.fund_name)}</a></div>
+                                    <button class="fund-code" type="button" onclick="copyCode('${escapeHtml(fund.fund_id)}')" title="点击复制代码" aria-label="复制基金代码 ${escapeHtml(fund.fund_id)}">
+                                        <span>${escapeHtml(fund.fund_id)}</span>
+                                        <span class="meta-dot">·</span>
+                                        <span>${exchange}</span>
+                                        <span class="meta-dot">·</span>
+                                        <span>${escapeHtml(fund.fund_type)}</span>
+                                        <span class="meta-dot">·</span>
+                                        <span>${holdDays}</span>
+                                    </button>
+                                </div>
+                                <div class="fund-actions">
+                                    ${statusHtml}
+                                    <button class="detail-btn" type="button" onclick="openFundDetail('${escapeHtml(fund.fund_id)}')">详情</button>
+                                </div>
+                            </div>
+                            <div class="fund-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">价格</div>
+                                    <div class="detail-value">${fund.price.toFixed(3)}</div>
+                                    <div class="detail-sub ${changeClass}">${changeSign}${fund.change_pct.toFixed(2)}%</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">净值</div>
+                                    <div class="detail-value">${fund.net_value.toFixed(3)}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">成交额</div>
+                                    <div class="detail-value">${(fund.volume >= 10000) ? (fund.volume / 10000).toFixed(2) + '亿' : fund.volume.toFixed(0) + '万'}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">实时溢价率</div>
+                                    <div class="detail-value ${premiumTone}">${fund.premium_rate.toFixed(2)}%</div>
+                                    ${sourceLabel}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            });
+
+            // "有利可套" Tab 底部追加筛选规则说明
+            if (!showPaused) {
+                html += `
+                    <div class="filter-note">
+                        <div class="filter-note-title">当前筛选条件</div>
+                        <ul>
+                            <li>申购状态为<b>限购</b>（如限100、限1万等）</li>
+                            <li>实时溢价率 <b>≥ 1%</b></li>
+                            <li>成交额 <b>≥ 1000 万</b></li>
+                        </ul>
+                        <div class="filter-note-extra">
+                            实时溢价率会根据 <b>场内价格 / 基金净值（或盘中估值）</b> 计算。
+                        </div>
+                        <div class="filter-note-risk">
+                            数据仅供参考，不构成投资建议。投资有风险，决策需谨慎。
+                        </div>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+
+        }
+
+        // 页面加载时获取数据
+        loadData();
+
+        // 每5分钟自动刷新
+        setInterval(loadData, 5 * 60 * 1000);
+    </script>
+</body>
+
+</html>
