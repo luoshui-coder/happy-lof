@@ -1,0 +1,27 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - img "今乐福" [ref=e4]
+    - generic [ref=e5]:
+      - heading "今乐福" [level=1] [ref=e6]
+      - paragraph [ref=e7]: LOF 溢价查询 · 把握基金的每一次价值偏离
+    - generic [ref=e8]: 更新时间：加载中...
+  - region "LOF 筛选工具" [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic: 🔍
+        - searchbox "按基金代码或名称搜索" [ref=e12]
+      - generic [ref=e13]:
+        - img "Cookie 状态加载中" [ref=e14]
+        - button "刷新数据" [disabled] [ref=e15] [cursor=pointer]: ↻
+        - button "指南" [ref=e16] [cursor=pointer]
+    - generic "基金分类" [ref=e17]:
+      - button "有利可套" [pressed] [ref=e18] [cursor=pointer]
+      - button "全部" [ref=e19] [cursor=pointer]
+      - button "股票 LOF" [ref=e20] [cursor=pointer]
+      - button "指数 LOF" [ref=e21] [cursor=pointer]
+      - button "QDII" [ref=e22] [cursor=pointer]
+  - generic [ref=e24]: 正在获取最新数据.
+  - text: "- - - - + +"
+  - paragraph [ref=e26]:
+    - text: 陕ICP备2024050461号-4
+    - button "使用帮助" [ref=e27] [cursor=pointer]

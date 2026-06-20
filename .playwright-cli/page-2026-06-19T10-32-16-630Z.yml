@@ -1,0 +1,27 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - img "今乐福" [ref=e4]
+    - generic [ref=e5]:
+      - heading "今乐福" [level=1] [ref=e6]
+      - generic [ref=e7]:
+        - img "Cookie 状态加载中" [ref=e8]
+        - generic [ref=e9]: 加载中...
+        - button "刷新数据" [disabled] [ref=e10] [cursor=pointer]: ↻
+        - button "指南" [ref=e11] [cursor=pointer]
+  - region "LOF 筛选工具" [ref=e12]:
+    - generic [ref=e14]:
+      - generic: 🔍
+      - searchbox "按基金代码或名称搜索" [ref=e15]
+    - generic [ref=e16]:
+      - generic "基金分类" [ref=e17]:
+        - button "有利可套" [pressed] [ref=e18] [cursor=pointer]
+        - button "全部" [ref=e19] [cursor=pointer]
+        - button "股票 LOF" [ref=e20] [cursor=pointer]
+        - button "指数 LOF" [ref=e21] [cursor=pointer]
+        - button "QDII" [ref=e22] [cursor=pointer]
+      - generic [ref=e23]: 加载中
+  - generic [ref=e25]: 正在获取最新数据.
+  - text: "- - - - + +"
+  - paragraph [ref=e27]:
+    - text: 陕ICP备2024050461号-4
+    - button "使用帮助" [ref=e28] [cursor=pointer]

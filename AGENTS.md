@@ -1,48 +1,44 @@
-# AGENTS.md
+# Repository Guidelines
 
-This file provides guidance to Codex when working with this repository.
+## Project Structure & Module Organization
 
-## 项目概览
+This repository powers “今乐福”, a Flask API plus static frontend for LOF arbitrage data. `app.py` exports the Flask `app` and route table. `api/index.py` is a thin adapter that imports the same app. Core Jisilu fetching, parsing, and filtering logic lives in `lof_lib.py`. Frontend assets live under `public/`, with `public/index.html` as the main page and images/SVGs beside it. Bark push helpers for the Aliyun/BaoTa environment are named `baota_lof_*_push.py` and `baota_lof_*_cron.sh`. There is currently no dedicated `tests/` directory.
 
-这是“今乐福”的阿里云部署版本：
+## Build, Test, and Development Commands
 
-- 后端：`app.py` 导出 Flask `app`，用于本地 API 调试或服务器侧按需挂载。
-- 前端：`public/index.html` 静态页面，线上默认由阿里云服务器 nginx 托管。
-- 数据源：首页实时列表使用集思录接口，核心逻辑封装在 `lof_lib.py`；基金详情历史曲线按需调用 Tushare。
-- 持久化：无本地持久化，不使用 SQLite。
-- 定时任务：无常驻 scheduler，不使用 APScheduler。
-
-## 常用命令
-
-安装依赖：
+Install dependencies:
 
 ```bash
 pip3 install -r requirements.txt
 ```
 
-仅运行 Flask API：
+Run the local API:
 
 ```bash
 flask --app app run --port 5003
 ```
 
-部署：
+Useful smoke checks:
 
 ```bash
-# 线上默认部署到阿里云服务器 / 宝塔 / nginx，不走 Vercel。
+curl http://127.0.0.1:5003/api/health
+curl http://127.0.0.1:5003/api/lof
 ```
 
-## API
+`public/index.html` can be opened directly or served by nginx/static hosting. Production deployment defaults to Aliyun/BaoTa/nginx, not Vercel.
 
-- `GET /api/health`：轻量健康检查，不请求集思录。
-- `GET /api/lof`：实时 LOF 数据，前端负责筛选展示。
-- `GET /api/lof/all`：非开放申购 LOF 数据。
-- `GET /api/lof/<fund_id>/history`：按需返回 Tushare 场内价格和基金净值历史。
+## Coding Style & Naming Conventions
 
-## 维护注意
+Use Python 3, 4-space indentation, type hints where they improve clarity, and small request-scoped helpers for API work. Keep route behavior in `app.py` and reusable data logic in `lof_lib.py`. Prefer descriptive snake_case names for Python functions and variables. Keep static files in `public/`; do not introduce Flask `static_folder` usage.
 
-- 不要重新引入 `database.py`、`scheduler.py`、SQLite 或长期运行脚本。
-- 阿里云服务器环境变量按需配置 `JISILU_COOKIE`、`TUSHARE_TOKEN`。
-- 不要把真实 Cookie、token、密钥写入仓库或回复。
-- 静态资源放 `public/`，不要使用 Flask `static_folder`。
-- 生产发布默认走阿里云服务器，不使用 Vercel 配置。
+## Testing Guidelines
+
+No formal test framework is configured. For changes, run at least the Flask server and the smoke checks above. For data-source changes, verify both authenticated and degraded Jisilu behavior when possible. For history changes, test `/api/lof/<fund_id>/history` with and without `TUSHARE_TOKEN`.
+
+## Commit & Pull Request Guidelines
+
+Recent history uses short imperative or Conventional Commit-style messages, for example `feat: ...`, `fix: ...`, and `docs: ...`. Keep commits focused. Pull requests should describe the user-visible change, list any API or environment-variable impact, include screenshots for frontend changes, and note the smoke checks performed.
+
+## Security & Configuration Tips
+
+Configure secrets through environment variables such as `JISILU_USERNAME`, `JISILU_PASSWORD`, `JISILU_COOKIE`, and `TUSHARE_TOKEN`. Never commit real cookies, tokens, passwords, or BaoTa/server credentials. Do not reintroduce `database.py`, `scheduler.py`, SQLite persistence, APScheduler, or long-running background schedulers.

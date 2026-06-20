@@ -1,0 +1,117 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - img "今乐福" [ref=e4]
+    - generic [ref=e5]:
+      - heading "今乐福" [level=1] [ref=e6]
+      - paragraph [ref=e7]: LOF 溢价查询 · 把握基金的每一次价值偏离
+    - generic [ref=e8]: 更新时间：2026-06-19 09:56:01
+  - region "LOF 筛选工具" [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic: ⌕
+        - searchbox "按基金代码或名称搜索" [ref=e12]
+      - generic [ref=e13]:
+        - img "Cookie 状态需确认：疑似 cookie 失效或权限不足（index_lof=20 < 80）" [ref=e27]
+        - button "刷新数据" [ref=e15] [cursor=pointer]: ↻
+        - button "指南" [active] [pressed] [ref=e16] [cursor=pointer]
+    - generic "基金分类" [ref=e17]:
+      - button "全部" [ref=e18] [cursor=pointer]
+      - button "股票 LOF" [ref=e19] [cursor=pointer]
+      - button "指数 LOF" [pressed] [ref=e20] [cursor=pointer]
+      - button "QDII" [ref=e21] [cursor=pointer]
+  - generic [ref=e3042]:
+    - generic [ref=e3043]:
+      - generic [ref=e3044]:
+        - generic [ref=e3045]: 给第一次看 LOF 的人
+        - heading "LOF 套利入门：先别背公式，先看懂“价差”" [level=2] [ref=e3046]
+        - paragraph [ref=e3047]: 你可以把 LOF 想成一篮同样的货：一边在基金公司按净值进货，一边在证券市场按市价买卖。 当两边价格不一样，价差就出现了。
+        - paragraph [ref=e3048]: 本页只讲一件事：怎么判断“看起来有便宜可捡”的机会，是真的能做，还是只是一个会夹手的抽屉。
+        - generic "学习路径" [ref=e3049]:
+          - generic [ref=e3050]:
+            - generic [ref=e3051]: 第一步
+            - text: 看懂两扇门：净值和市价。
+          - generic [ref=e3052]:
+            - generic [ref=e3053]: 第二步
+            - text: 看懂水位差：溢价从哪里来。
+          - generic [ref=e3054]:
+            - generic [ref=e3055]: 第三步
+            - text: 看懂等待期：T+2/T+3 的风险。
+          - generic [ref=e3056]:
+            - generic [ref=e3057]: 第四步
+            - text: 看三盏灯：再决定做不做。
+      - img "LOF 像两扇门：基金公司按净值申购，证券市场按市价买卖" [ref=e3058]
+    - figure "先看完整地图：LOF 溢价套利不是只看一个溢价率，而是从发现价差开始，一路确认安全垫、申购状态、到账时间、成交深度和费用滑点。" [ref=e3059]:
+      - img "LOF 溢价套利全流程图：发现溢价、判断安全垫、确认申购、下单申购、等待到账、场内卖出" [ref=e3060]
+      - generic [ref=e3061]: 先看完整地图：LOF 溢价套利不是只看一个溢价率，而是从发现价差开始，一路确认安全垫、申购状态、到账时间、成交深度和费用滑点。
+    - heading "一、LOF 像一个有两扇门的市场" [level=3] [ref=e3062]
+    - paragraph [ref=e3063]: 普通基金通常只有“基金公司”这扇门；股票只有“交易市场”这扇门。LOF 特别的地方，是两扇门都开着。
+    - group [ref=e3064]:
+      - generic "用菜市场打比方：同一篮菜，两边报价不同 -" [ref=e3065] [cursor=pointer]
+      - generic [ref=e3066]:
+        - generic [ref=e3067]: 想象你要买一篮菜。批发窗口说“这篮菜今天值 100 元”，隔壁摊位因为大家抢着买，已经有人愿意出 103 元。 这 3 元不是菜突然变多了，而是交易市场的人愿意出更高价格。
+        - figure "同一份 LOF 份额，可以从基金公司这扇门申购，也可以从证券市场这扇门卖出。" [ref=e3068]:
+          - img "一篮基金份额同时连接基金公司和证券市场两种渠道" [ref=e3069]
+          - generic [ref=e3070]: 同一份 LOF 份额，可以从基金公司这扇门申购，也可以从证券市场这扇门卖出。
+        - generic [ref=e3071]:
+          - generic [ref=e3072]:
+            - generic [ref=e3073]: "1"
+            - paragraph [ref=e3074]: 净值像批发窗口的标价：基金底层资产合起来大概值多少钱。
+          - generic [ref=e3075]:
+            - generic [ref=e3076]: "2"
+            - paragraph [ref=e3077]: 市价像摊位现场成交价：市场上有人愿意用多少钱买卖。
+          - generic [ref=e3078]:
+            - generic [ref=e3079]: "3"
+            - paragraph [ref=e3080]: 套利就是试图从便宜门进、从贵门出。但门不是瞬移门，中间要等份额到账。
+    - group [ref=e3081]:
+      - generic "最常见的是“溢价套利” -" [ref=e3082] [cursor=pointer]
+      - generic [ref=e3083]:
+        - figure "净值像左边水位，市价像右边水位；右边更高，中间的高度差就是溢价空间。" [ref=e3084]:
+          - img "溢价像两杯水之间的水位差" [ref=e3085]
+          - generic [ref=e3086]: 净值像左边水位，市价像右边水位；右边更高，中间的高度差就是溢价空间。
+        - paragraph [ref=e3087]: 溢价就是市价高于净值。比如净值 1.000 元，市场价 1.030 元，粗略看就是 3% 溢价。 你的想法是：按 1.000 申购，到账后按接近 1.030 卖掉。
+        - generic [ref=e3088]: 入门先记一句话：溢价不是利润，溢价只是安全垫。 真正利润要扣掉申购费、交易佣金，还要扛住等待期间的价格波动。
+    - heading "二、为什么不是看到溢价就能捡钱？" [level=3] [ref=e3089]
+    - paragraph [ref=e3090]: 因为你申购后，份额不是马上能卖。套利最容易误解的地方，就是把“今天看到的价差”当成“已经到手的钱”。
+    - group [ref=e3091]:
+      - generic "T+2 / T+3：像点菜，要等出锅 -" [ref=e3092] [cursor=pointer]
+      - generic [ref=e3093]:
+        - figure "你在 T 日下单，真正能卖出往往要等到 T+2 或 T+3；等待的几天里，价格可能已经变了。" [ref=e3094]:
+          - img "LOF 申购后需要等待 T+2 或 T+3 才能卖出" [ref=e3095]
+          - generic [ref=e3096]: 你在 T 日下单，真正能卖出往往要等到 T+2 或 T+3；等待的几天里，价格可能已经变了。
+        - generic [ref=e3097]:
+          - generic [ref=e3098]:
+            - generic [ref=e3099]: T
+            - paragraph [ref=e3100]: 今天 15:00 前申购，成本通常按今天收盘后的净值确认。此时你还不能马上卖。
+          - generic [ref=e3101]:
+            - generic [ref=e3102]: "+2"
+            - paragraph [ref=e3103]: 多数普通 LOF 到 T+2 左右才有份额可卖。中间市场价格可能涨，也可能跌。
+          - generic [ref=e3104]:
+            - generic [ref=e3105]: "+3"
+            - paragraph [ref=e3106]: QDII 跨境基金常见要等更久，还要多承担海外市场和汇率波动。
+        - generic [ref=e3107]: 所以，看到 2% 溢价并不等于稳赚 2%。如果等待期间标的跌 4%，那 2% 安全垫可能不够。
+    - heading "三、下手前先看三盏灯" [level=3] [ref=e3108]
+    - paragraph [ref=e3109]: 新手不要一上来追最高溢价。更稳的方式，是把每个机会当成过马路：三盏灯都看过，再走。
+    - group [ref=e3110]:
+      - generic "三盏灯：安全垫、成交额、申购状态 -" [ref=e3111] [cursor=pointer]
+      - generic [ref=e3112]:
+        - figure "绿灯越多越稳；只要有一盏红灯，就先别急着冲。" [ref=e3113]:
+          - img "LOF 套利前检查安全垫、成交额、申购状态三盏灯" [ref=e3114]
+          - generic [ref=e3115]: 绿灯越多越稳；只要有一盏红灯，就先别急着冲。
+        - generic [ref=e3116]:
+          - generic [ref=e3117]:
+            - generic [ref=e3118]: 安全垫够不够
+            - text: 普通 LOF 低溢价要谨慎；QDII 等待更久，通常需要更厚的安全垫。
+          - generic [ref=e3119]:
+            - generic [ref=e3120]: 成交额够不够
+            - text: 成交太小，卖出时可能砸出很大滑点，就像窄门里大家一起挤。
+          - generic [ref=e3121]:
+            - generic [ref=e3122]: 能不能申购
+            - text: 暂停申购就是门关了；限购很低则只能小资金参与。
+        - generic [ref=e3123]: 本工具“有利可套”默认帮你先筛：申购状态含限购、实时溢价率不低、成交额不太小。 它不是替你做决定，而是先把明显不适合看的项目过滤掉。
+    - group [ref=e3124]:
+      - generic "稳健做法：有底仓，比裸冲更容易理解 +" [ref=e3125] [cursor=pointer]
+    - group [ref=e3126]:
+      - generic "一句话总结：套利看的是“可落袋的价差” +" [ref=e3127] [cursor=pointer]
+  - paragraph [ref=e25]:
+    - text: 陕ICP备2024050461号-4
+    - button "使用帮助" [ref=e26] [cursor=pointer]

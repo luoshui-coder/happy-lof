@@ -1,0 +1,30 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - img "今乐福" [ref=e4]
+    - generic [ref=e5]:
+      - heading "今乐福" [level=1] [ref=e6]
+      - paragraph [ref=e7]: LOF 溢价查询 · 把握基金的每一次价值偏离
+      - generic [ref=e8]:
+        - img "Cookie 异常：Unexpected token 'H', \"HTTPConnec\"... is not valid JSON" [ref=e9]
+        - generic [ref=e10]: 加载中...
+        - button "刷新数据" [ref=e11] [cursor=pointer]: ↻
+        - button "指南" [ref=e12] [cursor=pointer]
+  - region "LOF 筛选工具" [ref=e13]:
+    - generic [ref=e15]:
+      - generic: 🔍
+      - searchbox "按基金代码或名称搜索" [ref=e16]
+    - generic [ref=e17]:
+      - generic "基金分类" [ref=e18]:
+        - button "有利可套" [pressed] [ref=e19] [cursor=pointer]
+        - button "全部" [ref=e20] [cursor=pointer]
+        - button "股票 LOF" [ref=e21] [cursor=pointer]
+        - button "指数 LOF" [ref=e22] [cursor=pointer]
+        - button "QDII" [ref=e23] [cursor=pointer]
+      - generic [ref=e24]: 加载中
+  - generic [ref=e26]:
+    - text: ❌ 数据加载失败
+    - text: Unexpected token 'H', "HTTPConnec"... is not valid JSON
+  - text: "- - - - + +"
+  - paragraph [ref=e28]:
+    - text: 陕ICP备2024050461号-4
+    - button "使用帮助" [ref=e29] [cursor=pointer]

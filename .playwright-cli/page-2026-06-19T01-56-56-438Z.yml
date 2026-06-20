@@ -1,0 +1,373 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - img "今乐福" [ref=e4]
+    - generic [ref=e5]:
+      - heading "今乐福" [level=1] [ref=e6]
+      - paragraph [ref=e7]: LOF 溢价查询 · 把握基金的每一次价值偏离
+    - generic [ref=e8]: 更新时间：2026-06-19 09:56:01
+  - region "LOF 筛选工具" [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic: ⌕
+        - searchbox "按基金代码或名称搜索" [ref=e12]
+      - generic [ref=e13]:
+        - img "Cookie 状态需确认：疑似 cookie 失效或权限不足（index_lof=20 < 80）" [ref=e27]
+        - button "刷新数据" [ref=e15] [cursor=pointer]: ↻
+        - button "指南" [ref=e16] [cursor=pointer]
+    - generic "基金分类" [ref=e17]:
+      - button "全部" [ref=e18] [cursor=pointer]
+      - button "股票 LOF" [ref=e19] [cursor=pointer]
+      - button "指数 LOF" [ref=e20] [cursor=pointer]
+      - button "QDII" [active] [pressed] [ref=e21] [cursor=pointer]
+  - generic [ref=e22]:
+    - generic [ref=e1334]:
+      - generic [ref=e1335]:
+        - text: 筛选：
+        - strong [ref=e1336]: QDII
+      - generic [ref=e1337]: 共 14 条 / 全部 54 条
+    - generic [ref=e1338]:
+      - generic [ref=e1339]: 基金
+      - generic [ref=e1340]: 实时净值 / 成交额
+      - generic [ref=e1341]: 收盘价 / 涨幅
+      - generic [ref=e1342]: 实时溢价率
+      - generic [ref=e1343]: 状态 / 详情
+    - generic [ref=e1344]:
+      - generic [ref=e1345]:
+        - link "全球芯片LOF" [ref=e1347] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/501225.html
+        - button "复制基金代码 501225" [ref=e1348] [cursor=pointer]:
+          - generic [ref=e1349]: "501225"
+          - generic [ref=e1350]: ·
+          - generic [ref=e1351]: 沪
+          - generic [ref=e1352]: ·
+          - generic [ref=e1353]: QDII
+          - generic [ref=e1354]: ·
+          - generic [ref=e1355]: T+3
+      - generic [ref=e1356]:
+        - generic [ref=e1357]: "3.418"
+        - generic [ref=e1358]: 3521万
+      - generic [ref=e1359]:
+        - generic [ref=e1360]: "4.565"
+        - generic [ref=e1361]: "-0.41%"
+      - generic [ref=e1362]:
+        - generic [ref=e1363]: 33.57%
+        - generic [ref=e1364]: 净值
+      - generic [ref=e1365]:
+        - generic [ref=e1366]: 暂停 · 暂停申购
+        - button "详情" [ref=e1367] [cursor=pointer]
+    - generic [ref=e1368]:
+      - generic [ref=e1369]:
+        - link "标普信息科技LOF" [ref=e1371] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/161128.html
+        - button "复制基金代码 161128" [ref=e1372] [cursor=pointer]:
+          - generic [ref=e1373]: "161128"
+          - generic [ref=e1374]: ·
+          - generic [ref=e1375]: 深
+          - generic [ref=e1376]: ·
+          - generic [ref=e1377]: QDII
+          - generic [ref=e1378]: ·
+          - generic [ref=e1379]: T+3
+      - generic [ref=e1380]:
+        - generic [ref=e1381]: "6.573"
+        - generic [ref=e1382]: 1.70亿
+      - generic [ref=e1383]:
+        - generic [ref=e1384]: "7.059"
+        - generic [ref=e1385]: "-0.44%"
+      - generic [ref=e1386]:
+        - generic [ref=e1387]: 7.39%
+        - generic [ref=e1388]: 净值
+      - generic [ref=e1389]:
+        - generic [ref=e1390]: 暂停 · 暂停申购
+        - button "详情" [ref=e1391] [cursor=pointer]
+    - generic [ref=e1392]:
+      - generic [ref=e1393]:
+        - link "纳斯达克100LOF" [ref=e1395] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/161130.html
+        - button "复制基金代码 161130" [ref=e1396] [cursor=pointer]:
+          - generic [ref=e1397]: "161130"
+          - generic [ref=e1398]: ·
+          - generic [ref=e1399]: 深
+          - generic [ref=e1400]: ·
+          - generic [ref=e1401]: QDII
+          - generic [ref=e1402]: ·
+          - generic [ref=e1403]: T+3
+      - generic [ref=e1404]:
+        - generic [ref=e1405]: "4.484"
+        - generic [ref=e1406]: 4093万
+      - generic [ref=e1407]:
+        - generic [ref=e1408]: "4.790"
+        - generic [ref=e1409]: "-0.02%"
+      - generic [ref=e1410]:
+        - generic [ref=e1411]: 6.82%
+        - generic [ref=e1412]: 净值
+      - generic [ref=e1413]:
+        - generic [ref=e1414]: 暂停 · 暂停申购
+        - button "详情" [ref=e1415] [cursor=pointer]
+    - generic [ref=e1416]:
+      - generic [ref=e1417]:
+        - link "标普500LOF" [ref=e1419] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/161125.html
+        - button "复制基金代码 161125" [ref=e1420] [cursor=pointer]:
+          - generic [ref=e1421]: "161125"
+          - generic [ref=e1422]: ·
+          - generic [ref=e1423]: 深
+          - generic [ref=e1424]: ·
+          - generic [ref=e1425]: QDII
+          - generic [ref=e1426]: ·
+          - generic [ref=e1427]: T+3
+      - generic [ref=e1428]:
+        - generic [ref=e1429]: "3.066"
+        - generic [ref=e1430]: 1232万
+      - generic [ref=e1431]:
+        - generic [ref=e1432]: "3.176"
+        - generic [ref=e1433]: "-0.13%"
+      - generic [ref=e1434]:
+        - generic [ref=e1435]: 3.58%
+        - generic [ref=e1436]: 净值
+      - generic [ref=e1437]:
+        - generic [ref=e1438]: 暂停 · 暂停申购
+        - button "详情" [ref=e1439] [cursor=pointer]
+    - generic [ref=e1440]:
+      - generic [ref=e1441]:
+        - link "海外科技LOF" [ref=e1443] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/501312.html
+        - button "复制基金代码 501312" [ref=e1444] [cursor=pointer]:
+          - generic [ref=e1445]: "501312"
+          - generic [ref=e1446]: ·
+          - generic [ref=e1447]: 沪
+          - generic [ref=e1448]: ·
+          - generic [ref=e1449]: QDII
+          - generic [ref=e1450]: ·
+          - generic [ref=e1451]: T+3
+      - generic [ref=e1452]:
+        - generic [ref=e1453]: "2.349"
+        - generic [ref=e1454]: 1.49亿
+      - generic [ref=e1455]:
+        - generic [ref=e1456]: "2.390"
+        - generic [ref=e1457]: "-0.54%"
+      - generic [ref=e1458]:
+        - generic [ref=e1459]: 1.72%
+        - generic [ref=e1460]: 净值
+      - generic [ref=e1461]:
+        - generic [ref=e1462]: 限100
+        - button "详情" [ref=e1463] [cursor=pointer]
+    - generic [ref=e1464]:
+      - generic [ref=e1465]:
+        - link "港美互联网LOF" [ref=e1467] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/160644.html
+        - button "复制基金代码 160644" [ref=e1468] [cursor=pointer]:
+          - generic [ref=e1469]: "160644"
+          - generic [ref=e1470]: ·
+          - generic [ref=e1471]: 深
+          - generic [ref=e1472]: ·
+          - generic [ref=e1473]: QDII
+          - generic [ref=e1474]: ·
+          - generic [ref=e1475]: T+3
+      - generic [ref=e1476]:
+        - generic [ref=e1477]: "2.112"
+        - generic [ref=e1478]: 6.24亿
+      - generic [ref=e1479]:
+        - generic [ref=e1480]: "2.127"
+        - generic [ref=e1481]: "-1.80%"
+      - generic [ref=e1482]:
+        - generic [ref=e1483]: 0.70%
+        - generic [ref=e1484]: 净值
+      - generic [ref=e1485]:
+        - generic [ref=e1486]: 暂停 · 暂停申购
+        - button "详情" [ref=e1487] [cursor=pointer]
+    - generic [ref=e1488]:
+      - generic [ref=e1489]:
+        - link "美国REIT精选LOF" [ref=e1491] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/160140.html
+        - button "复制基金代码 160140" [ref=e1492] [cursor=pointer]:
+          - generic [ref=e1493]: "160140"
+          - generic [ref=e1494]: ·
+          - generic [ref=e1495]: 深
+          - generic [ref=e1496]: ·
+          - generic [ref=e1497]: QDII
+          - generic [ref=e1498]: ·
+          - generic [ref=e1499]: T+3
+      - generic [ref=e1500]:
+        - generic [ref=e1501]: "1.404"
+        - generic [ref=e1502]: 285万
+      - generic [ref=e1503]:
+        - generic [ref=e1504]: "1.412"
+        - generic [ref=e1505]: "-1.94%"
+      - generic [ref=e1506]:
+        - generic [ref=e1507]: 0.57%
+        - generic [ref=e1508]: 净值
+      - generic [ref=e1509]:
+        - generic [ref=e1510]: 开放
+        - button "详情" [ref=e1511] [cursor=pointer]
+    - generic [ref=e1512]:
+      - generic [ref=e1513]:
+        - link "印度基金LOF" [ref=e1515] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/164824.html
+        - button "复制基金代码 164824" [ref=e1516] [cursor=pointer]:
+          - generic [ref=e1517]: "164824"
+          - generic [ref=e1518]: ·
+          - generic [ref=e1519]: 深
+          - generic [ref=e1520]: ·
+          - generic [ref=e1521]: QDII
+          - generic [ref=e1522]: ·
+          - generic [ref=e1523]: T+3
+      - generic [ref=e1524]:
+        - generic [ref=e1525]: "1.311"
+        - generic [ref=e1526]: 3261万
+      - generic [ref=e1527]:
+        - generic [ref=e1528]: "1.316"
+        - generic [ref=e1529]: +0.23%
+      - generic [ref=e1530]:
+        - generic [ref=e1531]: 0.35%
+        - generic [ref=e1532]: 净值
+      - generic [ref=e1533]:
+        - generic [ref=e1534]: 限50万
+        - button "详情" [ref=e1535] [cursor=pointer]
+    - generic [ref=e1536]:
+      - generic [ref=e1537]:
+        - link "美国消费LOF" [ref=e1539] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/162415.html
+        - button "复制基金代码 162415" [ref=e1540] [cursor=pointer]:
+          - generic [ref=e1541]: "162415"
+          - generic [ref=e1542]: ·
+          - generic [ref=e1543]: 深
+          - generic [ref=e1544]: ·
+          - generic [ref=e1545]: QDII
+          - generic [ref=e1546]: ·
+          - generic [ref=e1547]: T+3
+      - generic [ref=e1548]:
+        - generic [ref=e1549]: "2.851"
+        - generic [ref=e1550]: 653万
+      - generic [ref=e1551]:
+        - generic [ref=e1552]: "2.856"
+        - generic [ref=e1553]: "-1.52%"
+      - generic [ref=e1554]:
+        - generic [ref=e1555]: 0.18%
+        - generic [ref=e1556]: 净值
+      - generic [ref=e1557]:
+        - generic [ref=e1558]: 限1千
+        - button "详情" [ref=e1559] [cursor=pointer]
+    - generic [ref=e1560]:
+      - generic [ref=e1561]:
+        - link "标普医疗保健LOF" [ref=e1563] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/161126.html
+        - button "复制基金代码 161126" [ref=e1564] [cursor=pointer]:
+          - generic [ref=e1565]: "161126"
+          - generic [ref=e1566]: ·
+          - generic [ref=e1567]: 深
+          - generic [ref=e1568]: ·
+          - generic [ref=e1569]: QDII
+          - generic [ref=e1570]: ·
+          - generic [ref=e1571]: T+3
+      - generic [ref=e1572]:
+        - generic [ref=e1573]: "1.842"
+        - generic [ref=e1574]: 394万
+      - generic [ref=e1575]:
+        - generic [ref=e1576]: "1.844"
+        - generic [ref=e1577]: "-0.97%"
+      - generic [ref=e1578]:
+        - generic [ref=e1579]: 0.10%
+        - generic [ref=e1580]: 净值
+      - generic [ref=e1581]:
+        - generic [ref=e1582]: 暂停 · 暂停申购
+        - button "详情" [ref=e1583] [cursor=pointer]
+    - generic [ref=e1584]:
+      - generic [ref=e1585]:
+        - link "美元债LOF" [ref=e1587] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/501300.html
+        - button "复制基金代码 501300" [ref=e1588] [cursor=pointer]:
+          - generic [ref=e1589]: "501300"
+          - generic [ref=e1590]: ·
+          - generic [ref=e1591]: 沪
+          - generic [ref=e1592]: ·
+          - generic [ref=e1593]: QDII
+          - generic [ref=e1594]: ·
+          - generic [ref=e1595]: T+3
+      - generic [ref=e1596]:
+        - generic [ref=e1597]: "0.942"
+        - generic [ref=e1598]: 1714万
+      - generic [ref=e1599]:
+        - generic [ref=e1600]: "0.943"
+        - generic [ref=e1601]: 0.00%
+      - generic [ref=e1602]:
+        - generic [ref=e1603]: 0.06%
+        - generic [ref=e1604]: 净值
+      - generic [ref=e1605]:
+        - generic [ref=e1606]: 限5000万
+        - button "详情" [ref=e1607] [cursor=pointer]
+    - generic [ref=e1608]:
+      - generic [ref=e1609]:
+        - link "标普生物科技LOF" [ref=e1611] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/161127.html
+        - button "复制基金代码 161127" [ref=e1612] [cursor=pointer]:
+          - generic [ref=e1613]: "161127"
+          - generic [ref=e1614]: ·
+          - generic [ref=e1615]: 深
+          - generic [ref=e1616]: ·
+          - generic [ref=e1617]: QDII
+          - generic [ref=e1618]: ·
+          - generic [ref=e1619]: T+3
+      - generic [ref=e1620]:
+        - generic [ref=e1621]: "1.866"
+        - generic [ref=e1622]: 1160万
+      - generic [ref=e1623]:
+        - generic [ref=e1624]: "1.862"
+        - generic [ref=e1625]: +3.39%
+      - generic [ref=e1626]:
+        - generic [ref=e1627]: "-0.20%"
+        - generic [ref=e1628]: 净值
+      - generic [ref=e1629]:
+        - generic [ref=e1630]: 暂停 · 暂停申购
+        - button "详情" [ref=e1631] [cursor=pointer]
+    - generic [ref=e1632]:
+      - generic [ref=e1633]:
+        - link "南方香港LOF" [ref=e1635] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/160125.html
+        - button "复制基金代码 160125" [ref=e1636] [cursor=pointer]:
+          - generic [ref=e1637]: "160125"
+          - generic [ref=e1638]: ·
+          - generic [ref=e1639]: 深
+          - generic [ref=e1640]: ·
+          - generic [ref=e1641]: QDII
+          - generic [ref=e1642]: ·
+          - generic [ref=e1643]: T+3
+      - generic [ref=e1644]:
+        - generic [ref=e1645]: "1.733"
+        - generic [ref=e1646]: 136万
+      - generic [ref=e1647]:
+        - generic [ref=e1648]: "1.702"
+        - generic [ref=e1649]: "-0.53%"
+      - generic [ref=e1650]:
+        - generic [ref=e1651]: "-1.81%"
+        - generic [ref=e1652]: 净值
+      - generic [ref=e1653]:
+        - generic [ref=e1654]: 开放
+        - button "详情" [ref=e1655] [cursor=pointer]
+    - generic [ref=e1656]:
+      - generic [ref=e1657]:
+        - link "中概互联网LOF" [ref=e1659] [cursor=pointer]:
+          - /url: http://fund.eastmoney.com/164906.html
+        - button "复制基金代码 164906" [ref=e1660] [cursor=pointer]:
+          - generic [ref=e1661]: "164906"
+          - generic [ref=e1662]: ·
+          - generic [ref=e1663]: 深
+          - generic [ref=e1664]: ·
+          - generic [ref=e1665]: QDII
+          - generic [ref=e1666]: ·
+          - generic [ref=e1667]: T+3
+      - generic [ref=e1668]:
+        - generic [ref=e1669]: "0.927"
+        - generic [ref=e1670]: 1062万
+      - generic [ref=e1671]:
+        - generic [ref=e1672]: "0.909"
+        - generic [ref=e1673]: "-1.84%"
+      - generic [ref=e1674]:
+        - generic [ref=e1675]: "-1.97%"
+        - generic [ref=e1676]: 净值
+      - generic [ref=e1677]:
+        - generic [ref=e1678]: 开放
+        - button "详情" [ref=e1679] [cursor=pointer]
+  - text: "- - - - + +"
+  - paragraph [ref=e25]:
+    - text: 陕ICP备2024050461号-4
+    - button "使用帮助" [ref=e26] [cursor=pointer]

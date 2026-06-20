@@ -57,7 +57,7 @@
         body {
             margin: 0;
             min-height: 100vh;
-            padding: 0 0 calc(84px + env(safe-area-inset-bottom));
+            padding: 0 0 calc(32px + env(safe-area-inset-bottom));
             font-family: var(--body);
             background:
                 linear-gradient(90deg, rgba(37, 92, 133, 0.035) 1px, transparent 1px) 0 0 / 30px 30px,
@@ -89,10 +89,13 @@
 
         button:focus-visible,
         a:focus-visible,
+        input:focus-visible,
         summary:focus-visible,
         .fund-code:focus-visible,
         .detail-btn:focus-visible,
-        .range-btn:focus-visible {
+        .range-btn:focus-visible,
+        .chip-btn:focus-visible,
+        .tool-btn:focus-visible {
             outline: 3px solid rgba(185, 135, 35, 0.45);
             outline-offset: 3px;
         }
@@ -101,7 +104,7 @@
             position: sticky;
             top: 0;
             z-index: 10;
-            padding: 18px max(18px, env(safe-area-inset-left)) 24px max(18px, env(safe-area-inset-right));
+            padding: 14px max(16px, env(safe-area-inset-left)) 16px max(16px, env(safe-area-inset-right));
             color: var(--paper-strong);
             background:
                 linear-gradient(135deg, rgba(103, 32, 24, 0.98), rgba(29, 36, 36, 0.95)),
@@ -120,8 +123,8 @@
         }
 
         .brand-mark {
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             border-radius: 8px;
             object-fit: cover;
             background: #fff6dc;
@@ -136,7 +139,7 @@
         .header h1 {
             margin: 0;
             font-family: var(--display);
-            font-size: clamp(1.55rem, 5vw, 2.35rem);
+            font-size: clamp(1.34rem, 4vw, 1.95rem);
             font-weight: 700;
             letter-spacing: 0;
             line-height: 1.05;
@@ -145,8 +148,58 @@
         .header p {
             margin: 5px 0 0;
             color: rgba(255, 250, 240, 0.78);
-            font-size: 0.88rem;
+            font-size: 0.78rem;
             line-height: 1.45;
+        }
+
+
+        .header-tools {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 4px;
+        }
+
+        .header-tools .update-time {
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: rgba(255, 250, 240, 0.86);
+            font-size: 0.62rem;
+        }
+
+        .header-tools .cookie-dot {
+            width: 8px;
+            height: 8px;
+            box-shadow: 0 0 0 2px rgba(197, 154, 57, 0.12);
+        }
+        .header-tools .cookie-dot.status-ok {
+            box-shadow: 0 0 0 2px rgba(38, 183, 120, 0.14);
+        }
+        .header-tools .cookie-dot.status-warn {
+            box-shadow: 0 0 0 2px rgba(217, 169, 40, 0.14);
+        }
+        .header-tools .cookie-dot.status-error {
+            box-shadow: 0 0 0 2px rgba(198, 61, 53, 0.13);
+        }
+
+        .header-tools .tool-btn {
+            width: 28px;
+            min-height: 24px;
+            background: rgba(255, 250, 240, 0.12);
+            border-color: rgba(255, 250, 240, 0.2);
+            color: rgba(255, 250, 240, 0.9);
+            font-size: 0.68rem;
+        }
+
+        .header-tools .guide-btn {
+            width: auto;
+            padding: 0 7px;
+        }
+        .header-tools .tool-btn:hover {
+            background: rgba(255, 250, 240, 0.2);
+            color: #fff;
         }
 
         .update-time {
@@ -164,22 +217,210 @@
         .container {
             width: min(960px, 100%);
             margin: 0 auto;
-            padding: 18px 14px 10px;
+            padding: 14px 14px 10px;
+        }
+
+        .control-shell {
+            position: sticky;
+            top: 0;
+            z-index: 9;
+            width: min(960px, calc(100% - 20px));
+            margin: 8px auto 0;
+            padding: 6px;
+            background: rgba(255, 253, 246, 0.92);
+            border: 1px solid rgba(103, 32, 24, 0.14);
+            border-radius: 8px;
+            box-shadow: 0 12px 28px rgba(64, 49, 31, 0.1);
+            backdrop-filter: blur(16px);
+        }
+
+        .control-top {
+            display: grid;
+            grid-template-columns: minmax(180px, 1fr) auto;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .search-field {
+            position: relative;
+            min-width: 0;
+        }
+
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            color: #6f6554;
+            font-size: 1rem;
+            font-weight: 900;
+            line-height: 1;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .search-field input {
+            width: 100%;
+            height: 32px;
+            min-width: 0;
+            padding: 0 10px 0 36px;
+            color: var(--ink);
+            background: rgba(255, 253, 246, 0.98);
+            border: 1px solid rgba(103, 32, 24, 0.14);
+            border-radius: 7px;
+            font-family: var(--body);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .search-field input::placeholder {
+            color: #9a907f;
+            font-weight: 650;
+        }
+
+        .tool-actions {
+            display: flex;
+            min-width: 0;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
+        .cookie-dot {
+            width: 14px;
+            height: 14px;
+            flex: 0 0 auto;
+            border: 1px solid rgba(103, 32, 24, 0.16);
+            border-radius: 50%;
+            background: #c59a39;
+            box-shadow: 0 0 0 4px rgba(197, 154, 57, 0.12);
+        }
+
+        .cookie-dot.status-ok {
+            background: #26b778;
+            box-shadow: 0 0 0 4px rgba(38, 183, 120, 0.14);
+        }
+
+        .cookie-dot.status-warn {
+            background: #d9a928;
+            box-shadow: 0 0 0 4px rgba(217, 169, 40, 0.14);
+        }
+
+        .cookie-dot.status-error {
+            background: #c63d35;
+            box-shadow: 0 0 0 4px rgba(198, 61, 53, 0.13);
+        }
+
+        .tool-btn,
+        .chip-btn {
+            min-height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            border: 1px solid rgba(103, 32, 24, 0.14);
+            border-radius: 7px;
+            background: rgba(244, 240, 230, 0.72);
+            color: #665d4f;
+            cursor: pointer;
+            font-size: 0.74rem;
+            font-weight: 800;
+            line-height: 1;
+            white-space: nowrap;
+            transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
+        }
+
+        .tool-btn {
+            width: 36px;
+            padding: 0;
+        }
+
+        .tool-btn.guide-btn {
+            width: auto;
+            padding: 0 10px;
+        }
+
+        .tool-btn:hover,
+        .chip-btn:hover {
+            color: var(--ink);
+            border-color: rgba(103, 32, 24, 0.24);
+            background: rgba(255, 250, 240, 0.92);
+            transform: translateY(-1px);
+        }
+
+        .tool-btn.active,
+        .chip-btn.active {
+            color: #fffaf0;
+            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+            border-color: rgba(103, 32, 24, 0.44);
+            box-shadow: 0 8px 18px rgba(103, 32, 24, 0.16);
+        }
+
+        .chip-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            min-width: 0;
+            gap: 6px;
+        }
+
+        .category-scroll {
+            display: flex;
+            min-width: 0;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 1px;
+            scrollbar-width: none;
+        }
+
+        .category-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip-btn {
+            flex: 0 0 auto;
+            padding: 0 9px;
+        }
+
+        .result-count {
+            flex: 0 0 auto;
+            min-height: 30px;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 7px;
+            color: #6e786f;
+            background: rgba(255, 250, 240, 0.56);
+            border: 1px solid rgba(103, 32, 24, 0.09);
+            border-radius: 7px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .result-count strong {
+            color: var(--brand-dark);
+        }
+
+        .fund-table-head {
+            display: none;
         }
 
         .fund-card {
             position: relative;
             overflow: hidden;
             display: grid;
-            gap: 12px;
-            min-height: 118px;
-            margin-bottom: 12px;
-            padding: 15px;
+            grid-template-columns: minmax(0, 1.36fr) minmax(86px, 0.72fr) minmax(86px, 0.72fr) minmax(92px, 0.74fr) minmax(98px, 0.56fr);
+            gap: 0;
+            align-items: center;
+            min-height: 68px;
+            margin-bottom: 8px;
+            padding: 10px 11px;
             background:
                 linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(246, 248, 239, 0.88)),
                 linear-gradient(90deg, rgba(183, 58, 47, 0.08), transparent 42%);
             border: 1px solid rgba(103, 32, 24, 0.13);
-            border-left: 5px solid var(--brand);
+            border-left: 4px solid var(--brand);
             border-radius: 8px;
             box-shadow: 0 9px 24px rgba(64, 49, 31, 0.08);
             transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
@@ -222,16 +463,53 @@
             gap: 12px;
         }
 
+        .fund-metric,
+        .fund-premium,
+        .fund-actions {
+            min-width: 0;
+        }
+
+        .fund-metric,
+        .fund-premium,
+        .fund-actions {
+            padding-left: 12px;
+            border-left: 1px solid rgba(216, 222, 206, 0.86);
+            text-align: center;
+        }
+
+        .fund-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fund-metric,
+        .fund-premium {
+            display: grid;
+            gap: 4px;
+        }
+
         .fund-info {
             min-width: 0;
         }
 
+        .fund-title-row {
+            display: flex;
+            max-width: 100%;
+            min-width: 0;
+            align-items: baseline;
+            gap: 4px;
+        }
+
         .fund-name {
+            flex: 1 1 auto;
+            min-width: 0;
             max-width: 100%;
             overflow: hidden;
             color: var(--ink);
             font-family: var(--display);
-            font-size: 1.08rem;
+            font-size: 0.98rem;
             font-weight: 700;
             line-height: 1.25;
             text-overflow: ellipsis;
@@ -251,19 +529,42 @@
 
         .fund-code {
             display: inline-flex;
-            flex-wrap: wrap;
-            gap: 5px;
+            flex: 0 0 auto;
+            flex-wrap: nowrap;
             align-items: center;
-            margin-top: 5px;
             padding: 0;
-            color: var(--muted);
+            color: var(--brand-dark);
             background: transparent;
             border: 0;
             cursor: pointer;
             font-family: var(--mono);
-            font-size: 0.72rem;
-            line-height: 1.5;
-            text-align: left;
+            font-size: 0.58rem;
+            font-weight: 800;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .fund-meta {
+            display: flex;
+            max-width: 100%;
+            min-width: 0;
+            flex-wrap: nowrap;
+            gap: 3px;
+            align-items: center;
+            margin-top: 3px;
+            overflow: hidden;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 0.55rem;
+            line-height: 1.15;
+            white-space: nowrap;
+        }
+
+        .fund-meta span {
+            flex: 0 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .fund-actions {
@@ -275,14 +576,14 @@
         }
 
         .detail-btn {
-            min-height: 27px;
-            padding: 5px 10px;
+            min-height: 24px;
+            padding: 4px 8px;
             color: var(--brand-dark);
             background: rgba(185, 135, 35, 0.14);
             border: 1px solid rgba(185, 135, 35, 0.35);
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.72rem;
+            font-size: 0.66rem;
             font-weight: 800;
             line-height: 1.1;
             white-space: nowrap;
@@ -293,20 +594,25 @@
         }
 
         .meta-dot {
+            flex: 0 0 auto;
             color: #b6aa94;
         }
 
         .status-badge {
             flex: 0 0 auto;
-            min-height: 27px;
-            padding: 6px 8px 5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 24px;
+            padding: 4px 6px;
             color: #fffaf0;
             background: var(--green);
             border-radius: 5px;
             box-shadow: 0 4px 10px rgba(23, 123, 102, 0.18);
-            font-size: 0.72rem;
+            font-size: 0.64rem;
             font-weight: 700;
-            line-height: 1.1;
+            line-height: 1;
+            text-align: center;
             white-space: nowrap;
         }
 
@@ -348,15 +654,19 @@
             overflow-wrap: anywhere;
             color: var(--ink);
             font-family: var(--mono);
-            font-size: clamp(0.88rem, 3vw, 1rem);
+            font-size: 0.88rem;
             font-weight: 800;
             line-height: 1.15;
+        }
+
+        .mobile-label {
+            display: none;
         }
 
         .detail-sub {
             margin-top: 3px;
             color: var(--muted);
-            font-size: 0.68rem;
+            font-size: 0.62rem;
             line-height: 1.2;
         }
 
@@ -404,89 +714,30 @@
         }
 
         .filter-note {
-            margin: 14px 0 0;
-            padding: 14px 16px;
+            margin: 0 0 7px;
+            padding: 8px 10px;
             color: var(--muted);
-            font-size: 0.84rem;
-            line-height: 1.7;
+            font-size: 0.66rem;
+            line-height: 1.42;
         }
 
         .filter-note-title {
-            margin-bottom: 6px;
+            margin-bottom: 3px;
             color: var(--brand-dark);
+            font-size: 0.68rem;
             font-weight: 800;
         }
 
-        .filter-note ul {
-            margin: 0;
-            padding-left: 18px;
-        }
-
         .filter-note-extra {
-            margin-top: 8px;
+            margin-top: 2px;
             color: #887d69;
         }
 
         .filter-note-risk {
-            margin-top: 8px;
-            padding-top: 8px;
+            margin-top: 2px;
+            padding-top: 2px;
             border-top: 1px dashed var(--hairline);
             color: #958873;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 999;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 7px;
-            width: min(560px, calc(100% - 22px));
-            margin: 0 auto calc(11px + env(safe-area-inset-bottom));
-            padding: 7px;
-            background: rgba(255, 253, 246, 0.88);
-            border: 1px solid rgba(103, 32, 24, 0.16);
-            border-radius: 12px;
-            box-shadow: 0 18px 44px rgba(42, 52, 47, 0.2);
-            backdrop-filter: blur(18px);
-        }
-
-        .nav-item {
-            display: flex;
-            min-width: 0;
-            min-height: 48px;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 7px 8px;
-            color: #6b6252;
-            background: transparent;
-            border: 1px solid transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.82rem;
-            font-weight: 700;
-            line-height: 1.1;
-            transition: background 160ms ease, color 160ms ease, transform 160ms ease;
-        }
-
-        .nav-item:hover {
-            color: var(--ink);
-            background: rgba(103, 32, 24, 0.06);
-        }
-
-        .nav-item.active {
-            color: #fffaf0;
-            background: linear-gradient(135deg, var(--brand), var(--brand-dark));
-            border-color: rgba(103, 32, 24, 0.42);
-            box-shadow: 0 8px 18px rgba(103, 32, 24, 0.18);
-        }
-
-        .nav-icon {
-            font-size: 1.05rem;
-            line-height: 1;
         }
 
         .toast {
@@ -1393,10 +1644,6 @@
         }
 
         @media (min-width: 720px) {
-            body {
-                padding-bottom: 96px;
-            }
-
             .header {
                 position: static;
                 padding-top: 28px;
@@ -1416,11 +1663,37 @@
                 padding-top: 22px;
             }
 
+            .control-shell {
+                top: 10px;
+            }
+
+            .fund-table-head {
+                display: grid;
+                grid-template-columns: minmax(0, 1.36fr) minmax(86px, 0.72fr) minmax(86px, 0.72fr) minmax(92px, 0.74fr) minmax(98px, 0.56fr);
+                gap: 0;
+                margin-bottom: 7px;
+                padding: 8px 11px;
+                color: #52645d;
+                background: rgba(219, 234, 242, 0.42);
+                border: 1px solid rgba(37, 92, 133, 0.1);
+                border-radius: 8px;
+                font-size: 0.72rem;
+                font-weight: 900;
+            }
+
+            .fund-table-head span {
+                text-align: center;
+            }
+
+            .fund-table-head span:not(:first-child) {
+                padding-left: 12px;
+                border-left: 1px solid rgba(216, 222, 206, 0.86);
+                text-align: center;
+            }
+
             .fund-card {
-                grid-template-columns: minmax(260px, 1fr) minmax(420px, 1.3fr);
-                align-items: center;
-                min-height: 104px;
-                padding: 15px 16px;
+                min-height: 86px;
+                padding: 10px 11px;
             }
 
             .fund-header {
@@ -1444,15 +1717,189 @@
             .history-summary-grid {
                 grid-template-columns: 1fr;
             }
-
-            .nav-item {
-                gap: 4px;
-                padding-inline: 4px;
-                font-size: 0.76rem;
-            }
         }
 
         @media (max-width: 719px) {
+            .header {
+                padding-top: 9px;
+                padding-bottom: 10px;
+            }
+
+            .brand-mark {
+                width: 34px;
+                height: 34px;
+            }
+
+            .header h1 {
+                font-size: 1.18rem;
+            }
+
+            .header p {
+                display: none;
+            }
+
+            .update-time {
+                font-size: 0.68rem;
+            }
+
+            .control-shell {
+                position: static;
+                width: calc(100% - 16px);
+                margin-top: 6px;
+            }
+
+            .control-top {
+                grid-template-columns: 1fr;
+            }
+
+            .tool-actions {
+                justify-content: flex-start;
+            }
+
+            .chip-btn {
+                min-height: 24px;
+                padding: 0 6px;
+                border-radius: 6px;
+                font-size: 0.6rem;
+            }
+
+            .result-count {
+                min-height: 22px;
+                padding: 0 5px;
+                border-radius: 6px;
+                font-size: 0.56rem;
+            }
+
+            .chip-row {
+                gap: 3px;
+            }
+
+            .category-scroll {
+                gap: 3px;
+            }
+
+            .container {
+                padding-top: 10px;
+            }
+
+            .fund-card {
+                grid-template-columns: minmax(96px, 1.22fr) minmax(46px, 0.7fr) minmax(46px, 0.7fr) minmax(48px, 0.72fr) minmax(50px, 0.68fr);
+                min-height: 58px;
+                padding: 8px 6px;
+                border-left-width: 4px;
+            }
+
+            .fund-table-head {
+                display: grid;
+                grid-template-columns: minmax(96px, 1.22fr) minmax(46px, 0.7fr) minmax(46px, 0.7fr) minmax(48px, 0.72fr) minmax(50px, 0.68fr);
+                gap: 0;
+                margin-bottom: 4px;
+                padding: 0 6px 3px 10px;
+                color: #6d7469;
+                background: transparent;
+                border: 0;
+                font-size: 0.48rem;
+                font-weight: 900;
+                line-height: 1.1;
+            }
+
+            .fund-table-head span {
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            .fund-table-head span:not(:first-child) {
+                padding-left: 3px;
+                text-align: center;
+            }
+
+            .fund-main {
+                padding-right: 4px;
+            }
+
+            .fund-name {
+                font-size: 0.76rem;
+                line-height: 1.16;
+            }
+
+            .fund-code {
+                font-size: 0.48rem;
+            }
+
+            .fund-meta {
+                gap: 1px;
+                margin-top: 2px;
+                font-size: 0.48rem;
+                line-height: 1.05;
+            }
+
+            .fund-metric,
+            .fund-premium {
+                min-height: 42px;
+                align-content: center;
+                padding-left: 3px;
+                border-left: 1px solid rgba(216, 222, 206, 0.6);
+            }
+
+            .fund-actions {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 42px;
+                margin-top: 0;
+                padding-top: 0;
+                padding-left: 3px;
+                border-top: 0;
+                border-left: 1px solid rgba(216, 222, 206, 0.6);
+                gap: 3px;
+            }
+
+            .mobile-label {
+                display: none; /* 去掉多余标签以省空间 */
+            }
+            .detail-value {
+                font-size: 0.72rem;
+                line-height: 1.08;
+            }
+            .detail-sub {
+                font-size: 0.55rem;
+                line-height: 1.1;
+            }
+            .filter-note {
+                margin-bottom: 5px;
+                padding: 6px 8px;
+                font-size: 0.52rem;
+                line-height: 1.34;
+            }
+            .filter-note-title {
+                margin-bottom: 2px;
+                font-size: 0.54rem;
+            }
+            .status-badge {
+                max-width: 100%;
+                height: 16px;
+                min-height: 16px;
+                padding: 0 3px;
+                overflow: hidden;
+                font-size: 0.54rem;
+                line-height: 1;
+                text-overflow: ellipsis;
+            }
+            .detail-btn {
+                min-height: 17px;
+                padding: 1px 5px;
+                font-size: 0.54rem;
+                margin-top: 0;
+            }
+
+            .detail-label {
+                display: none;
+            }
+
             .modal {
                 align-items: stretch;
                 padding: 10px;
@@ -1573,10 +2020,34 @@
             <div class="brand-copy">
                 <h1>今乐福</h1>
                 <p>LOF 溢价查询 · 把握基金的每一次价值偏离</p>
+                <div class="header-tools">
+                    <span class="cookie-dot status-warn" id="cookieStatus" role="img" aria-label="Cookie 状态加载中" title="Cookie 状态加载中"></span>
+                    <span class="update-time" id="updateTime" aria-live="polite">加载中...</span>
+                    <button class="tool-btn" type="button" id="refreshBtn" onclick="loadData(true)" aria-label="刷新数据" title="刷新数据">↻</button>
+                    <button class="tool-btn guide-btn" type="button" id="guideBtn" onclick="switchView('tutorial')" aria-pressed="false">指南</button>
+                </div>
             </div>
-            <div class="update-time" id="updateTime" aria-live="polite">更新时间：加载中...</div>
         </div>
     </div>
+
+    <section class="control-shell" aria-label="LOF 筛选工具">
+        <div class="control-top">
+            <label class="search-field">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <input id="fundSearch" type="search" placeholder="代码 / 名称" autocomplete="off" aria-label="按基金代码或名称搜索">
+            </label>
+        </div>
+        <div class="chip-row">
+            <div class="category-scroll" aria-label="基金分类">
+                <button class="chip-btn active" type="button" data-category="profit" onclick="setCategory('profit')" aria-pressed="true">有利可套</button>
+                <button class="chip-btn" type="button" data-category="all" onclick="setCategory('all')" aria-pressed="false">全部</button>
+                <button class="chip-btn" type="button" data-category="stock" onclick="setCategory('stock')" aria-pressed="false">股票 LOF</button>
+                <button class="chip-btn" type="button" data-category="index" onclick="setCategory('index')" aria-pressed="false">指数 LOF</button>
+                <button class="chip-btn" type="button" data-category="qdii" onclick="setCategory('qdii')" aria-pressed="false">QDII</button>
+            </div>
+            <span class="result-count" id="resultCount" aria-live="polite">加载中</span>
+        </div>
+    </section>
 
     <div class="container" id="content">
 
@@ -1721,7 +2192,7 @@
                         </div>
                     </div>
                     <div class="rule-box">
-                        本工具“有利可套”默认帮你先筛：申购状态含限购、实时溢价率不低、成交额不太小。
+                        本工具“有利可套”默认帮你先筛：申购状态含限购、溢价率不低、成交额不太小。
                         它不是替你做决定，而是先把明显不适合看的项目过滤掉。
                     </div>
                 </div>
@@ -1772,8 +2243,8 @@
             <ul>
                 <li><strong>🔗 跳转链接：</strong>点击基金名称可直达天天基金详情页。</li>
                 <li><strong>📋 复制代码：</strong>点击基金代码即可复制到剪贴板。</li>
-                <li><strong>📘 套利指南：</strong>底部菜单可查看 LOF 溢价套利的图文解释。</li>
-                <li><strong>📊 数据口径：</strong>实时溢价率会优先使用接口字段，必要时按场内价格与净值或估值计算。</li>
+                <li><strong>📘 套利指南：</strong>顶部指南按钮可查看 LOF 溢价套利的图文解释。</li>
+                <li><strong>📊 数据口径：</strong>溢价率会优先使用接口字段，必要时按场内价格与净值或估值计算。</li>
 
                 <li><strong>⚠️ 免责声明：</strong>
                     <p class="small-text">数据仅供参考，不构成投资建议。</p>
@@ -1806,21 +2277,6 @@
     <div class="footer">
         <p>陕ICP备2024050461号-4 <button class="help-text" type="button" onclick="showHelp()">使用帮助</button></p>
     </div>
-
-    <nav class="bottom-nav" aria-label="主导航">
-        <button class="nav-item active" type="button" onclick="switchTab('profit')" id="tab-profit" aria-pressed="true">
-            <span class="nav-icon">🔥</span>
-            <span>有利可套</span>
-        </button>
-        <button class="nav-item" type="button" onclick="switchTab('all')" id="tab-all" aria-pressed="false">
-            <span class="nav-icon">📊</span>
-            <span>全部数据</span>
-        </button>
-        <button class="nav-item" type="button" onclick="switchTab('tutorial')" id="tab-tutorial" aria-pressed="false">
-            <span class="nav-icon">📘</span>
-            <span>套利指南</span>
-        </button>
-    </nav>
 
     <script>
         // Modal functions
@@ -1930,48 +2386,159 @@
             }
         }
 
-        let showPaused = false; // Default: 'profit' mode (hide paused)
+        let activeCategory = 'profit';
+        let activeView = 'list';
         let lastResult = null;
         let activeHistoryFundId = null;
         let activeHistoryRange = '1w';
         const historyCache = {};
+        const categoryLabels = {
+            profit: '有利可套',
+            all: '全部',
+            stock: '股票 LOF',
+            index: '指数 LOF',
+            qdii: 'QDII',
+        };
 
-        function switchTab(tab) {
-            // Update active state
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.setAttribute('aria-pressed', 'false'));
-            const activeTab = document.getElementById(`tab-${tab}`);
-            if (activeTab) {
-                activeTab.classList.add('active');
-                activeTab.setAttribute('aria-pressed', 'true');
-            }
-
+        function switchView(view) {
+            activeView = view === 'tutorial' ? 'tutorial' : 'list';
             const content = document.getElementById('content');
             const tutorialView = document.getElementById('tutorial-view');
             const seoSection = document.querySelector('.seo-section');
+            const guideBtn = document.getElementById('guideBtn');
+            const isTutorial = activeView === 'tutorial';
 
-            if (tab === 'tutorial') {
-                if (content) content.style.display = 'none';
-                if (tutorialView) tutorialView.style.display = 'block';
-                if (seoSection) seoSection.style.display = 'none';
-                window.scrollTo(0, 0);
-                return;
-            } else {
-                if (content) content.style.display = 'block';
-                if (tutorialView) tutorialView.style.display = 'none';
-                if (seoSection) seoSection.style.display = 'block';
+            if (content) content.style.display = isTutorial ? 'none' : 'block';
+            if (tutorialView) tutorialView.style.display = isTutorial ? 'block' : 'none';
+            if (seoSection) seoSection.style.display = isTutorial ? 'none' : 'block';
+            if (guideBtn) {
+                guideBtn.classList.toggle('active', isTutorial);
+                guideBtn.setAttribute('aria-pressed', String(isTutorial));
             }
 
-            // Set filter logic
-            showPaused = (tab === 'all');
+            window.scrollTo(0, 0);
+            if (!isTutorial && lastResult) {
+                renderData(lastResult);
+            }
+        }
 
-            // Re-render
+        function setCategory(category) {
+            activeCategory = categoryLabels[category] ? category : 'all';
+            document.querySelectorAll('.chip-btn').forEach(button => {
+                const isActive = button.dataset.category === activeCategory;
+                button.classList.toggle('active', isActive);
+                button.setAttribute('aria-pressed', String(isActive));
+            });
+            switchView('list');
             if (lastResult) {
                 renderData(lastResult);
-                window.scrollTo(0, 0); // Scroll to top when switching
             } else {
                 loadData();
             }
+        }
+
+        function searchQuery() {
+            return String(document.getElementById('fundSearch')?.value || '').trim().toLowerCase();
+        }
+
+        function matchesCategory(fund) {
+            const type = String(fund?.fund_type || '');
+            const applyStatus = String(fund?.apply_status || '');
+            if (activeCategory === 'profit') {
+                return applyStatus.includes('限') && Number(fund?.premium_rate || 0) >= 1 && Number(fund?.volume || 0) >= 1000;
+            }
+            if (activeCategory === 'stock') return type.includes('股票');
+            if (activeCategory === 'index') return type.includes('指数');
+            if (activeCategory === 'qdii') return type.includes('QDII');
+            return true;
+        }
+
+        function matchesSearch(fund) {
+            const query = searchQuery();
+            if (!query) return true;
+            const haystack = `${fund?.fund_id || ''} ${fund?.fund_name || ''}`.toLowerCase();
+            return haystack.includes(query);
+        }
+
+        function filteredFunds(result) {
+            return (result?.data || []).filter(fund => matchesCategory(fund) && matchesSearch(fund));
+        }
+
+        function publicSourceText(value) {
+            const hiddenSourceName = ['集', '思', '录'].join('');
+            return String(value ?? '').replaceAll(hiddenSourceName, '数据源');
+        }
+
+        function renderAuthStatus(authStatus) {
+            const dot = document.getElementById('cookieStatus');
+            if (!dot) return;
+            const status = authStatus?.status || 'unknown';
+            const message = publicSourceText(authStatus?.message || 'Cookie 状态未知');
+            let cls = 'status-warn';
+            let label = `Cookie 状态需确认：${message}`;
+
+            if (status === 'ok') {
+                cls = 'status-ok';
+                label = `Cookie 正常：${message}`;
+            } else if (status === 'error' || status === 'no_cookie') {
+                cls = 'status-error';
+                label = `Cookie 异常：${message}`;
+            }
+
+            dot.className = `cookie-dot ${cls}`;
+            dot.title = label;
+            dot.setAttribute('aria-label', label);
+        }
+
+        function formatVolumeWan(value) {
+            if (value === null || value === undefined || Number.isNaN(Number(value))) return '-';
+            const parsed = Number(value);
+            return parsed >= 10000 ? `${(parsed / 10000).toFixed(2)}亿` : `${parsed.toFixed(0)}万`;
+        }
+
+        function premiumSourceLabel(fund) {
+            const source = String(fund?.premium_source || '').trim();
+            const type = String(fund?.fund_type || '');
+            const navDate = String(fund?.nav_date || '').trim();
+            const isQdii = type.includes('QDII');
+
+            if (source === '净值') {
+                const label = isQdii ? 'T-2净值' : 'T-1净值';
+                return {
+                    label,
+                    title: navDate ? `${label}，日期：${navDate}` : label,
+                };
+            }
+
+            if (source === '估值') {
+                return {
+                    label: '估值',
+                    title: navDate ? `按估值计算，净值日期：${navDate}` : '按估值计算',
+                };
+            }
+
+            if (source === '接口') {
+                return {
+                    label: '接口',
+                    title: '使用数据接口返回的溢价率',
+                };
+            }
+
+            return {
+                label: source || (isQdii ? 'T-2净值' : 'T-1净值'),
+                title: navDate ? `参考净值日期：${navDate}` : '参考净值计算',
+            };
+        }
+
+        function renderProfitFilterNote() {
+            if (activeCategory !== 'profit') return '';
+            return `
+                <div class="filter-note" role="note">
+                    <div class="filter-note-title">有利可套筛选：限购 + 溢价率 ≥ 1% + 成交额 ≥ 1000万</div>
+                    <div class="filter-note-extra">溢价率多按最新披露净值计算；QDII 常受 T-2 净值、汇率和海外市场时差影响，偏差可能更大。</div>
+                    <div class="filter-note-risk">仅供参考，不构成投资建议。</div>
+                </div>
+            `;
         }
 
         function findFund(fundId) {
@@ -2311,12 +2878,17 @@
             `;
         }
 
-        async function loadData() {
+        async function loadData(force = false) {
             const content = document.getElementById('content');
             const updateTimeEl = document.getElementById('updateTime');
+            const refreshBtn = document.getElementById('refreshBtn');
 
-            if (!lastResult) {
+            if (!lastResult || force) {
                 content.innerHTML = '<div class="loading">正在获取最新数据</div>';
+            }
+            if (refreshBtn) {
+                refreshBtn.disabled = true;
+                refreshBtn.setAttribute('aria-busy', 'true');
             }
 
             try {
@@ -2329,135 +2901,125 @@
 
                 lastResult = result;
                 updateTimeEl.textContent = `更新时间：${result.update_time || result.timestamp || '刚刚更新'}`;
+                renderAuthStatus(result.auth_status);
                 renderData(result);
 
             } catch (error) {
                 console.error('加载失败:', error);
+                renderAuthStatus({ status: 'error', message: error.message });
                 content.innerHTML = `<div class="error">❌ 数据加载失败<br>${error.message}</div>`;
+            } finally {
+                if (refreshBtn) {
+                    refreshBtn.disabled = false;
+                    refreshBtn.setAttribute('aria-busy', 'false');
+                }
             }
         }
 
         function renderData(result) {
             const content = document.getElementById('content');
-
-            // 过滤逻辑
-            const displayList = result.data.filter(fund => {
-                // "全部数据" Tab (showPaused=true) -> 完全不过滤，全部显示
-                if (showPaused) {
-                    return true;
-                }
-
-                // "有利可套" Tab -> 仅显示: 有限购额度 + 溢价>=1% + 成交额>=1000万
-                if (!fund.apply_status.includes('限')) return false;
-                if (fund.premium_rate < 1.0) return false;
-                if (fund.volume < 1000) return false;
-
-                return true;
-            });
+            const displayList = filteredFunds(result);
+            const query = searchQuery();
+            const profitFilterNote = renderProfitFilterNote();
+            const resultCount = document.getElementById('resultCount');
+            if (resultCount) {
+                resultCount.innerHTML = `${query ? `搜 <strong>${escapeHtml(query)}</strong> · ` : ''}${displayList.length} / ${(result.data || []).length}`;
+            }
 
             if (displayList.length === 0) {
                 content.innerHTML = `
+                    ${profitFilterNote}
                     <div class="empty-state">
                         <div class="empty-state-icon">📊</div>
-                        <div>暂无符合条件的套利机会</div>
+                        <div>暂无符合条件的基金</div>
                     </div>
                 `;
                 return;
             }
 
-            let html = '';
+            let html = `
+                ${profitFilterNote}
+                <div class="fund-table-head" aria-hidden="true">
+                    <span>基金名称</span>
+                    <span>净值 / 成交额</span>
+                    <span>收盘价 / 涨幅</span>
+                    <span>溢价率</span>
+                    <span>状态 / 详情</span>
+                </div>
+            `;
 
             displayList.forEach(fund => {
                 const changeClass = fund.change_pct > 0 ? 'positive' : (fund.change_pct < 0 ? 'negative' : '');
                 const changeSign = fund.change_pct > 0 ? '+' : '';
+                const fundId = String(fund.fund_id || '');
+                const applyStatus = String(fund.apply_status || '');
                 // 判断交易所和持有天数（用于界面提示）
-                const isShanghai = fund.fund_id.startsWith('50') || fund.fund_id.startsWith('51');
+                const isShanghai = fundId.startsWith('50') || fundId.startsWith('51');
                 const exchange = isShanghai ? '沪' : '深';
                 const holdDays = (fund.fund_type && fund.fund_type.includes('QDII')) ? 'T+3' : 'T+2';
                 const premiumTone = fund.premium_rate < 0 ? 'premium-down' : 'premium-up';
-                const sourceLabel = '';
+                const premiumSource = premiumSourceLabel(fund);
 
                 const isSuspended = fund.volume === 0;
-                // Combine status and suspension info
                 let statusHtml = '';
-                const badgeClass = getBadgeClass(fund.apply_status);
+                const badgeClass = getBadgeClass(applyStatus);
 
                 if (isSuspended) {
                     statusHtml = `<span class="status-badge badge-paused">停牌</span>`;
-                } else if (fund.apply_status && !fund.apply_status.includes('开放') && fund.apply_status !== '') {
-                    // Show if paused or limited (ignore 'Open')
-                    // Show '⏸ Paused' or 'Limit...'
-                    const prefix = fund.apply_status.includes('暂停') ? '暂停 · ' : '';
-                    statusHtml = `<span class="status-badge ${badgeClass}">${prefix}${escapeHtml(fund.apply_status)}</span>`;
+                } else if (applyStatus && !applyStatus.includes('开放')) {
+                    const compactStatus = applyStatus.includes('暂停') ? '暂停' : applyStatus;
+                    statusHtml = `<span class="status-badge ${badgeClass}">${escapeHtml(compactStatus)}</span>`;
+                } else {
+                    statusHtml = `<span class="status-badge">开放</span>`;
                 }
 
                 html += `
-                        <div class="fund-card ${fund.apply_status.includes('暂停') ? 'paused' : ''}">
-                            <div class="fund-header">
-                                <div class="fund-info">
-                                    <div class="fund-name"><a href="http://fund.eastmoney.com/${fund.fund_id}.html" target="_blank" rel="noopener noreferrer">${escapeHtml(fund.fund_name)}</a></div>
-                                    <button class="fund-code" type="button" onclick="copyCode('${escapeHtml(fund.fund_id)}')" title="点击复制代码" aria-label="复制基金代码 ${escapeHtml(fund.fund_id)}">
-                                        <span>${escapeHtml(fund.fund_id)}</span>
-                                        <span class="meta-dot">·</span>
-                                        <span>${exchange}</span>
-                                        <span class="meta-dot">·</span>
-                                        <span>${escapeHtml(fund.fund_type)}</span>
-                                        <span class="meta-dot">·</span>
-                                        <span>${holdDays}</span>
-                                    </button>
+                        <div class="fund-card ${applyStatus.includes('暂停') ? 'paused' : ''}">
+                            <div class="fund-main">
+                                <div class="fund-title-row">
+                                    <div class="fund-name"><a href="http://fund.eastmoney.com/${fundId}.html" target="_blank" rel="noopener noreferrer">${escapeHtml(fund.fund_name)}</a></div>
                                 </div>
-                                <div class="fund-actions">
-                                    ${statusHtml}
-                                    <button class="detail-btn" type="button" onclick="openFundDetail('${escapeHtml(fund.fund_id)}')">详情</button>
+                                <div class="fund-meta" title="${escapeHtml(fundId)} · ${exchange} · ${escapeHtml(fund.fund_type)} · ${holdDays}">
+                                    <button class="fund-code" type="button" onclick="copyCode('${escapeHtml(fundId)}')" title="点击复制代码" aria-label="复制基金代码 ${escapeHtml(fundId)}">${escapeHtml(fundId)}</button>
+                                    <span class="meta-dot">·</span>
+                                    <span>${exchange}</span>
+                                    <span class="meta-dot">·</span>
+                                    <span>${escapeHtml(fund.fund_type)}</span>
+                                    <span class="meta-dot">·</span>
+                                    <span>${holdDays}</span>
                                 </div>
                             </div>
-                            <div class="fund-details">
-                                <div class="detail-item">
-                                    <div class="detail-label">价格</div>
-                                    <div class="detail-value">${fund.price.toFixed(3)}</div>
-                                    <div class="detail-sub ${changeClass}">${changeSign}${fund.change_pct.toFixed(2)}%</div>
-                                </div>
-                                <div class="detail-item">
-                                    <div class="detail-label">净值</div>
-                                    <div class="detail-value">${fund.net_value.toFixed(3)}</div>
-                                </div>
-                                <div class="detail-item">
-                                    <div class="detail-label">成交额</div>
-                                    <div class="detail-value">${(fund.volume >= 10000) ? (fund.volume / 10000).toFixed(2) + '亿' : fund.volume.toFixed(0) + '万'}</div>
-                                </div>
-                                <div class="detail-item">
-                                    <div class="detail-label">实时溢价率</div>
-                                    <div class="detail-value ${premiumTone}">${fund.premium_rate.toFixed(2)}%</div>
-                                    ${sourceLabel}
-                                </div>
+                            <div class="fund-metric">
+                                <span class="mobile-label">净值</span>
+                                <div class="detail-value">${fund.net_value.toFixed(3)}</div>
+                                <div class="detail-sub">${formatVolumeWan(fund.volume)}</div>
+                            </div>
+                            <div class="fund-metric">
+                                <span class="mobile-label">价格</span>
+                                <div class="detail-value">${fund.price.toFixed(3)}</div>
+                                <div class="detail-sub ${changeClass}">${changeSign}${fund.change_pct.toFixed(2)}%</div>
+                            </div>
+                            <div class="fund-premium">
+                                <span class="mobile-label">溢价</span>
+                                <div class="detail-value ${premiumTone}">${fund.premium_rate.toFixed(2)}%</div>
+                                <div class="detail-sub" title="${escapeHtml(premiumSource.title)}">${escapeHtml(premiumSource.label)}</div>
+                            </div>
+                            <div class="fund-actions">
+                                ${statusHtml}
+                                <button class="detail-btn" type="button" onclick="openFundDetail('${escapeHtml(fundId)}')">详情</button>
                             </div>
                         </div>
                     `;
             });
 
-            // "有利可套" Tab 底部追加筛选规则说明
-            if (!showPaused) {
-                html += `
-                    <div class="filter-note">
-                        <div class="filter-note-title">当前筛选条件</div>
-                        <ul>
-                            <li>申购状态为<b>限购</b>（如限100、限1万等）</li>
-                            <li>实时溢价率 <b>≥ 1%</b></li>
-                            <li>成交额 <b>≥ 1000 万</b></li>
-                        </ul>
-                        <div class="filter-note-extra">
-                            实时溢价率会根据 <b>场内价格 / 基金净值（或盘中估值）</b> 计算。
-                        </div>
-                        <div class="filter-note-risk">
-                            数据仅供参考，不构成投资建议。投资有风险，决策需谨慎。
-                        </div>
-                    </div>
-                `;
-            }
-
             content.innerHTML = html;
 
         }
+
+        document.getElementById('fundSearch')?.addEventListener('input', () => {
+            switchView('list');
+            if (lastResult) renderData(lastResult);
+        });
 
         // 页面加载时获取数据
         loadData();
