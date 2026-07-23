@@ -170,8 +170,8 @@
         }
 
         .header-tools .cookie-dot {
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
             box-shadow: 0 0 0 2px rgba(197, 154, 57, 0.12);
         }
         .header-tools .cookie-dot.status-ok {
@@ -259,37 +259,7 @@
             pointer-events: none;
         }
 
-        
         .search-field input {
-            padding: 0 64px 0 32px;
-        }
-        .search-actions {
-            position: absolute;
-            right: 4px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            align-items: center;
-            gap: 2px;
-        }
-        .tool-btn-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            background: transparent;
-            border: none;
-            color: #6f6554;
-            cursor: pointer;
-            border-radius: 6px;
-        }
-        .tool-btn-icon:hover {
-            background: rgba(185, 135, 35, 0.14);
-            color: var(--brand-dark);
-        }
-
-        .search-field input.original-ignore {
             width: 100%;
             height: 32px;
             min-width: 0;
@@ -433,17 +403,7 @@
         }
 
         .fund-table-head {
-            display: grid;
-            grid-template-columns: minmax(0, 1.36fr) minmax(86px, 0.72fr) minmax(86px, 0.72fr) minmax(92px, 0.74fr) minmax(98px, 0.56fr);
-            gap: 0;
-            padding: 0 11px;
-            margin-bottom: 4px;
-            font-size: 0.72rem;
-            color: var(--muted);
-            font-weight: 600;
-        }
-        .fund-table-head span:not(:first-child) {
-            text-align: center;
+            display: none;
         }
 
         .fund-card {
@@ -584,13 +544,7 @@
             white-space: nowrap;
         }
 
-        .fund-code {
-                font-size: 0.5rem;
-            }
-            .meta-dot {
-                margin: 0 1px;
-            }
-            .fund-meta {
+        .fund-meta {
             display: flex;
             max-width: 100%;
             min-width: 0;
@@ -645,11 +599,6 @@
         }
 
         .status-badge {
-            line-height: normal;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-
             flex: 0 0 auto;
             display: inline-flex;
             align-items: center;
@@ -815,8 +764,23 @@
             align-items: center;
             justify-content: center;
             padding: 18px;
+            overflow: hidden;
+            overscroll-behavior: contain;
             background: rgba(20, 27, 25, 0.5);
             backdrop-filter: blur(10px);
+        }
+
+        html.modal-open {
+            overflow: hidden;
+            overscroll-behavior: none;
+        }
+
+        body.modal-open {
+            position: fixed;
+            right: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
         }
 
         .modal-content {
@@ -824,6 +788,9 @@
             width: min(430px, 100%);
             max-height: min(78vh, 720px);
             overflow: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
             padding: 24px;
             background: var(--paper-strong);
             border: 1px solid rgba(103, 32, 24, 0.16);
@@ -969,6 +936,9 @@
             padding: 20px 36px 34px;
             max-height: calc(min(90vh, 900px) - 164px);
             overflow: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
         }
 
         .history-visual-grid {
@@ -1182,6 +1152,10 @@
 
         .history-table .premium-cell {
             font-weight: 900;
+        }
+
+        .history-table .mobile-value {
+            display: none;
         }
 
         .percent-pill {
@@ -1770,78 +1744,348 @@
             }
         }
 
-        
         @media (max-width: 719px) {
-            .fund-table-head {
-                grid-template-columns: minmax(90px, 1.4fr) minmax(56px, 0.9fr) minmax(56px, 0.9fr) minmax(60px, 0.9fr);
-                font-size: 0.65rem;
+            .header {
+                padding-top: 9px;
+                padding-bottom: 10px;
             }
-            .fund-table-head span:last-child {
+
+            .brand-mark {
+                width: 34px;
+                height: 34px;
+            }
+
+            .header h1 {
+                font-size: 1.18rem;
+            }
+
+            .header p {
                 display: none;
             }
-            .fund-card {
-                grid-template-columns: minmax(90px, 1.4fr) minmax(56px, 0.9fr) minmax(56px, 0.9fr) minmax(60px, 0.9fr);
-                min-height: 54px;
-                padding: 8px;
-            }
-            .fund-actions {
-                position: absolute;
-                right: 8px;
-                bottom: 8px;
-                flex-direction: row;
-                gap: 6px;
-                align-items: center;
-                border: none;
-                padding-left: 0;
-            }
-            .fund-metric, .fund-premium {
-                padding-left: 4px;
-            }
-            .detail-btn {
-                min-height: 22px;
-                padding: 2px 6px;
-                font-size: 0.62rem;
-            }
-            .status-badge {
-                min-height: 22px;
-                padding: 2px 5px;
-                font-size: 0.62rem;
-                line-height: 1;
-            }
-            .fund-name {
-                font-size: 0.88rem;
-            }
-            .fund-code {
-                font-size: 0.5rem;
-            }
-            .meta-dot {
-                margin: 0 1px;
-            }
-            .fund-meta {
-                font-size: 0.5rem;
-                letter-spacing: -0.2px;
-            }
-            .chip-btn {
+
+            .update-time {
                 font-size: 0.68rem;
-                padding: 0 6px;
-                min-height: 26px;
             }
+
+            .control-shell {
+                position: static;
+                width: calc(100% - 16px);
+                margin-top: 6px;
+            }
+
+            .control-top {
+                grid-template-columns: 1fr;
+            }
+
+            .tool-actions {
+                justify-content: flex-start;
+            }
+
+            .chip-btn {
+                min-height: 24px;
+                padding: 0 6px;
+                border-radius: 6px;
+                font-size: 0.6rem;
+            }
+
             .result-count {
-                font-size: 0.65rem;
+                min-height: 22px;
                 padding: 0 5px;
+                border-radius: 6px;
+                font-size: 0.56rem;
+            }
+
+            .chip-row {
+                gap: 3px;
+            }
+
+            .category-scroll {
+                gap: 3px;
+            }
+
+            .container {
+                padding-top: 10px;
+            }
+
+            .fund-card {
+                grid-template-columns: minmax(96px, 1.22fr) minmax(46px, 0.7fr) minmax(46px, 0.7fr) minmax(48px, 0.72fr) minmax(50px, 0.68fr);
+                min-height: 58px;
+                padding: 8px 6px;
+                border-left-width: 4px;
+            }
+
+            .fund-table-head {
+                display: grid;
+                grid-template-columns: minmax(96px, 1.22fr) minmax(46px, 0.7fr) minmax(46px, 0.7fr) minmax(48px, 0.72fr) minmax(50px, 0.68fr);
+                gap: 0;
+                margin-bottom: 4px;
+                padding: 0 6px 3px 10px;
+                color: #6d7469;
+                background: transparent;
+                border: 0;
+                font-size: 0.48rem;
+                font-weight: 900;
+                line-height: 1.1;
+            }
+
+            .fund-table-head span {
+                min-width: 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            .fund-table-head span:not(:first-child) {
+                padding-left: 3px;
+                text-align: center;
+            }
+
+            .fund-main {
+                padding-right: 4px;
+            }
+
+            .fund-name {
+                font-size: 0.76rem;
+                line-height: 1.16;
+            }
+
+            .fund-code {
+                font-size: 0.48rem;
+            }
+
+            .fund-meta {
+                gap: 1px;
+                margin-top: 2px;
+                font-size: 0.48rem;
+                line-height: 1.05;
+            }
+
+            .fund-metric,
+            .fund-premium {
+                min-height: 42px;
+                align-content: center;
+                padding-left: 3px;
+                border-left: 1px solid rgba(216, 222, 206, 0.6);
+            }
+
+            .fund-actions {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 42px;
+                margin-top: 0;
+                padding-top: 0;
+                padding-left: 3px;
+                border-top: 0;
+                border-left: 1px solid rgba(216, 222, 206, 0.6);
+                gap: 3px;
+            }
+
+            .mobile-label {
+                display: none; /* 去掉多余标签以省空间 */
             }
             .detail-value {
-                font-size: 0.78rem;
+                font-size: 0.72rem;
+                line-height: 1.08;
             }
             .detail-sub {
                 font-size: 0.55rem;
+                line-height: 1.1;
             }
-            .mobile-label {
+            .filter-note {
+                margin-bottom: 5px;
+                padding: 6px 8px;
+                font-size: 0.52rem;
+                line-height: 1.34;
+            }
+            .filter-note-title {
+                margin-bottom: 2px;
+                font-size: 0.54rem;
+            }
+            .status-badge {
+                max-width: 100%;
+                height: 16px;
+                min-height: 16px;
+                padding: 0 3px;
+                overflow: hidden;
+                font-size: 0.54rem;
+                line-height: 1;
+                text-overflow: ellipsis;
+            }
+            .detail-btn {
+                min-height: 17px;
+                padding: 1px 5px;
+                font-size: 0.54rem;
+                margin-top: 0;
+            }
+
+            .detail-label {
                 display: none;
             }
+
+            .modal {
+                align-items: flex-start;
+                padding: 10px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                touch-action: pan-y;
+            }
+
+            .history-modal-content {
+                width: 100%;
+                max-height: none;
+                overflow: visible;
+            }
+
+            .history-head {
+                padding: 18px 66px 14px 16px;
+            }
+
+            .history-meta {
+                font-size: 0.68rem;
+            }
+
+            .range-tabs,
+            .history-panel {
+                padding-right: 16px;
+                padding-left: 16px;
+            }
+
+            .range-tabs {
+                gap: 5px;
+            }
+
+            .range-btn {
+                flex: 1 1 calc(50% - 5px);
+                min-width: 0;
+            }
+
+            .history-panel {
+                max-height: none;
+                overflow: visible;
+                overscroll-behavior: auto;
+            }
+
+            .history-visual-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .history-summary-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .chart-wrap {
+                min-height: 330px;
+                padding: 10px;
+            }
+
+            .history-chart {
+                height: 270px;
+            }
+
+            .chart-legend {
+                justify-content: flex-start;
+            }
+
+            .history-table {
+                display: table;
+                font-size: 0.48rem;
+                table-layout: fixed;
+            }
+
+            .history-table colgroup {
+                display: table-column-group;
+            }
+
+            .history-table thead {
+                display: table-header-group;
+            }
+
+            .history-table col:nth-child(1) {
+                width: 12% !important;
+            }
+
+            .history-table col:nth-child(2) {
+                width: 11% !important;
+            }
+
+            .history-table col:nth-child(3) {
+                width: 15% !important;
+            }
+
+            .history-table col:nth-child(4) {
+                width: 13% !important;
+            }
+
+            .history-table col:nth-child(5) {
+                width: 12% !important;
+            }
+
+            .history-table col:nth-child(6) {
+                width: 15% !important;
+            }
+
+            .history-table col:nth-child(7) {
+                width: 22% !important;
+            }
+
+            .history-table tr {
+                display: table-row;
+            }
+
+            .history-table th,
+            .history-table td {
+                display: table-cell;
+                min-width: 0;
+                padding: 6px 1px;
+                overflow: hidden;
+                line-height: 1.1;
+                text-align: center;
+                text-overflow: clip;
+                white-space: nowrap;
+            }
+
+            .history-table th:first-child,
+            .history-table td:first-child {
+                text-align: left;
+            }
+
+            .history-table .desktop-value {
+                display: none;
+            }
+
+            .history-table .mobile-value {
+                display: inline;
+            }
+
+            .percent-pill {
+                width: auto;
+                min-width: 0;
+                min-height: 15px;
+                padding: 1px 2px;
+                border-radius: 5px;
+            }
+
+            .tutorial-hero,
+            .tutorial-path,
+            .decision-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tutorial-hero {
+                padding: 16px;
+            }
+
+            .tutorial-card h3,
+            .tutorial-section-intro,
+            details {
+                margin-right: 14px;
+                margin-left: 14px;
+            }
         }
-
-
 
         @media (prefers-reduced-motion: reduce) {
             *,
@@ -1876,8 +2120,8 @@
                 <div class="header-tools">
                     <span class="cookie-dot status-warn" id="cookieStatus" role="img" aria-label="Cookie 状态加载中" title="Cookie 状态加载中"></span>
                     <span class="update-time" id="updateTime" aria-live="polite">加载中...</span>
-                    
-                    
+                    <button class="tool-btn" type="button" id="refreshBtn" onclick="loadData(true)" aria-label="刷新数据" title="刷新数据">↻</button>
+                    <button class="tool-btn guide-btn" type="button" id="guideBtn" onclick="switchView('tutorial')" aria-pressed="false">指南</button>
                 </div>
             </div>
         </div>
@@ -1888,15 +2132,6 @@
             <label class="search-field">
                 <span class="search-icon" aria-hidden="true">🔍</span>
                 <input id="fundSearch" type="search" placeholder="代码 / 名称" autocomplete="off" aria-label="按基金代码或名称搜索">
-                <div class="search-actions">
-                    <button class="tool-btn-icon" type="button" id="refreshBtn" onclick="loadData(true)" aria-label="刷新数据" title="刷新数据">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-                    </button>
-                    <button class="tool-btn-icon" type="button" id="guideBtn" onclick="switchView('tutorial')" aria-label="套利指南" title="套利指南">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                    </button>
-                </div>
-
             </label>
         </div>
         <div class="chip-row">
@@ -2125,10 +2360,10 @@
                 </div>
             </div>
             <div class="range-tabs" aria-label="历史区间">
-                <button class="range-btn active" type="button" onclick="setHistoryRange('1w')" data-range="1w">近一周</button>
+                <button class="range-btn" type="button" onclick="setHistoryRange('1w')" data-range="1w">近一周</button>
                 <button class="range-btn" type="button" onclick="setHistoryRange('1m')" data-range="1m">一个月</button>
                 <button class="range-btn" type="button" onclick="setHistoryRange('3m')" data-range="3m">三个月</button>
-                <button class="range-btn" type="button" onclick="setHistoryRange('1y')" data-range="1y">一年</button>
+                <button class="range-btn active" type="button" onclick="setHistoryRange('1y')" data-range="1y">一年</button>
             </div>
             <div id="historyContent" class="history-panel">
                 <div class="history-state">点击基金后加载历史数据</div>
@@ -2142,20 +2377,56 @@
 
     <script>
         // Modal functions
+        let lockedScrollY = 0;
+
+        function lockPageScroll() {
+            if (document.body.classList.contains('modal-open')) return;
+            lockedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+            document.body.style.top = `-${lockedScrollY}px`;
+            document.documentElement.classList.add('modal-open');
+            document.body.classList.add('modal-open');
+        }
+
+        function unlockPageScrollIfIdle() {
+            const hasOpenModal = Array.from(document.querySelectorAll('.modal'))
+                .some(modal => modal.style.display && modal.style.display !== 'none');
+            if (hasOpenModal) return;
+
+            const scrollY = lockedScrollY;
+            document.body.classList.remove('modal-open');
+            document.documentElement.classList.remove('modal-open');
+            document.body.style.top = '';
+            window.scrollTo(0, scrollY);
+            requestAnimationFrame(() => {
+                window.scrollTo(0, scrollY);
+            });
+        }
+
+        function showModal(modal) {
+            lockPageScroll();
+            modal.style.display = 'flex';
+            modal.scrollTop = 0;
+        }
+
+        function hideModal(modal) {
+            modal.style.display = 'none';
+            unlockPageScrollIfIdle();
+        }
+
         function showHelp() {
             const modal = document.getElementById('helpModal');
-            modal.style.display = 'flex';
-            document.querySelector('.close-btn')?.focus();
+            showModal(modal);
+            modal.querySelector('.close-btn')?.focus();
         }
 
         function closeHelp() {
             const modal = document.getElementById('helpModal');
-            modal.style.display = 'none';
+            hideModal(modal);
         }
 
         function closeHistory() {
             const modal = document.getElementById('historyModal');
-            modal.style.display = 'none';
+            hideModal(modal);
         }
 
         // Close modal when clicking outside
@@ -2163,10 +2434,10 @@
             const helpModal = document.getElementById('helpModal');
             const historyModal = document.getElementById('historyModal');
             if (event.target == helpModal) {
-                helpModal.style.display = "none";
+                hideModal(helpModal);
             }
             if (event.target == historyModal) {
-                historyModal.style.display = "none";
+                hideModal(historyModal);
             }
         }
 
@@ -2252,7 +2523,7 @@
         let activeView = 'list';
         let lastResult = null;
         let activeHistoryFundId = null;
-        let activeHistoryRange = '1w';
+        let activeHistoryRange = '1y';
         const historyCache = {};
         const categoryLabels = {
             profit: '有利可套',
@@ -2339,7 +2610,7 @@
             let cls = 'status-warn';
             let label = `Cookie 状态需确认：${message}`;
 
-            if (status === 'ok' || status === 'slogin') {
+            if (status === 'ok') {
                 cls = 'status-ok';
                 label = `Cookie 正常：${message}`;
             } else if (status === 'error' || status === 'no_cookie') {
@@ -2393,19 +2664,15 @@
         }
 
         function renderProfitFilterNote() {
-            if (activeCategory === 'profit') {
-                return `
-                    <div class="filter-note">
-                        <strong>当前为“有利可套”精选：</strong>剔除了长期停牌和成交极其低迷的基金。<br>
-                        <span style="font-size:0.65rem; color:var(--muted); margin-top:2px; display:block;">
-                            * 仅供参考，不构成任何投资建议。特别是 QDII 基金，其净值通常为 T-2 日，且受外汇限额及交易时间差异影响，实时溢价率估算可能存在较大误差，请务必结合实盘情况谨慎判断。
-                        </span>
-                    </div>
-                `;
-            }
-            return '';
+            if (activeCategory !== 'profit') return '';
+            return `
+                <div class="filter-note" role="note">
+                    <div class="filter-note-title">有利可套筛选：限购 + 溢价率 ≥ 1% + 成交额 ≥ 1000万</div>
+                    <div class="filter-note-extra">溢价率多按最新披露净值计算；QDII 常受 T-2 净值、汇率和海外市场时差影响，偏差可能更大。</div>
+                    <div class="filter-note-risk">仅供参考，不构成投资建议。</div>
+                </div>
+            `;
         }
-
 
         function findFund(fundId) {
             return (lastResult?.data || []).find(item => item.fund_id === fundId) || null;
@@ -2423,7 +2690,7 @@
 
         async function openFundDetail(fundId) {
             activeHistoryFundId = fundId;
-            activeHistoryRange = '1w';
+            activeHistoryRange = '1y';
             document.querySelectorAll('.range-btn').forEach(button => {
                 button.classList.toggle('active', button.dataset.range === activeHistoryRange);
             });
@@ -2433,6 +2700,7 @@
             const meta = document.getElementById('historyMeta');
             const content = document.getElementById('historyContent');
             const fund = findFund(fundId);
+            const historyPanel = document.getElementById('historyContent');
 
             title.textContent = fund ? `${fund.fund_name} 历史详情` : `${fundId} 历史详情`;
             meta.innerHTML = fund
@@ -2444,7 +2712,8 @@
                   `
                 : `<span>${escapeHtml(fundId)}</span>`;
             content.innerHTML = '<div class="history-state">正在加载历史数据</div>';
-            modal.style.display = 'flex';
+            historyPanel.scrollTop = 0;
+            showModal(modal);
 
             if (historyCache[fundId]) {
                 renderHistory(historyCache[fundId]);
@@ -2685,11 +2954,17 @@
         function renderHistoryTable(rows) {
             const tableRows = rows.slice(-30).reverse().map(row => `
                 <tr>
-                    <td>${escapeHtml(row.date)}</td>
+                    <td>
+                        <span class="desktop-value">${escapeHtml(row.date)}</span>
+                        <span class="mobile-value">${escapeHtml(formatDateShort(row.date))}</span>
+                    </td>
                     <td>${formatNumber(row.close, 3)}</td>
                     <td class="change-cell"><span class="percent-pill ${percentTone(row.pct_chg)}">${formatSignedPercent(row.pct_chg)}</span></td>
                     <td>${formatNumber(row.unit_nav, 4)}</td>
-                    <td>${escapeHtml(row.nav_date || '-')}</td>
+                    <td>
+                        <span class="desktop-value">${escapeHtml(row.nav_date || '-')}</span>
+                        <span class="mobile-value">${escapeHtml(formatDateShort(row.nav_date || '-'))}</span>
+                    </td>
                     <td class="premium-cell"><span class="percent-pill ${percentTone(row.premium, 'premium-up', 'premium-down')}">${formatSignedPercent(row.premium)}</span></td>
                     <td>${formatMoneyWanFromThousand(row.amount)}</td>
                 </tr>
@@ -2709,13 +2984,13 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <th>交易日</th>
-                                <th>收盘价</th>
-                                <th>涨跌幅</th>
-                                <th>单位净值</th>
-                                <th>净值日</th>
-                                <th>价差</th>
-                                <th>成交额</th>
+                                <th><span class="desktop-value">交易日</span><span class="mobile-value">交易</span></th>
+                                <th><span class="desktop-value">收盘价</span><span class="mobile-value">收</span></th>
+                                <th><span class="desktop-value">涨跌幅</span><span class="mobile-value">涨</span></th>
+                                <th><span class="desktop-value">单位净值</span><span class="mobile-value">净</span></th>
+                                <th><span class="desktop-value">净值日</span><span class="mobile-value">净日</span></th>
+                                <th><span class="desktop-value">价差</span><span class="mobile-value">差</span></th>
+                                <th><span class="desktop-value">成交额</span><span class="mobile-value">额</span></th>
                             </tr>
                         </thead>
                         <tbody>${tableRows}</tbody>
@@ -2766,7 +3041,7 @@
                 }
 
                 lastResult = result;
-                updateTimeEl.textContent = result.update_time || result.timestamp || '刚刚更新';
+                updateTimeEl.textContent = `更新时间：${result.update_time || result.timestamp || '刚刚更新'}`;
                 renderAuthStatus(result.auth_status);
                 renderData(result);
 

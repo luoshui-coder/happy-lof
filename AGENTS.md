@@ -1,5 +1,12 @@
 # Repository Guidelines
 
+## Agent Operating Rules
+
+- 用户叫洛水，所有回复必须使用中文。
+- 禁止批量删除文件或目录。不要使用 `rm -rf`、`rm -r`、`rm -R`、`find . -delete`、`find . -exec rm {} \;`。
+- 删除文件时只能一次删除一个明确路径的文件，例如 `rm "/Users/luoshui/path/to/file.txt"`。
+- 如果需要删除目录，或需要批量删除多个文件，应停止操作并询问洛水，由用户确认后手动删除。
+
 ## Project Structure & Module Organization
 
 This repository powers “今乐福”, a Flask API plus static frontend for LOF arbitrage data. `app.py` exports the Flask `app` and route table. `api/index.py` is a thin adapter that imports the same app. Core Jisilu fetching, parsing, and filtering logic lives in `lof_lib.py`. Frontend assets live under `public/`, with `public/index.html` as the main page and images/SVGs beside it. Bark push helpers for the Aliyun/BaoTa environment are named `baota_lof_*_push.py` and `baota_lof_*_cron.sh`. There is currently no dedicated `tests/` directory.
